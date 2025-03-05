@@ -1,0 +1,18 @@
+<div>
+    <div>
+        <h1>otp verification page</h1>
+    </div>
+    <div>
+        <label for="">Enter Email</label>
+        <input type="email" [(ngModel)]="email" placeholder="enter your email">
+    </div>
+
+    <button (click)="sendOtp()">sendotp</button>
+
+    <div *ngIf="message.includes('otp sent')">
+        <input type="text" ([ngModel])="otp" placeholder="enter your otp">
+    </div>
+
+    
+   
+</div>
