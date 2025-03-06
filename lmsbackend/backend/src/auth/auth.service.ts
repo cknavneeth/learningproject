@@ -1,7 +1,15 @@
-import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, Res } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as nodemailer from 'nodemailer';
 import { Subject } from 'rxjs';
+import { user, userDocument } from 'src/users/users.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import * as jwt from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
+
+
 
 
 
@@ -10,6 +18,8 @@ import { Subject } from 'rxjs';
 export class AuthService {
 
     constructor(private readonly userservice:UsersService){}
+
+    private accessToken:string|null=null
 
     async register(username:string,email:string,password:string){
         let existinguser=await this.userservice.findByEmail(email)
@@ -58,5 +68,78 @@ export class AuthService {
         }
 
         await transporter.sendMail(mailOptions)
+    }
+
+
+    async verifyotp(email:string,otp:string){
+        let user=await this.userservice.findByEmail(email)
+        if(!user || !user.otp || !user.otpExpires){
+            throw new BadRequestException('invalid request')
+        }
+
+        const now =new Date()
+        if(user.otp!==otp || now>user.otpExpires){
+            throw new BadRequestException('invalid or expired otp')
+        }
+
+      
+       user.isVerified=true
+       user.otp=null
+       user.otpExpires=null
+
+       await user.save()
+
+       return {message:'otp verified successfully'}
+    }
+
+
+
+    //for login form
+    async login(email:string,password:string,res:Response){
+        let user=await this.userservice.findByEmail(email)
+        if(!user){
+            throw new BadRequestException('User not found')
+        }
+
+        if(!user.isVerified){
+            throw new BadRequestException('User is not verified')
+        }
+
+        let isPasswordvalid=await this.userservice.comparePassword(password,user.password)
+        if(!isPasswordvalid){
+            throw new BadRequestException('Password is not matching')
+        }
+
+        const accesstoken=this.generateAccessToken(user)
+        const refreshtoken=this.generateRefreshToken(user)
+
+        this.setAccessToken(accesstoken)
+
+        res.cookie('refreshToken', refreshtoken, {
+            httpOnly: true,  
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'strict', 
+            maxAge: 7 * 24 * 60 * 60 * 1000, 
+          });
+
+          return {accesstoken,refreshtoken,message:'Login successfull'}
+    }
+
+    generateAccessToken(user:userDocument){
+       return jwt.sign({userId:user._id.toString(),email:user.email},process.env.JWT_SECRET_KEY as string,{expiresIn:process.env.JWT_EXPIRES_IN})
+    }
+
+
+    generateRefreshToken(user:user){
+        return jwt.sign({userId:user._id,email:user.email},process.env.REFRESH_TOKEN_SECRET as string,{expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN})
+    }
+
+
+    setAccessToken(token:string){
+       this.accessToken=token
+    }
+  
+    getAccessToken():string | null{
+       return this.accessToken
     }
 }

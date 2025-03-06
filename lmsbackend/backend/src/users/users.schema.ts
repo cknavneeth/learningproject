@@ -1,9 +1,11 @@
 import { Prop,Schema,SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export type userDocument = user & Document
 @Schema()
 export class user{
+    
+    _id: Types.ObjectId;
 
     @Prop({required:true})
     username:string
@@ -15,13 +17,13 @@ export class user{
     password:string
 
     @Prop({default:false})
-    isBlocked:boolean
+    isVerified:boolean
 
-    @Prop()
-    otp:string
+    @Prop({type:String,required:false})
+    otp?:string | null
 
-    @Prop()
-    otpExpires:Date
+    @Prop({type:String,required:false})
+    otpExpires?:Date  | null
 
 }
 

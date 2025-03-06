@@ -1,1 +1,22 @@
-<p>login works!</p>
+<div>
+    <div>
+        <h1>Login registration form</h1>
+    </div>
+    <form [formGroup]="loginForm">
+        <div>
+            <div>
+                <label for="">Email Address</label>
+                <input type="email" formControlName="email" required>
+            </div>
+            <div>
+                    <label for="">Email Address</label>
+                    <input type="text" formControlName="password" required>
+            </div>
+            <div>
+                  <button (click)="loginNow()" [disabled]="loginForm.invalid">Submit</button>
+            </div>
+        </div>
+
+    </form>
+    
+</div>

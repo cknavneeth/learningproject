@@ -8,11 +8,12 @@
     </div>
 
     <button (click)="sendOtp()">sendotp</button>
+    <button (click)="resendOtp()">resend otp</button>
 
     <div *ngIf="message.includes('otp sent')">
-        <input type="text" ([ngModel])="otp" placeholder="enter your otp">
+        <input type="text" [(ngModel)]="otp" placeholder="enter your otp">
     </div>
 
-    
+    <button (click)="verifyOtp()">verify your otp</button>
    
 </div>

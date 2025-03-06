@@ -9,8 +9,8 @@ export class UsersService {
 
     constructor(@InjectModel(user.name) private usermodel:Model<userDocument>){}
 
-    async findByEmail(email:string):Promise<user | null>{
-       return  this.usermodel.findOne({email})
+    async findByEmail(email:string):Promise<userDocument | null>{
+       return  this.usermodel.findOne({email}).exec()
     }
 
 
@@ -26,6 +26,10 @@ export class UsersService {
             {$set:updatedData},
             {new:true}
         )
+   }
+
+   async comparePassword(receivedPassword:string,storedHashedPassword:string):Promise<boolean>{
+       return await bcrypt.compare(receivedPassword,storedHashedPassword)
    }
     
 }

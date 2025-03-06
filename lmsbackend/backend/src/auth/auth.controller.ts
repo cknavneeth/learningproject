@@ -1,5 +1,6 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -17,5 +18,25 @@ export class AuthController {
             throw new BadRequestException('Email is required');
           }
            return this.authservice.sendOtp(body.email)
+    }
+
+
+    @Post('verifyotp')
+    async verifyotp(@Body() body:{email:string,otp:string}){
+        if(!body.email || !body.otp){
+          throw new BadRequestException('there is no email and otp')
+        }
+        return this.authservice.verifyotp(body.email,body.otp)
+    }
+
+
+    @Post('login')
+    async login(@Body() body:{email:string,password:string},@Res() res:Response){
+        if(!body.email || !body.password){
+          throw new BadRequestException('No email and password')
+        }
+        const {accesstoken,refreshtoken,message}=await this.authservice.login(body.email,body.password,res )
+
+       return res.json({accesstoken,message})
     }
 }
