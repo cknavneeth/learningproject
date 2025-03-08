@@ -1,0 +1,60 @@
+import { Component } from '@angular/core';
+import { InstructorauthserviceService } from '../../../services/instructorauthservice.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-instructorotp',
+  imports: [ReactiveFormsModule,FormsModule,CommonModule],
+  templateUrl: './instructorotp.component.html',
+  styleUrl: './instructorotp.component.scss'
+})
+export class InstructorotpComponent {
+   emailaddress:string=''
+   otp:string=''
+   message:string=''
+
+   constructor(private instructorservice:InstructorauthserviceService,private router:Router){}
+
+   sendOtp(){
+      return this.instructorservice.sendOtp(this.emailaddress).subscribe(
+        response=>{
+          console.log('otp sended successfully')
+          this.message=response.message
+        },
+        error=>{
+          console.log('error sending in otp',error.message)
+        }
+      )
+   }
+
+   resendotp(){
+    console.log('email address for otp',this.emailaddress)
+    return this.instructorservice.sendOtp(this.emailaddress).subscribe(
+      response=>{
+        console.log('otp sended successfully again')
+        this.message=response.message
+      },
+      error=>{
+        console.log('error occured while resending otp')
+      }
+    )
+   }
+
+
+   verifyOtp(){
+      return this.instructorservice.verifyOtp(this.emailaddress,this.otp).subscribe(
+        response=>{
+          alert('otp verified successfully')
+          if(response )
+          this.message='Otp verified successfully'
+        this.router.navigate(['/instructorlogin'])
+        },
+        error=>{
+          console.log('invalid otp')
+          console.log(error.message)
+        }
+      )
+   }
+}

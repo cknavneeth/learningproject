@@ -31,5 +31,10 @@ export class UsersService {
    async comparePassword(receivedPassword:string,storedHashedPassword:string):Promise<boolean>{
        return await bcrypt.compare(receivedPassword,storedHashedPassword)
    }
+
+   async findById(user:string):Promise<userDocument|null>{
+       let findeduser=await this.usermodel.findById(user)
+       return findeduser
+   }
     
 }

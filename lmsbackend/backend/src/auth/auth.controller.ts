@@ -1,6 +1,9 @@
-import { BadRequestException, Body, Controller, Post, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post, Req, Res, UnauthorizedException, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
+import {Request, Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Certificate } from 'crypto';
+import * as multer from 'multer';
 
 @Controller('auth')
 export class AuthController {
@@ -38,5 +41,54 @@ export class AuthController {
         const {accesstoken,refreshtoken,message}=await this.authservice.login(body.email,body.password,res )
 
        return res.json({accesstoken,message})
+    }
+
+
+    @Post('refreshtoken')
+    async refreshtoken(@Req() req:Request,@Res() res:Response){
+
+      try {
+        const refreshtoken=req.cookies.refreshtoken
+         if(!refreshtoken){
+          return res.status(401).json({success:false,message:'refresh token is not available'})
+         }
+
+         const newaccesstoken=await this.authservice.refreshaccesstoken(refreshtoken)
+
+         return res.status(200).json({success:true,accesstoken:newaccesstoken})
+      } catch (error) {
+         if(error.name=='TokenExpiredError'){
+          throw new UnauthorizedException('refresh token got expired')
+         }
+         if(error.name='JsonWebTokenError'){
+          throw new UnauthorizedException('invalid refresh token')
+         }
+         throw new UnauthorizedException('authentication failed')
+      }
+         
+    }
+
+
+
+    @Post('instructorRegister')
+    @UseInterceptors(FileInterceptor('certificate'))
+    async registerinstructor(
+      @Body() body:any,
+      @UploadedFile() certificate:Express.Multer.File
+    ){
+      console.log('file received',certificate)
+      console.log('body',body)
+        return this.authservice.registerinstructor(body.name,body.emailaddress,body.password,certificate) 
+    }
+
+    @Post('insotp')
+    async sendOtp(@Body() body:{emailaddress:string}){
+         console.log('email for sending otp',body.emailaddress)
+         return this.authservice.sendinstructorotp(body.emailaddress)
+    }
+
+    @Post('verifyinsotp')
+    async verifyOtp(@Body() body:{emailaddress:string,otp:string}){
+        return this.authservice.verifyinstructorotp(body.emailaddress,body.otp)
     }
 }

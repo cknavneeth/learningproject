@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable, Res } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, Res, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as nodemailer from 'nodemailer';
 import { Subject } from 'rxjs';
@@ -9,6 +9,9 @@ import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 
+import { InstructorsService } from 'src/instructors/instructors.service';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+
 
 
 
@@ -17,7 +20,7 @@ import { Response } from 'express';
 @Injectable()
 export class AuthService {
 
-    constructor(private readonly userservice:UsersService){}
+    constructor(private readonly userservice:UsersService,private readonly cloudinary:CloudinaryService,private readonly instructorService:InstructorsService){}
 
     private accessToken:string|null=null
 
@@ -141,5 +144,105 @@ export class AuthService {
   
     getAccessToken():string | null{
        return this.accessToken
+    }
+
+
+    async refreshaccesstoken(refreshtoken:string):Promise<string>{
+        try {
+            let payload=jwt.verify(refreshtoken,process.env.REFRESH_TOKEN_SECRET as string) as {userId:string}
+
+            const user=await this.userservice.findById(payload.userId)
+  
+            if(!user){
+              throw new UnauthorizedException({
+                message:'invalide refresh token',
+                error:'invalidTokenError'
+              })
+            }
+            return this.generateAccessToken(user)
+        } catch (error) {
+
+            if(error instanceof jwt.JsonWebTokenError){
+                throw new UnauthorizedException({
+                    message:'invalid refresh token',
+                    error:'JsonWebTokenError'
+                })
+            }else if(error instanceof jwt.TokenExpiredError){
+                throw new UnauthorizedException({
+                    message:'refresh token expires',
+                    error:'TokenExpiredError'
+                })
+            }
+            else {
+                throw new UnauthorizedException({
+                    message: 'Authentication failed',
+                    name: 'UnknownError'
+                });
+            }
+        } 
+    }
+
+
+    async registerinstructor(name:string,emailaddress:string,password:string,certificate:Express.Multer.File){
+         let existingUser=await this.userservice.findByEmail(emailaddress)
+         if(existingUser){
+            throw new BadRequestException('User already exists')
+         }
+
+         console.log('rone',emailaddress)
+
+         let certificateUrl=await this.cloudinary.UploadedFile(certificate)
+
+         return this.instructorService.createInstructor(name,emailaddress,password,certificateUrl)
+
+
+    }
+
+
+
+    async sendinstructorotp(emailaddress:string){
+        let instructor=await this.instructorService.findByEmail(emailaddress)
+        if(!instructor){
+            throw new BadRequestException('Instructor not exists')
+        }
+
+        const otp=Math.floor(100000 +Math.random()*900000).toString()
+        const otpExpires=new Date()
+
+        otpExpires.setMinutes(otpExpires.getMinutes()+5)
+
+        instructor.otp=otp
+        instructor.otpExpires=otpExpires
+
+        await this.instructorService.updateinstructor(emailaddress,{otp,otpExpires})
+
+        await this.sendMail(emailaddress,otp)
+
+        return {message:'otp sented successfully'}
+    }
+
+    async verifyinstructorotp(emailaddress:string,otp:string){
+        console.log('call backendil ethi')
+        let instructor=await this.instructorService.findByEmail(emailaddress)
+        if(!instructor){
+            throw new BadRequestException('invalid instructor')
+        }
+
+        if(!instructor.otp|| !instructor.otpExpires){
+            throw new BadRequestException('invalid request')
+        }
+
+        const now=new Date()
+        if(instructor.otp!==otp || now>instructor.otpExpires){
+            throw new BadRequestException('invalid otp')
+        }
+
+        instructor.isVerified=true
+        instructor.otp=null
+        instructor.otpExpires=null
+
+        await instructor.save()
+
+        return {message:'Otp verified successfully'}
     }
 }
