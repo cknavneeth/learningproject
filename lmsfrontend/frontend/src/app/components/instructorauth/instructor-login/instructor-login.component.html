@@ -1,1 +1,16 @@
-<p>instructor-login works!</p>
+<div>
+    <p>instructor login form</p>
+    <form [formGroup]="instructorLogin" (ngSubmit)="onSubmit()">
+        <div>
+            <label for="">Email address</label>
+            <input type="email" formControlName="emailaddress" placeholder="enter your email">
+        </div>
+        <div>
+            <label for="">password</label>
+            <input type="text" formControlName="password" placeholder="enter your password">
+        </div>
+        <button type="submit" [disabled]="instructorLogin.invalid">submit form</button>
+
+    </form>
+    
+</div>

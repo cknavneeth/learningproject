@@ -91,4 +91,26 @@ export class AuthController {
     async verifyOtp(@Body() body:{emailaddress:string,otp:string}){
         return this.authservice.verifyinstructorotp(body.emailaddress,body.otp)
     }
+
+
+
+    @Post('inslogin')
+    async instructorLogin(@Body() body:{emailaddress:string,password:string},@Res() res:Response){
+      console.log('login call ethiyonn nokam')
+      return this.authservice.instructorLogin(body.emailaddress,body.password,res)
+    }
+
+    @Post('getinsAccess')
+    async refreshaccesstoken(@Req() req:Request,@Res() res:Response){
+         try {
+            let refreshtoken=req.cookies.instructor_refreshToken
+            if(!refreshtoken){
+              return res.status(401).json({success:false,message:'refresh token is not available'})
+            }
+
+            const newaccesstoken=this.authservice.accesstokenretry(refreshtoken)
+         } catch (error) {
+          
+         }
+    }
 }

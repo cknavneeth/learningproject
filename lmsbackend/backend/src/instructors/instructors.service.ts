@@ -26,4 +26,13 @@ export class InstructorsService {
             {new:true}
         )
     }
+
+    async comparePassword(password:string,storedHashedPassword:string){
+        return await bcrypt.compare(password,storedHashedPassword)
+    }
+
+    async findById(instructorId:string){
+        let instructor=await this.instructorModel.findById(instructorId)
+        return instructor
+    }
 }

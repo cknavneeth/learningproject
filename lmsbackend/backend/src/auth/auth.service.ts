@@ -11,6 +11,7 @@ import { Response } from 'express';
 
 import { InstructorsService } from 'src/instructors/instructors.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { instructorDocument } from 'src/instructors/instructor.schema';
 
 
 
@@ -244,5 +245,72 @@ export class AuthService {
         await instructor.save()
 
         return {message:'Otp verified successfully'}
+    }
+
+
+
+
+
+    async instructorLogin(emailaddress:string,password:string,res:Response){
+        console.log('serviceil call ethyo')
+         let instructor=await this.instructorService.findByEmail(emailaddress)
+         if(!instructor){
+            throw new BadRequestException('There is no user')
+         }
+         if(!instructor.isVerified){
+            throw new BadRequestException('instructor is not verified')
+         }
+
+         let isPasswordvalid=await this.instructorService.comparePassword(password,instructor.password)
+
+         if(!isPasswordvalid){
+            throw new BadRequestException('password is not matching')
+         }
+
+         const accesstoken=this.generateInstructorAccess(instructor)
+         const refreshtoken=this.generateInstructorRefresh(instructor)
+
+
+         res.cookie('instructor_refreshToken', refreshtoken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+          console.log('access token aykan ponu')
+
+          return res.status(200).json({
+            accesstoken,
+            message: 'Instructor logged in successfully'
+        });
+
+    }
+
+    generateInstructorAccess(instructor:instructorDocument){
+        return jwt.sign({InstructorId:instructor._id.toString(),emailaddress:instructor.emailaddress},process.env.JWT_SECRET_KEY as string,{expiresIn:process.env.JWT_EXPIRES_IN})
+    }
+    generateInstructorRefresh(instructor:instructorDocument){
+       return jwt.sign({InstructorId:instructor._id.toString(),emailaddress:instructor.emailaddress},process.env.REFRESH_TOKEN_SECRET as string,{expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN})
+    }
+
+
+
+    async accesstokenretry(refreshtoken:string){
+        try {
+            const payload=jwt.verify(refreshtoken,process.env.REFRESH_TOKEN_SECRET as string) as {InstructorId:string}
+
+           let instructor=await this.instructorService.findById(payload.InstructorId)
+
+           if(!instructor){
+              throw new BadRequestException('invalid refresh token')
+           }
+
+        return this.generateInstructorAccess(instructor)
+            
+        } catch (error) {
+            throw new BadRequestException('Error while accessing token')
+        }
+        
     }
 }

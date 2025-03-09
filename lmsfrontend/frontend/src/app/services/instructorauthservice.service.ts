@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+
+interface LoginResponse{
+  accesstoken:string;
+  message:string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -23,4 +28,32 @@ export class InstructorauthserviceService {
   verifyOtp(emailaddress:string,otp:string){
     return this.http.post(`${this.apiurl}/verifyinsotp`,{emailaddress,otp})
   }
+
+  login(instructorData:any):Observable<any>{
+    return this.http.post<LoginResponse>(`${this.apiurl}/inslogin`,instructorData,{withCredentials:true}).pipe(
+      tap((response)=>{
+        console.log('login is successfull')
+          this.saveAccesstoken(response.accesstoken)
+      })
+    )
+  }
+
+  private accesstoken:string|null=null
+
+  saveAccesstoken(token:string){
+         this.accesstoken=token
+  }
+
+  getAccessToken():string|null{
+    return this.accesstoken
+  }
+
+  refreshToken(){
+    return this.http.post<LoginResponse>(`${this.apiurl}/getinsAccess`,{},{withCredentials:true}).pipe(
+      tap((response)=>{
+        this.saveAccesstoken(response.accesstoken)
+      })
+    )
+  }
+
 }

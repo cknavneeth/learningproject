@@ -6,6 +6,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { InstructorRegisterComponent } from './components/instructorauth/instructor-register/instructor-register.component';
 import { InstructorotpComponent } from './components/instructorauth/instructorotp/instructorotp.component';
 import { InstructorLoginComponent } from './components/instructorauth/instructor-login/instructor-login.component';
+import { HomeinsComponent } from './components/insMaincomponent/homeins/homeins.component';
 
 export const routes: Routes = [
     {
@@ -28,5 +29,8 @@ export const routes: Routes = [
     },
     {
         path:'instructorlogin',component:InstructorLoginComponent
+    },
+    {
+        path:'instructor/home',component:HomeinsComponent
     }
 ];

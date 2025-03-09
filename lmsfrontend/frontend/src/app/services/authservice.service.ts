@@ -38,6 +38,10 @@ export class AuthserviceService {
      this.accesstoken=token
   }
 
+  getAccessToken():string|null{
+    return this.accesstoken
+  }
+
   refreshToken(){
     return this.http.post<{accesstoken:string}>(`${this.apiurl}/refreshtoken`,{},{withCredentials:true}).pipe(
       tap(response=>{
