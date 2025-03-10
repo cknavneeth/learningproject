@@ -7,8 +7,12 @@ import { InstructorRegisterComponent } from './components/instructorauth/instruc
 import { InstructorotpComponent } from './components/instructorauth/instructorotp/instructorotp.component';
 import { InstructorLoginComponent } from './components/instructorauth/instructor-login/instructor-login.component';
 import { HomeinsComponent } from './components/insMaincomponent/homeins/homeins.component';
+import { LandingpageComponent } from './pages/landingpage/landingpage.component';
 
 export const routes: Routes = [
+    {
+       path:'',component:LandingpageComponent
+    },
     {
         path:'register',component:RegisterComponent
     },
@@ -16,7 +20,7 @@ export const routes: Routes = [
         path:'sentotp',component:OtpverificationComponent
     },
     {
-        path:'home',component:HomeComponent
+        path:'home',component:LandingpageComponent
     },
     {
         path:'login',component:LoginComponent

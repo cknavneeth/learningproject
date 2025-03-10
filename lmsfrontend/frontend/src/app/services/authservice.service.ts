@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap } from 'rxjs';
+import { TokenserviceService } from './tokenservice.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class AuthserviceService {
 
   private apiurl='http://localhost:5000/auth';
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient,private tokenservice:TokenserviceService) { }
 
   register(userData:any):Observable<any>{
     return this.http.post(`${this.apiurl}/register`,userData)
@@ -27,7 +28,7 @@ export class AuthserviceService {
   login(userData:any):Observable<any>{
       return this.http.post(`${this.apiurl}/login`,userData,{withCredentials:true}).pipe(
         tap((response:any)=>{
-          this.saveAccesstoken(response.accesstoken)
+          this.tokenservice.setStudentToken(response.accesstoken)
         })
       )
   }
@@ -39,20 +40,35 @@ export class AuthserviceService {
   }
 
   getAccessToken():string|null{
-    return this.accesstoken
+    return this.tokenservice.getStudentToken()
   }
 
   refreshToken(){
     return this.http.post<{accesstoken:string}>(`${this.apiurl}/refreshtoken`,{},{withCredentials:true}).pipe(
       tap(response=>{
         this.saveAccesstoken(response.accesstoken)
+        this.tokenservice.setStudentToken(response.accesstoken)
       }),
       catchError(error=>{
         console.log(error)
+        this.tokenservice.removeStudentToken()
         throw error
       })
     )
   }
+
+
+  logoutthestudent():Observable<any>{
+    return this.http.post(`${this.apiurl}/logout`,{},{withCredentials:true}).pipe(
+      tap(()=>{
+        this.tokenservice.removeStudentToken()
+      }),
+      catchError((error)=>{
+        throw error
+      })
+    )
+  }
+
 
 
 

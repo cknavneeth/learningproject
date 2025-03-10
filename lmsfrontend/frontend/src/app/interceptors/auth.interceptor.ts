@@ -1,22 +1,24 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { AuthserviceService } from '../services/authservice.service';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, switchMap, tap, throwError } from 'rxjs';
 import { InstructorauthserviceService } from '../services/instructorauthservice.service';
+import { TokenserviceService } from '../services/tokenservice.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const studentauthservice=inject(AuthserviceService)
   const instructorauthservice=inject(InstructorauthserviceService)
+  const tokenservice=inject(TokenserviceService)
 
   let accesstoken:string|null=null
 
   let authreq=req
 
   if(req.url.includes('/student')){
-      accesstoken=studentauthservice['accesstoken']
+      accesstoken=tokenservice.getStudentToken()
   }else if(req.url.includes('/instructor')){
-    accesstoken=instructorauthservice['accesstoken']
+    accesstoken=tokenservice.getInstructorToken()
   }
 
  
@@ -34,8 +36,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         const authservice=req.url.includes('/instructor/')?instructorauthservice:studentauthservice
         return authservice.refreshToken().pipe(
           switchMap((response)=>{
+            tap((response)=>{
+              console.log('response again',response)
+            })
             const newaccesstoken=response.accesstoken
             authservice.saveAccesstoken(newaccesstoken)
+            if(req.url.includes('/student')){
+                  tokenservice.setStudentToken(newaccesstoken)
+            }else if(req.url.includes('/instructor')){
+                  tokenservice.setInstructorToken(newaccesstoken)
+            }
 
             let retryreq=req.clone({
               setHeaders:{
@@ -46,6 +56,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(retryreq)
           }),
           catchError(error=>{
+            if(req.url.includes('/student')){
+               tokenservice.removeStudentToken()
+            }else if(req.url.includes('/instructor')){
+               tokenservice.removeInstructorToken()
+            }
             console.log('refresh token failed bro')
             return throwError(()=>error)
           })

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { catchError, Observable, tap } from 'rxjs';
+import { TokenserviceService } from './tokenservice.service';
 
 interface LoginResponse{
   accesstoken:string;
@@ -14,7 +15,7 @@ export class InstructorauthserviceService {
 
   private apiurl='http://localhost:5000/auth'
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient,private tokenservice:TokenserviceService) { }
 
   registerinstructor(formdata:FormData){
        return this.http.post(`${this.apiurl}/instructorRegister`,formdata)
@@ -34,6 +35,7 @@ export class InstructorauthserviceService {
       tap((response)=>{
         console.log('login is successfull')
           this.saveAccesstoken(response.accesstoken)
+          this.tokenservice.setInstructorToken(response.accesstoken)
       })
     )
   }
@@ -45,13 +47,18 @@ export class InstructorauthserviceService {
   }
 
   getAccessToken():string|null{
-    return this.accesstoken
+    return this.tokenservice.getInstructorToken()
   }
 
   refreshToken(){
     return this.http.post<LoginResponse>(`${this.apiurl}/getinsAccess`,{},{withCredentials:true}).pipe(
       tap((response)=>{
         this.saveAccesstoken(response.accesstoken)
+        this.tokenservice.setInstructorToken(response.accesstoken)
+      }),
+      catchError((error)=>{
+        this.tokenservice.removeInstructorToken()
+        throw error
       })
     )
   }

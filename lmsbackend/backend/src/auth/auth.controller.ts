@@ -1,9 +1,10 @@
-import { BadRequestException, Body, Controller, Post, Req, Res, UnauthorizedException, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Req, Res, UnauthorizedException, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Certificate } from 'crypto';
 import * as multer from 'multer';
+import { strict } from 'assert';
 
 @Controller('auth')
 export class AuthController {
@@ -113,4 +114,13 @@ export class AuthController {
           
          }
     }
+
+
+    @Post('logout')
+    async logoutstudent(@Req() req:Request,@Res() res:Response){
+        res.clearCookie('refreshToken',{httpOnly:true,secure:true,sameSite:'strict'})
+        return res.status(200).json({message:'Logged out successfully'})
+    }
+
+   
 }

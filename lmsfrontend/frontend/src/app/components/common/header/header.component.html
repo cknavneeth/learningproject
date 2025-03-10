@@ -1,0 +1,40 @@
+<header class="bg-gray-900 text-white py-4 fixed top-0 w-full z-50 shadow-lg">
+    <div class="container mx-auto flex items-center justify-between px-6">
+      <!-- Logo -->
+      <a routerLink="/" class="text-2xl font-bold text-yellow-400">ScholarSync</a>
+  
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex space-x-6">
+        <a routerLink="/about" class="hover:text-yellow-400 transition">About Us</a>
+        <ng-container *ngIf="!isAuthenticated; else LoggedIn">
+          <a routerLink="/login" class="hover:text-yellow-400 transition">Login</a>
+          <a routerLink="/register" class="hover:text-yellow-400 transition">Register</a>
+        </ng-container>
+        <ng-template #LoggedIn>
+          <button (click)="logout()" class="bg-yellow-400 text-gray-900 px-4 py-2 rounded hover:bg-yellow-500 transition">
+            Log Out
+          </button>
+        </ng-template>
+      </nav>
+  
+      <!-- Mobile Menu Button -->
+      <button class="md:hidden focus:outline-none" (click)="togglemenu()">
+        <i class="fas fa-bars text-2xl"></i> <!-- FontAwesome icon -->
+      </button>
+    </div>
+  
+    <!-- Mobile Navigation (Dropdown) -->
+    <div *ngIf="menuOpen" class="md:hidden bg-gray-800 text-white text-center py-4">
+      <a routerLink="/about" class="block py-2 hover:text-yellow-400">About Us</a>
+      <ng-container *ngIf="!isAuthenticated; else LoggedInMobile">
+        <a routerLink="/login" class="block py-2 hover:text-yellow-400">Login</a>
+        <a routerLink="/register" class="block py-2 hover:text-yellow-400">Register</a>
+      </ng-container>
+      <ng-template #LoggedInMobile>
+        <button (click)="logout()" class="w-full bg-yellow-400 text-gray-900 px-4 py-2 mt-2 rounded hover:bg-yellow-500">
+          Log Out
+        </button>
+      </ng-template>
+    </div>
+  </header>
+  
