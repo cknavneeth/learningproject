@@ -1,0 +1,146 @@
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Light Mode */
+.light-mode {
+    background: #f9f9f9;
+    color: #333;
+}
+
+/* Dark Mode */
+.dark-mode {
+    background: #1e1e1e;
+    color: #fff;
+}
+
+/* Form Wrapper */
+.form-wrapper {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.form-wrapper:hover {
+    transform: scale(1.02);
+}
+
+/* Dark Mode Inputs */
+.dark-mode input {
+    background: #333;
+    color: #fff;
+    border: 1px solid #666;
+}
+
+/* Title */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Input Group */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* Buttons */
+.action-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.action-btn:hover {
+    background: #0056b3;
+}
+
+/* Secondary Button */
+.secondary {
+    background: #6c757d;
+}
+
+.secondary:hover {
+    background: #5a6268;
+}
+
+/* Verify Button */
+.verify-btn {
+    margin-top: 15px;
+}
+
+/* Dark Mode Button */
+.toggle-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: inherit;
+}
+.toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.toggle-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background: #0056b3;
+}
+.action-btn:disabled {
+    background: #ccc; /* Grey */
+    cursor: not-allowed;
+    opacity: 0.6;
+}

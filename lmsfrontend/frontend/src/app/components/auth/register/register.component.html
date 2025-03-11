@@ -1,29 +1,73 @@
-<div>
-    <div>
-        <h1>The registration form</h1>
-    </div>
+<div [ngClass]="{ 'dark-mode': isDarkMode, 'light-mode': !isDarkMode }" class="container">
+     <!-- Dark Mode Toggle Button -->
+     <button class="toggle-btn" (click)="toggleDarkMode()">
+         {{ isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode' }}
+     </button>
+ 
+     <div class="form-wrapper">
+         <h1>Registration Form</h1>
+ 
+         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+             <!-- Username -->
+             <div class="input-group">
+                 <label for="username">User Name</label>
+                 <input type="text" id="username" formControlName="username" required>
+                 <small class="error" *ngIf="registerForm.controls['username'].hasError('required') && registerForm.controls['username'].touched">
+                     Username is <strong>required</strong>
+                 </small>
+             </div>
+ 
+             <!-- Email -->
+             <div class="input-group">
+                 <label for="email">Email Address</label>
+                 <input type="email" id="email" formControlName="email" required>
+                 <small class="error" *ngIf="registerForm.controls['email'].hasError('required') && registerForm.controls['email'].touched">
+                     Email is <strong>required</strong>
+                 </small>
+                 <small class="error" *ngIf="registerForm.controls['email'].hasError('email') && registerForm.controls['email'].touched">
+                     Please enter a <strong>valid email</strong>
+                 </small>
+             </div>
+ 
+             <!-- Password -->
+             <div class="input-group">
+                 <label for="password">Password</label>
+                 <input type="password" id="password" formControlName="password" required>
+                 <small class="error" *ngIf="registerForm.controls['password'].hasError('required') && registerForm.controls['password'].touched">
+                     Password is <strong>required</strong>
+                 </small>
+                 <small class="error" *ngIf="registerForm.controls['password'].hasError('minlength') && registerForm.controls['password'].touched">
+                     Password must be at least <strong>6 characters</strong>
+                 </small>
+             </div>
+ 
+             <!-- Confirm Password -->
+             <div class="input-group">
+                 <label for="confirmpassword">Confirm Password</label>
+                 <input type="password" id="confirmpassword" formControlName="confirmpassword" required>
+                 <small class="error" *ngIf="registerForm.controls['confirmpassword'].hasError('required') && registerForm.controls['confirmpassword'].touched">
+                     Confirm Password is <strong>required</strong>
+                 </small>
+                 <small class="error" *ngIf="registerForm.hasError('passwordMismatch') && registerForm.controls['confirmpassword'].touched">
+                     Passwords do not <strong>match</strong>
+                 </small>
+             </div>
+ 
+             <!-- Submit Button -->
+             <button type="submit" class="submit-btn" [disabled]="registerForm.invalid">
+                 Submit Form
+             </button>
 
-
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <div>
-             <label for="">User name:</label>
-             <input type="text" formControlName="username" required>
-        </div>
-        <div>
-             <label for="">Email Address:</label>
-             <input type="email" formControlName="email" required>
-        </div>
-        <div>
-             <label for="">Password:</label>
-             <input type="text" formControlName="password" required>
-        </div>
-        <div>
-             <label for="">confirm password:</label>
-             <input type="text" formControlName="confirmpassword" required>
-        </div>
-        <div>
-             <label for="">Submit</label>
-             <button type="submit" [disabled]="registerForm.invalid">submit form</button>
-        </div>
-    </form>
-</div>
+             <div>
+               <button [routerLink]="['/login']" class="login-link">Already Registered Login</button>
+             </div>
+            
+         </form>
+     </div>
+     <div class="mt-6 text-center">
+          <button [routerLink]="['/instructorregister']" class="text-blue-600 font-semibold underline hover:text-blue-800">
+              Wanna Be An Instructor? This way
+          </button>
+      </div>
+ </div>
+ 

@@ -11,9 +11,11 @@ import { Router } from '@angular/router';
   styleUrl: './otpverification.component.scss'
 })
 export class OtpverificationComponent {
+  isDarkMode:boolean=true
    email:string=''
    otp:string=''
    message:string=''
+   otpsent:boolean=false
 
    constructor(private service:AuthserviceService ,private router:Router){}
 
@@ -22,6 +24,7 @@ export class OtpverificationComponent {
       response=>{
         console.log('sented successfully')
         this.message='otp sented successfully'
+        this.otpsent=true
       },
       error=>{
         this.message='no otp sented'
@@ -34,6 +37,7 @@ export class OtpverificationComponent {
       response=>{
         console.log('otp resended successfully')
         this.message='otp sented again successfully'
+        this.otpsent=true
       },
       error=>{
         this.message='no otp sended'
@@ -53,4 +57,11 @@ export class OtpverificationComponent {
       }
     )
    }
+
+
+
+
+   toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+  }
 }

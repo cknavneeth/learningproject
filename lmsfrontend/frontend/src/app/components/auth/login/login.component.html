@@ -1,22 +1,48 @@
-<div>
-    <div>
-        <h1>Login registration form</h1>
+<div [ngClass]="{ 'dark-mode': isDarkMode, 'light-mode': !isDarkMode }" class="container">
+    <!-- Dark Mode Toggle Button -->
+    <div class="toggle-container">
+        <button class="toggle-btn" (click)="toggleDarkMode()">
+            {{ isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode' }}
+        </button>
     </div>
-    <form [formGroup]="loginForm">
-        <div>
-            <div>
-                <label for="">Email Address</label>
-                <input type="email" formControlName="email" required>
-            </div>
-            <div>
-                    <label for="">Email Address</label>
-                    <input type="text" formControlName="password" required>
-            </div>
-            <div>
-                  <button (click)="loginNow()" [disabled]="loginForm.invalid">Submit</button>
-            </div>
-        </div>
 
-    </form>
-    
+    <div class="form-wrapper">
+        <h1>Login</h1>
+
+        <form [formGroup]="loginForm" (ngSubmit)="loginNow()">
+            <!-- Email Input -->
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" formControlName="email" placeholder="Ex. pat@example.com" required>
+                <small class="error" *ngIf="loginForm.controls['email'].hasError('required')&& loginForm.controls['email'].touched">
+                    Email is <strong>required</strong>
+                </small>
+                <small class="error" *ngIf="loginForm.controls['email'].hasError('email') && loginForm.controls['email'].touched">
+                    Please enter a valid email address
+                </small>
+            </div>
+
+            <!-- Password Input -->
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" formControlName="password" required>
+                <small class="error" *ngIf="loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched">
+                    Password is <strong>required</strong>
+                </small>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn" [disabled]="loginForm.invalid">
+                Login
+            </button>
+
+            <div class="links">
+                <a [routerLink]="['/register']" class="register-link">
+                    signup? <strong>Register</strong>
+                </a>
+                <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+            
+        </form>
+    </div>
 </div>

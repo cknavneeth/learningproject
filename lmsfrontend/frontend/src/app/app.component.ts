@@ -14,7 +14,7 @@ export class AppComponent {
   showLayout=true
   constructor(private router:Router){
     this.router.events.subscribe(()=>{
-      const authroutes=['/register','/login','/sentotp']
+      const authroutes=['/register','/login','/sentotp','/instructorregister','/instructorotp',,'/instructorlogin']
       this.showLayout=!authroutes.includes(this.router.url)
     })
   }

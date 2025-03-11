@@ -14,6 +14,8 @@ export class InstructorotpComponent {
    emailaddress:string=''
    otp:string=''
    message:string=''
+   isDarkMode:boolean=true
+   otpSent:boolean=false
 
    constructor(private instructorservice:InstructorauthserviceService,private router:Router){}
 
@@ -21,6 +23,7 @@ export class InstructorotpComponent {
       return this.instructorservice.sendOtp(this.emailaddress).subscribe(
         response=>{
           console.log('otp sended successfully')
+          this.otpSent=true
           this.message=response.message
         },
         error=>{
@@ -29,11 +32,12 @@ export class InstructorotpComponent {
       )
    }
 
-   resendotp(){
+   resendOtp(){
     console.log('email address for otp',this.emailaddress)
     return this.instructorservice.sendOtp(this.emailaddress).subscribe(
       response=>{
         console.log('otp sended successfully again')
+        this.otpSent=true
         this.message=response.message
       },
       error=>{
@@ -56,5 +60,9 @@ export class InstructorotpComponent {
           console.log(error.message)
         }
       )
+   }
+
+   toggleDarkMode(){
+    this.isDarkMode=!this.isDarkMode
    }
 }

@@ -3,17 +3,18 @@ import {FormGroup,FormBuilder, Validators, FormsModule, ReactiveFormsModule} fro
 import { passwordMatchValidator } from '../../../validators/password-match.validator';
 import { AuthserviceService } from '../../../services/authservice.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule,RouterModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
    registerForm:FormGroup;
+   isDarkMode:boolean=true
 
    constructor(private fb:FormBuilder,private authservice:AuthserviceService,private router:Router){
     this.registerForm=this.fb.group(
@@ -27,6 +28,11 @@ export class RegisterComponent {
       validators:passwordMatchValidator
     })
    }
+
+
+   toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+  }
 
    onSubmit(){
     if(this.registerForm.valid){

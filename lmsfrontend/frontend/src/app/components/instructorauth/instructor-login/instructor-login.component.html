@@ -1,16 +1,34 @@
-<div>
-    <p>instructor login form</p>
-    <form [formGroup]="instructorLogin" (ngSubmit)="onSubmit()">
-        <div>
-            <label for="">Email address</label>
-            <input type="email" formControlName="emailaddress" placeholder="enter your email">
-        </div>
-        <div>
-            <label for="">password</label>
-            <input type="text" formControlName="password" placeholder="enter your password">
-        </div>
-        <button type="submit" [disabled]="instructorLogin.invalid">submit form</button>
+<div class="container" [ngClass]="{ 'dark-mode': isDarkMode, 'light-mode': !isDarkMode }">
+    <!-- Dark Mode Toggle -->
+    <button class="toggle-btn" (click)="toggleDarkMode()">
+        {{ isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode' }}
+    </button>
 
-    </form>
-    
+    <div class="form-wrapper">
+        <h1 class="font-semibold">Instructor Login</h1>
+
+        <form [formGroup]="instructorLogin" (ngSubmit)="onSubmit()">
+            <!-- Email Input -->
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input id="email" type="email" formControlName="emailaddress" placeholder="Enter your email">
+                <p class="error" *ngIf="instructorLogin.get('emailaddress')?.invalid && instructorLogin.get('emailaddress')?.touched">
+                    <span *ngIf="instructorLogin.get('emailaddress')?.errors?.['required']">Email is required</span>
+                    <span *ngIf="instructorLogin.get('emailaddress')?.errors?.['email']">Please enter a valid email</span>
+                </p>
+            </div>
+
+            <!-- Password Input -->
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" formControlName="password" placeholder="Enter your password">
+                <p class="error" *ngIf="instructorLogin.get('password')?.invalid && instructorLogin.get('password')?.touched">
+                    <span *ngIf="instructorLogin.get('password')?.errors?.['required']">Password is required</span>
+                </p>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="action-btn" type="submit" [disabled]="instructorLogin.invalid">Submit</button>
+        </form>
+    </div>
 </div>

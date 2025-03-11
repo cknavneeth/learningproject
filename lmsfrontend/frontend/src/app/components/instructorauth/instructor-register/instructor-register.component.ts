@@ -4,15 +4,17 @@ import { passwordMatchValidator } from '../../../validators/password-match.valid
 import { AuthserviceService } from '../../../services/authservice.service';
 import { InstructorauthserviceService } from '../../../services/instructorauthservice.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-instructor-register',
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule,RouterModule],
   templateUrl: './instructor-register.component.html',
   styleUrl: './instructor-register.component.scss'
 })
 export class InstructorRegisterComponent {
+
+  isDarkMode:boolean=true
   instructorRegistration:FormGroup
 
   selectedFile:File | null=null
@@ -56,6 +58,11 @@ export class InstructorRegisterComponent {
         console.log('error occured while registering the instructor')
       }
      )
+   }
+
+
+   toggleDarkMode(){
+    this.isDarkMode=!this.isDarkMode
    }
 
 }

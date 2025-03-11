@@ -1,28 +1,43 @@
-<div>
-   <form [formGroup]="instructorRegistration" (ngSubmit)="insRegistration()" enctype="multipart/form-data">
-    <div>
-       <div>
-         <label for="">Name:</label>
-         <input type="text" formControlName="instructorname">
-       </div>
-       <div>
-         <label for="">Email address:</label>
-         <input type="email" formControlName="emailaddress">
-       </div>
-       <div>
-         <label for="">password:</label>
-         <input type="text" formControlName="password">
-       </div>
-       <div>
-          <label for="">confirm password:</label>
-          <input type="text" formControlName="confirmpassword">
-       </div>
-       <div>
-          <label for="">Certificate:</label>
-          <input type="file" (change)="onFileSelect($event)">
-       </div>
-          <button [disabled]="instructorRegistration.invalid">submit form</button>
-    </div>
-   </form>
-   
+<div class="container" [ngClass]="{ 'dark-mode': isDarkMode, 'light-mode': !isDarkMode }">
+   <!-- Theme Toggle Button -->
+   <button class="toggle-btn" (click)="toggleDarkMode()">
+       {{ isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode' }}
+   </button>
+
+   <div class="form-wrapper">
+      
+
+       <h1>Instructor Registration</h1>
+
+       <form [formGroup]="instructorRegistration" (ngSubmit)="insRegistration()" enctype="multipart/form-data">
+           <div class="input-group">
+               <label>Name:</label>
+               <input type="text" formControlName="instructorname">
+           </div>
+
+           <div class="input-group">
+               <label>Email address:</label>
+               <input type="email" formControlName="emailaddress">
+           </div>
+
+           <div class="input-group">
+               <label>Password:</label>
+               <input type="password" formControlName="password">
+           </div>
+
+           <div class="input-group">
+               <label>Confirm Password:</label>
+               <input type="password" formControlName="confirmpassword">
+           </div>
+
+           <div class="input-group file-upload">
+               <label>Certificate:</label>
+               <input type="file" (change)="onFileSelect($event)">
+           </div>
+
+           <button class="action-btn" type="submit" [disabled]="instructorRegistration.invalid">Submit Form</button>
+       </form>
+
+       <button class="mt-4 text-red-400" [routerLink]="['/instructorlogin']">already registered?Login</button>
+   </div>
 </div>

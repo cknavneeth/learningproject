@@ -1,19 +1,45 @@
-<div>
-    <div>
-        <h1>otp verification page</h1>
-    </div>
-    <div>
-        <label for="">Enter Email</label>
-        <input type="email" [(ngModel)]="email" placeholder="enter your email">
-    </div>
+<div class="container" [ngClass]="{ 'dark-mode': isDarkMode, 'light-mode': !isDarkMode }">
+    <!-- Dark Mode Toggle Button -->
+    <button class="toggle-btn" (click)="toggleDarkMode()">
+        {{ isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode' }}
+    </button>
 
-    <button (click)="sendOtp()">sendotp</button>
-    <button (click)="resendOtp()">resend otp</button>
+    <div class="form-wrapper">
+        <h1>OTP Verification</h1>
 
-    <div *ngIf="message.includes('otp sent')">
-        <input type="text" [(ngModel)]="otp" placeholder="enter your otp">
+        <div *ngIf="!otpsent">
+            <div class="input-group">
+                <label for="email">Enter Email</label>
+                <input type="email" [(ngModel)]="email" placeholder="Enter your email" #emailInput="ngModel" required email>
+
+                <p class="error" *ngIf="emailInput.invalid && emailInput.touched">
+                    <span *ngIf="emailInput.errors?.['required']" class="text-red-500">Email is required</span>
+                    <span *ngIf="emailInput.errors?.['email']" class="text-red-500">Please enter a valid email</span>
+                </p>
+            </div>
+    
+            <!-- Send & Resend OTP Buttons -->
+            <div class="button-group">
+                <button class="action-btn" type="submit" (click)="sendOtp()" [disabled]="!emailInput.valid">Send OTP</button>
+                <button class="action-btn secondary" (click)="resendOtp()" [disabled]="!emailInput.valid">Resend OTP</button>
+            </div>
+
+        </div>
+
+        <!-- Email Input -->
+
+        <div *ngIf="otpsent">
+            <div  class="input-group">
+                <input type="text" [(ngModel)]="otp" placeholder="Enter your OTP">
+            </div>
+    
+            <!-- Verify OTP Button -->
+            <button class="action-btn verify-btn" (click)="verifyOtp()">Verify OTP</button>
+
+        </div>
+        
+
+        <!-- OTP Input (Shown only when OTP is sent) -->
+       
     </div>
-
-    <button (click)="verifyOtp()">verify your otp</button>
-   
 </div>

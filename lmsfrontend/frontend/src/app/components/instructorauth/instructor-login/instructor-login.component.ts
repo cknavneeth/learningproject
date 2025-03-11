@@ -2,16 +2,18 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormsModule, FormGroup,ReactiveFormsModule, Validators } from '@angular/forms';
 import { InstructorauthserviceService } from '../../../services/instructorauthservice.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-instructor-login',
-  imports: [ReactiveFormsModule,FormsModule],
+  imports: [ReactiveFormsModule,FormsModule,CommonModule],
   templateUrl: './instructor-login.component.html',
   styleUrl: './instructor-login.component.scss'
 })
 export class InstructorLoginComponent {
 
   instructorLogin:FormGroup
+  isDarkMode:boolean=true
 
   constructor(private fb:FormBuilder,private readonly instructorservice:InstructorauthserviceService,private router:Router){
     this.instructorLogin=this.fb.group({
@@ -42,6 +44,11 @@ export class InstructorLoginComponent {
         alert(error.message)
       }
   )
+  }
+
+
+  toggleDarkMode(){
+    this.isDarkMode=!this.isDarkMode
   }
 }
 

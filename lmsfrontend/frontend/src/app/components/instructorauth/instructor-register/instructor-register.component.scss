@@ -1,0 +1,141 @@
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Light Mode */
+.light-mode {
+    background: #f9f9f9;
+    color: #333;
+}
+
+/* Dark Mode */
+.dark-mode {
+    background: #121212;
+    color: #fff;
+}
+
+/* Form Wrapper */
+/* Light Mode - Form Wrapper */
+.form-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background: white; /* Ensure background is visible in light mode */
+}
+
+/* Dark Mode - Form Wrapper */
+.dark-mode .form-wrapper {
+    background: #1e1e1e; /* Darker background for contrast */
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1); /* Softer shadow */
+}
+
+
+/* Title */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Input Group */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Light Mode Inputs */
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #fff;
+    color: #333;
+}
+
+/* Dark Mode Inputs */
+.dark-mode input {
+    background: #333;
+    color: white;
+    border: 1px solid #666;
+}
+
+/* File Upload */
+.file-upload input {
+    cursor: pointer;
+}
+
+/* Button */
+.action-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.action-btn:hover {
+    background: #0056b3;
+}
+
+/* Disabled Button */
+.action-btn:disabled {
+    background: #888;
+    cursor: not-allowed;
+}
+
+/* Theme Toggle Button */
+.toggle-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: inherit;
+    font-weight: bold;
+}
+
+.toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.toggle-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background: #0056b3;
+}
