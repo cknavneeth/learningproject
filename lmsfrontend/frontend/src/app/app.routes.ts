@@ -8,6 +8,8 @@ import { InstructorotpComponent } from './components/instructorauth/instructorot
 import { InstructorLoginComponent } from './components/instructorauth/instructor-login/instructor-login.component';
 import { HomeinsComponent } from './components/insMaincomponent/homeins/homeins.component';
 import { LandingpageComponent } from './pages/landingpage/landingpage.component';
+import { AdminlayoutComponent } from './components/layout/adminlayout/adminlayout.component';
+import { AdminloginComponent } from './components/admin/adminlogin/adminlogin.component';
 
 export const routes: Routes = [
     {
@@ -36,5 +38,10 @@ export const routes: Routes = [
     },
     {
         path:'instructor/home',component:HomeinsComponent
+    },
+    {
+        path:'admin',component:AdminlayoutComponent,children:[
+            {path:'login',component:AdminloginComponent}
+        ]
     }
 ];

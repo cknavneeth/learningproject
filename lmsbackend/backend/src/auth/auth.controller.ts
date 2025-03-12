@@ -122,5 +122,11 @@ export class AuthController {
         return res.status(200).json({message:'Logged out successfully'})
     }
 
+
+    @Post('admin/login')
+    async adminlogin(@Body() body:{email:string,password:string}){
+        return this.authservice.adminLogin(body.email,body.password)
+    }
+
    
 }

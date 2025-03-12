@@ -1,0 +1,15 @@
+<div>
+    <form [formGroup]="adminLogin" (ngSubmit)="onLogin()">
+        <div>
+            <label for="">Email Address</label>
+           <input type="email" formControlName="email">
+        </div>
+        <div>
+            <label for="">password</label>
+            <input type="text" formControlName="password">
+        </div>
+        <div>
+            <button [disabled]="!adminLogin.valid">submit form</button>
+        </div>
+    </form>
+</div>

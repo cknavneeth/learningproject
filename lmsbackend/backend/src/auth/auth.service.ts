@@ -8,10 +8,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 import { InstructorsService } from 'src/instructors/instructors.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { instructorDocument } from 'src/instructors/instructor.schema';
+import { AdminService } from 'src/admin/admin.service';
+import * as bcrypt from 'bcryptjs'
 
 
 
@@ -21,7 +24,7 @@ import { instructorDocument } from 'src/instructors/instructor.schema';
 @Injectable()
 export class AuthService {
 
-    constructor(private readonly userservice:UsersService,private readonly cloudinary:CloudinaryService,private readonly instructorService:InstructorsService){}
+    constructor(private readonly userservice:UsersService,private readonly cloudinary:CloudinaryService,private readonly instructorService:InstructorsService ,private readonly adminService:AdminService,private jwtService:JwtService){}
 
     private accessToken:string|null=null
 
@@ -313,4 +316,29 @@ export class AuthService {
         }
         
     }
+
+
+    generateadmintoken(payload:object){
+        const expiresIn='1hr'
+        let newtoken=this.jwtService.sign(payload, { expiresIn })
+        return newtoken
+
+    }
+
+    async adminLogin(email:string,password:string){
+        let admin=await this.adminService.findbyEmail(email)
+
+        if(!admin){
+            throw new BadRequestException('invalid email or password')
+        }
+
+        if(admin.password!==password){
+            throw new BadRequestException('Password is not matching blud')
+        }
+        const token=this.generateadmintoken({ email: admin.email, role: 'admin' })
+
+        return {accesstoken:token,message:'Login successfully'}
+    }
+
+   
 }
