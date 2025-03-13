@@ -1,0 +1,9 @@
+<ng-container *ngIf="showLayout">
+    <app-header></app-header>
+  </ng-container>
+  <div>
+    <router-outlet></router-outlet>
+</div>
+<ng-container *ngIf="showLayout">
+    <app-footer></app-footer>
+  </ng-container>

@@ -13,7 +13,7 @@ interface LoginResponse{
 })
 export class InstructorauthserviceService {
 
-  private apiurl='http://localhost:5000/auth'
+  private apiurl='http://localhost:5000/auth/instructor'
 
   constructor(private http:HttpClient,private tokenservice:TokenserviceService) { }
 

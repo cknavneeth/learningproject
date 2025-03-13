@@ -8,7 +8,7 @@ export class AdminService {
     constructor(@InjectModel(admin.name) private adminmodel:Model<admindocument> ){}
 
     async findbyEmail(email:string){
-        let admin=await this.adminmodel.findById(email)
+        let admin=await this.adminmodel.findOne({email})
         return admin
     }
 }

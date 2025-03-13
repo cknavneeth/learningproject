@@ -7,8 +7,8 @@
       <nav class="hidden md:flex space-x-8">
           <a routerLink="/about" class="hover:text-red-400 transition">About Us</a>
           <ng-container *ngIf="!isAuthenticated; else LoggedIn">
-              <a [routerLink]="['/login']" class="hover:text-red-400 transition">Login</a>
-              <a [routerLink]="['/register']" class="hover:text-red-400 transition">Register</a>
+              <a [routerLink]="['/student/login']" class="hover:text-red-400 transition">Login</a>
+              <a [routerLink]="['/student/register']" class="hover:text-red-400 transition">Register</a>
           </ng-container>
           <ng-template #LoggedIn>
               <button (click)="logout()" class="bg-red-400 text-gray-900 px-4 py-2 rounded hover:bg-red-500 transition">
@@ -27,8 +27,8 @@
   <div *ngIf="menuOpen" class="md:hidden bg-gray-800 text-white text-center py-4">
       <a routerLink="/about" class="block py-2 hover:text-red-400">About Us</a>
       <ng-container *ngIf="!isAuthenticated; else LoggedInMobile">
-          <a routerLink="/login" class="block py-2 hover:text-red-400">Login</a>
-          <a routerLink="/register" class="block py-2 hover:text-red-400">Register</a>
+          <a routerLink="/student/login" class="block py-2 hover:text-red-400">Login</a>
+          <a routerLink="/student/register" class="block py-2 hover:text-red-400">Register</a>
       </ng-container>
       <ng-template #LoggedInMobile>
           <button (click)="logout()" class="w-full bg-red-400 text-gray-900 px-4 py-2 mt-2 rounded hover:bg-red-500">

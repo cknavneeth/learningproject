@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminserviceService } from '../../../services/adminservice.service';
 
 @Component({
   selector: 'app-adminlogin',
-  imports: [CommonModule],
+  imports: [CommonModule,ReactiveFormsModule],
   templateUrl: './adminlogin.component.html',
   styleUrl: './adminlogin.component.scss'
 })

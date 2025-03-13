@@ -6,7 +6,7 @@ import { Certificate } from 'crypto';
 import * as multer from 'multer';
 import { strict } from 'assert';
 
-@Controller('auth')
+@Controller('auth/student')
 export class AuthController {
 
     constructor(private readonly authservice:AuthService){}
@@ -70,52 +70,6 @@ export class AuthController {
     }
 
 
-
-    @Post('instructorRegister')
-    @UseInterceptors(FileInterceptor('certificate'))
-    async registerinstructor(
-      @Body() body:any,
-      @UploadedFile() certificate:Express.Multer.File
-    ){
-      console.log('file received',certificate)
-      console.log('body',body)
-        return this.authservice.registerinstructor(body.name,body.emailaddress,body.password,certificate) 
-    }
-
-    @Post('insotp')
-    async sendOtp(@Body() body:{emailaddress:string}){
-         console.log('email for sending otp',body.emailaddress)
-         return this.authservice.sendinstructorotp(body.emailaddress)
-    }
-
-    @Post('verifyinsotp')
-    async verifyOtp(@Body() body:{emailaddress:string,otp:string}){
-        return this.authservice.verifyinstructorotp(body.emailaddress,body.otp)
-    }
-
-
-
-    @Post('inslogin')
-    async instructorLogin(@Body() body:{emailaddress:string,password:string},@Res() res:Response){
-      console.log('login call ethiyonn nokam')
-      return this.authservice.instructorLogin(body.emailaddress,body.password,res)
-    }
-
-    @Post('getinsAccess')
-    async refreshaccesstoken(@Req() req:Request,@Res() res:Response){
-         try {
-            let refreshtoken=req.cookies.instructor_refreshToken
-            if(!refreshtoken){
-              return res.status(401).json({success:false,message:'refresh token is not available'})
-            }
-
-            const newaccesstoken=this.authservice.accesstokenretry(refreshtoken)
-         } catch (error) {
-          
-         }
-    }
-
-
     @Post('logout')
     async logoutstudent(@Req() req:Request,@Res() res:Response){
         res.clearCookie('refreshToken',{httpOnly:true,secure:true,sameSite:'strict'})
@@ -123,10 +77,7 @@ export class AuthController {
     }
 
 
-    @Post('admin/login')
-    async adminlogin(@Body() body:{email:string,password:string}){
-        return this.authservice.adminLogin(body.email,body.password)
-    }
+   
 
    
 }

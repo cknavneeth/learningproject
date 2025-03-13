@@ -5,10 +5,11 @@ import { UsersModule } from 'src/users/users.module';
 import { InstructorsModule } from 'src/instructors/instructors.module';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { AdminModule } from 'src/admin/admin.module';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports:[UsersModule,InstructorsModule,CloudinaryModule,AdminModule],
-  providers: [AuthService],
+  providers: [AuthService,JwtService],
   controllers: [AuthController]
 })
 export class AuthModule {}

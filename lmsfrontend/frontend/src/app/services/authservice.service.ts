@@ -8,7 +8,7 @@ import { TokenserviceService } from './tokenservice.service';
 })
 export class AuthserviceService {
 
-  private apiurl='http://localhost:5000/auth';
+  private apiurl='http://localhost:5000/auth/student';
 
   constructor(private http:HttpClient,private tokenservice:TokenserviceService) { }
 
