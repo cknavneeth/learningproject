@@ -1,7 +1,31 @@
-<nav>
-    <ul>
-      <li><a routerLink="/admin/users">Users</a></li>
-      <li><a routerLink="/admin/courses">Courses</a></li>
+<div [ngClass]="{'-translate-x-full': !showSidebar, 'translate-x-0': showSidebar, 'lg:translate-x-0': true}" 
+  class="w-64 min-h-screen bg-gray-900 fixed left-0 top-0 z-50 transition-transform transform lg:block">
+  
+  <!-- Close Button (Mobile) -->
+  <div class="flex justify-end p-4 lg:hidden">
+    <button class="text-white text-2xl" (click)="toggleSidebar()">×</button>
+  </div>
+
+  <!-- Sidebar Content -->
+  <div class="p-4 border-b border-gray-700">
+    <img src="assets/logo.png" alt="Website Logo" class="w-24">
+  </div>
+
+  <!-- Navigation -->
+  <nav class="p-4">
+    <ul class="space-y-2">
+      <li><a routerLink="/admin/dashboard" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 text-white">Dashboard</a></li>
+      <li><a routerLink="/admin/students" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 text-white">Users</a></li>
+      <li><a routerLink="/admin/instructors" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 text-white">instructors</a></li>
+      <li><a routerLink="/admin/courses" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 text-white">Courses</a></li>
+      <li><a routerLink="/admin/add-instructor" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 text-white">Add Instructor</a></li>
+      <li><a routerLink="/admin/sales-history" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 text-white">Sales History</a></li>
     </ul>
   </nav>
-  
+
+  <!-- Logout Button (Mobile) -->
+  <div class="p-4 border-t border-gray-700 lg:hidden">
+    <button class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">Logout</button>
+  </div>
+</div>
+

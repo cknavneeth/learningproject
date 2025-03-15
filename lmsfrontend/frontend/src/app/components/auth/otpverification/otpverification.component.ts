@@ -15,44 +15,51 @@ export class OtpverificationComponent {
    email:string=''
    otp:string=''
    message:string=''
+   errormessages:string=''
    otpsent:boolean=false
 
    constructor(private service:AuthserviceService ,private router:Router){}
 
    sendOtp(){
+    this.errormessages=''
+    this.message=''
     this.service.sendOtp(this.email).subscribe(
       response=>{
         console.log('sented successfully')
-        this.message='otp sented successfully'
+        this.message='OTP sent successfully'
         this.otpsent=true
       },
       error=>{
-        this.message='no otp sented'
+        this.errormessages='Failed sent otp please try again later'
       }
     )
    }
 
    resendOtp(){
+    this.errormessages=''
+    this.message=''
     this.service.sendOtp(this.email).subscribe(
       response=>{
         console.log('otp resended successfully')
-        this.message='otp sented again successfully'
+        this.message='OTP sent successfully'
         this.otpsent=true
       },
       error=>{
-        this.message='no otp sended'
+        this.errormessages='Failed to sent OTP,please try again'
       }
     )
    }
 
    verifyOtp(){
+    this.errormessages=''
     this.service.verifyotp(this.email,this.otp).subscribe(
       response=>{
         console.log('otp verification successfull')
-        this.router.navigate(['/login'])
+        this.message='OTP verified successfully'
+        this.router.navigate(['/student/login'])
       },
       error=>{
-        this.message='invalid otp'
+        this.errormessages='Invalid OTP.Please enter the correct OTP'
         console.log('error occured now')
       }
     )

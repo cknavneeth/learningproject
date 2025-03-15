@@ -31,6 +31,9 @@ export class instructor{
 
     @Prop({type:String,required:false})
     otpExpires?:Date | null
+
+    @Prop({type:Boolean,default:false})
+    isBlocked:boolean
 }
 
 export const instructorSchema=SchemaFactory.createForClass(instructor)

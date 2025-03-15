@@ -1,0 +1,78 @@
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+  <!-- Header -->
+  <div class="px-6 py-4 border-b dark:border-gray-700">
+    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">Instructor Verification</h2>
+  </div>
+
+  <!-- Content -->
+  <div class="px-6 py-4">
+    <div class="space-y-4">
+      <!-- Instructor Details -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <p class="text-sm text-gray-500 dark:text-gray-400">Name</p>
+          <p class="font-medium text-gray-900 dark:text-white">{{ Instructor.name }}</p>
+        </div>
+        <div class="space-y-2">
+          <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
+          <p class="font-medium text-gray-900 dark:text-white">{{ Instructor.emailaddress }}</p>
+        </div>
+      </div>
+
+      <!-- Status Badges -->
+      <div class="flex space-x-4">
+        <div class="flex items-center">
+          <span class="text-sm text-gray-500 dark:text-gray-400 mr-2">Block Status:</span>
+          <span [ngClass]="{
+            'px-2 py-1 text-xs font-medium rounded-full': true,
+            'bg-green-100 text-green-800': !Instructor.isBlocked,
+            'bg-red-100 text-red-800': Instructor.isBlocked
+          }">
+            {{ Instructor.isBlocked ? 'Blocked' : 'Active' }}
+          </span>
+        </div>
+        <div class="flex items-center">
+          <span class="text-sm text-gray-500 dark:text-gray-400 mr-2">Verification:</span>
+          <span [ngClass]="{
+            'px-2 py-1 text-xs font-medium rounded-full': true,
+            'bg-green-100 text-green-800': Instructor.isApproved,
+            'bg-yellow-100 text-yellow-800': !Instructor.isApproved
+          }">
+            {{ Instructor.isApproved ? 'Approved' : 'Pending' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Certificate Section -->
+      <div class="space-y-2">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Certificate</p>
+        <div class="border dark:border-gray-700 rounded-lg overflow-hidden">
+          <img 
+            [src]="Instructor.certificateUrl" 
+            alt="Certificate" 
+            class="w-full h-auto object-contain max-h-96"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 flex justify-end space-x-3 rounded-b-lg">
+    <button 
+      (click)="close()"
+      class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md transition-colors">
+      Close
+    </button>
+    <button 
+      (click)="rejectVerification()"
+      class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors">
+      Reject
+    </button>
+    <button 
+      (click)="acceptVerification()"
+      class="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors">
+      Accept
+    </button>
+  </div>
+</div>

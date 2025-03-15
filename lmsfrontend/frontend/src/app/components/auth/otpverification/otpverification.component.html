@@ -7,6 +7,13 @@
     <div class="form-wrapper">
         <h1>OTP Verification</h1>
 
+        <!-- Error Message -->
+
+        <p *ngIf="errormessages" class="text-red-500 text-center mb-4">{{ errormessages }}</p>
+
+        <!-- Success Message -->
+        <p *ngIf="message" class="text-green-500 text-center mb-4">{{ message }}</p>
+
         <div *ngIf="!otpsent">
             <div class="input-group">
                 <label for="email">Enter Email</label>

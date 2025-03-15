@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit{
       logout(){
           this.service.logoutthestudent().subscribe(
             response=>{
-              this.router.navigate(['/login'])
+              this.router.navigate(['/student/login'])
             }
           )
       }

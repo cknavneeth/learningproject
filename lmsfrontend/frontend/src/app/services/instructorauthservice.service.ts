@@ -22,7 +22,7 @@ export class InstructorauthserviceService {
   }
 
   sendOtp(emailaddress:string):Observable<any>{
-    console.log('vilikan povunnu',emailaddress)
+    
     return this.http.post(`${this.apiurl}/insotp`,{emailaddress},{headers:{'Content-Type':'application/json'}})
   }
 
@@ -63,4 +63,14 @@ export class InstructorauthserviceService {
     )
   }
 
+
+
+  forgotpasswordInstructor(emailaddress:string):Observable<any>{
+         return this.http.post(`${this.apiurl}/forgotpasswordinstructor`,{emailaddress})
+  }
+
+
+  resetpasswordinstructor(token:string,password:string):Observable<any>{
+    return this.http.post(`${this.apiurl}/resetpasswordinstructor/${token}`,{password})
+  }
 }

@@ -70,6 +70,15 @@ export class AuthserviceService {
   }
 
 
+  forgotpassword(email:string):Observable<any>{
+    return this.http.post(`${this.apiurl}/forgotpassword`,{email})
+  }
+
+  resetpassword(token:string,password:string):Observable<any>{
+    return this.http.post(`${this.apiurl}/resetpassword/${token}`,{password})
+  }
 
 
+
+  
 }

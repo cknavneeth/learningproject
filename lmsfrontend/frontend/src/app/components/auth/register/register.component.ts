@@ -39,7 +39,7 @@ export class RegisterComponent {
       this.authservice.register(this.registerForm.value).subscribe(
         response=>{
         alert('registration successfull')
-        this.router.navigate(['/sentotp'])
+        this.router.navigate(['student/sentotp'])
       },
       error=>{
         alert('registration failed')

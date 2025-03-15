@@ -1,0 +1,25 @@
+.admin-layout {
+    @apply flex min-h-screen bg-gray-100;
+  }
+  
+  .main-content {
+    @apply flex-1 lg:ml-64 bg-gray-100;
+    
+    /* Header styles */
+    header {
+      @apply bg-gray-900 text-white flex items-center justify-between px-6 py-4 shadow-md z-40 relative;
+    }
+  }
+  .admin-layout {
+    @apply flex min-h-screen bg-gray-100;
+  }
+  
+  .main-content {
+    @apply flex-1 lg:ml-64 bg-gray-100;
+    min-height: 100vh;
+  }
+  
+  .content-wrapper {
+    @apply pt-20 px-6; // Add padding-top to account for fixed header
+  }
+  

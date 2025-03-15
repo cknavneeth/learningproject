@@ -53,7 +53,7 @@ export class InstructorotpComponent {
           alert('otp verified successfully')
           if(response )
           this.message='Otp verified successfully'
-        this.router.navigate(['/instructorlogin'])
+        this.router.navigate(['/instructor/instructorlogin'])
         },
         error=>{
           console.log('invalid otp')

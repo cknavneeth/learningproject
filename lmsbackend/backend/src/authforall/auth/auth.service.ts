@@ -187,7 +187,55 @@ export class AuthService {
     }
 
 
-   
+
+    //here iam doing forgotpassword
+    async forgotpassword(email:string){
+        let user=await this.userservice.findByEmail(email)
+        if(!user){
+            throw new BadRequestException('user not found')
+        }
+        const token=this.jwtService.sign({userId:user._id.toString()},{secret:process.env.JWT_SECRET_KEY as string,expiresIn:'15m'})
+
+        const transporter=nodemailer.createTransport({
+            service:'gmail',
+            auth:{
+                user:process.env.EMAIL_USER,
+                pass:process.env.EMAIL_PASS
+            }
+        })
+        
+        const resetlink=`${process.env.FRONTEND_URL}/resetpassword/${token}`
+
+        transporter.sendMail({
+            from:process.env.EMAIL_USER,
+            to:email,
+            subject:'Password Reset',
+            text:`click on the link to reset your password ${resetlink} ONLY valid for 15 minutes remember`
+        })
+
+        return {message:'reset link sented successfully'}
+    }
+
+
+   //for reset password
+   async resetPasswordStudent(token:string,password:string){
+    try {
+        const decoded=this.jwtService.verify(token,{secret:process.env.JWT_SECRET_KEY as string}) as {userId:string}
+        
+        let student=await this.userservice.findById(decoded.userId)
+        if(!student){
+            throw new BadRequestException('user not found')
+        }
+        const hashedpassword=await bcrypt.hash(password,10)
+
+        await this.userservice.updatepassword(student.id,hashedpassword)
+
+        return {message:'password reseted successfully'}
+
+    } catch (error) {
+        throw new BadRequestException('invalid or expired token')
+    }
+   }
    
    
 }

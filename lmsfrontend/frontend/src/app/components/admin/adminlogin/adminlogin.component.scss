@@ -1,0 +1,41 @@
+:host {
+    display: block;    min-height: 100vh;
+}
+input {    @apply px-3 py-2;
+        &:focus {
+        @apply outline-none ring-2 ring-indigo-500;    }
+}
+label {    @apply block text-sm font-medium mb-1;
+}
+.material-icons {
+    font-size: 20px;
+}
+
+
+
+
+
+
+
+
+
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
+input {
+    @apply px-3 py-2;
+    
+    &:focus {
+        @apply outline-none ring-2 ring-indigo-500;
+    }
+}
+
+label {
+    @apply block text-sm font-medium mb-1;
+}
+
+.material-icons {
+    font-size: 20px;
+}

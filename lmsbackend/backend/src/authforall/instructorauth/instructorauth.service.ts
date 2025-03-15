@@ -5,11 +5,13 @@ import { InstructorsService } from 'src/instructors/instructors.service';
 import * as jwt from 'jsonwebtoken';
 import * as nodemailer from 'nodemailer';
 import { Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class InstructorauthService {
 
-    constructor(private readonly instructorService:InstructorsService,private readonly cloudinary:CloudinaryService){}
+    constructor(private readonly instructorService:InstructorsService,private readonly cloudinary:CloudinaryService,private jwtService:JwtService){}
     
         async registerinstructor(name:string,emailaddress:string,password:string,certificate:Express.Multer.File){
              let existingUser=await this.instructorService.findByEmail(emailaddress)
@@ -164,4 +166,59 @@ export class InstructorauthService {
         }
     
     
+
+        //gonna do forgot password
+        async forgotpassInstructor(emailaddress:string){
+            let instructor =await this.instructorService.findByEmail(emailaddress)
+            if(!instructor){
+                throw new BadRequestException('Instructor not found')
+            }
+
+            const token=this.jwtService.sign({InstructorId:instructor._id.toString()},{secret:process.env.JWT_SECRET_KEY as string,expiresIn:'15 m'})
+
+            const transporter=nodemailer.createTransport({
+                service:'gmail',
+                auth:{
+                    user:process.env.EMAIL_USER,
+                    pass:process.env.EMAIL_PASS
+                }
+            })
+
+
+            const resetlink=`${process.env.FRONTEND_URL}/instructorresetpassword/${token}`
+
+            transporter.sendMail({
+                from:process.env.EMAIL_USER,
+                to:emailaddress,
+                subject:'Password Reset',
+                text:`click on the link to reset your password ${resetlink} ONLY valid for 15 minutes remember`
+            })
+
+            return {message:'Reset link sent successfully'}
+        }
+
+
+
+        //resetting password for instructort
+        async resetPasswordInstructor(token:string,password:string){
+            try {
+                const decoded=this.jwtService.verify(token,{secret:process.env.JWT_SECRET_KEY as string}) as {InstructorId:string}
+                
+                let instructor=await this.instructorService.findById(decoded.InstructorId)
+                if(!instructor){
+                    throw new BadRequestException('instructor not found')
+                }
+                const hashedpassword=await bcrypt.hash(password,10)
+
+                await this.instructorService.updatePassword(instructor.emailaddress,hashedpassword)
+
+                return {message:'password reseted successfully'}
+
+            } catch (error) {
+                throw new BadRequestException('invalid or expired token')
+            }
+        }
+
+
+       
 }

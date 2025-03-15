@@ -15,7 +15,7 @@ export class StudentcomponentComponent {
   
   constructor(private router: Router) {
     this.router.events.subscribe(() => {
-      const authroutes = ['student/register', 'student/login', 'student/sentotp'];
+      const authroutes = ['student/register', 'student/login', 'student/sentotp','student/forgotpassword'];
       this.showLayout = !authroutes.includes(this.router.url.slice(1)); 
     });
   }

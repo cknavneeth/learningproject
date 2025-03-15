@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Req, Res, UnauthorizedException, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Req, Res, UnauthorizedException, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -77,6 +77,18 @@ export class AuthController {
     }
 
 
+    @Post('forgotpassword')
+    async forgotpassword(@Body() body:{email:string}){
+      if(!body.email){
+        throw new BadRequestException('email is required')
+      }
+      return this.authservice.forgotpassword(body.email)
+    }
+
+    @Post('resetpassword/:token')
+    async resetpassword(@Param('token') token:string,@Body() body:{password:string}){
+      return this.authservice.resetPasswordStudent(token,body.password)
+    }
    
 
    

@@ -4,7 +4,6 @@ import { Document, Types } from "mongoose";
 export type userDocument = user & Document
 @Schema()
 export class user{
-    
     _id: Types.ObjectId;
 
     @Prop({required:true})
@@ -24,6 +23,9 @@ export class user{
 
     @Prop({type:String,required:false})
     otpExpires?:Date  | null
+
+    @Prop({type:Boolean,default:false})
+    isBlocked:boolean
 
 }
 

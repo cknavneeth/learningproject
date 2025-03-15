@@ -36,5 +36,9 @@ export class UsersService {
        let findeduser=await this.usermodel.findById(user)
        return findeduser
    }
+
+   async updatepassword(userId:string,hashedpassword:string):Promise<void>{
+    await this.usermodel.findByIdAndUpdate(userId,{password:hashedpassword})
+   }
     
 }

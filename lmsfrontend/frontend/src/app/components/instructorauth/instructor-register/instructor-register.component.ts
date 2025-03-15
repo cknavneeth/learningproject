@@ -51,7 +51,7 @@ export class InstructorRegisterComponent {
      this.service.registerinstructor(formData).subscribe(
       response=>{
         alert('registration successfull')
-        this.router.navigate(['/instructorotp'])
+        this.router.navigate(['/instructor/instructorotp'])
       },
       error=>{
         alert('error occured')

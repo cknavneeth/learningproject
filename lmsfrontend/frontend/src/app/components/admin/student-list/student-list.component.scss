@@ -1,0 +1,59 @@
+:host {
+  display: block;  
+  .container {    @apply max-w-7xl mx-auto;
+  }  
+  .table-container {    @apply overflow-x-auto;
+  }  
+  button {    @apply transition-colors duration-200;
+        &:focus {
+      @apply outline-none ring-2 ring-offset-2 ring-blue-500;    }
+  }
+}
+
+
+
+
+
+
+
+
+
+:host {
+  display: block;  
+  .container {    @apply max-w-7xl mx-auto;
+  }  
+  .table-container {    @apply overflow-x-auto;
+  }  
+  button {    @apply transition-colors duration-200;
+        &:focus {
+      @apply outline-none ring-2 ring-offset-2 ring-blue-500;    }
+  }
+}
+
+
+
+
+
+
+
+
+
+:host {
+  display: block;
+  
+  .container {
+    @apply max-w-7xl mx-auto;
+  }
+  
+  .table-container {
+    @apply overflow-x-auto;
+  }
+  
+  button {
+    @apply transition-colors duration-200;
+    
+    &:focus {
+      @apply outline-none ring-2 ring-offset-2 ring-blue-500;
+    }
+  }
+}

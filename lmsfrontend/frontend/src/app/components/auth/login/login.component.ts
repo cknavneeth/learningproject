@@ -29,7 +29,7 @@ export class LoginComponent {
         this.service.login(this.loginForm.value).subscribe(
           response=>{
             console.log('login successfull')
-            this.router.navigate(['/home'])
+            this.router.navigate(['/student/home'])
           },
           error=>{
             console.log('there is error in login')

@@ -35,4 +35,8 @@ export class InstructorsService {
         let instructor=await this.instructorModel.findById(instructorId)
         return instructor
     }
+
+    async updatePassword(emailaddress:string,hashedpassword:string){
+        await this.instructorModel.findOneAndUpdate({emailaddress},{password:hashedpassword})
+    }
 }

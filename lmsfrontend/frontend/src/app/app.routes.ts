@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { OtpverificationComponent } from './components/auth/otpverification/otpverification.component';
-import { HomeComponent } from './components/maincomponent/home/home.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { InstructorRegisterComponent } from './components/instructorauth/instructor-register/instructor-register.component';
 import { InstructorotpComponent } from './components/instructorauth/instructorotp/instructorotp.component';
@@ -12,6 +11,13 @@ import { AdminlayoutComponent } from './components/layout/adminlayout/adminlayou
 import { AdminloginComponent } from './components/admin/adminlogin/adminlogin.component';
 import { StudentcomponentComponent } from './components/layout/studentcomponent/studentcomponent.component';
 import { InstructorcomponentComponent } from './components/layout/instructorcomponent/instructorcomponent.component';
+import { ForgorpasswordComponent } from './components/auth/forgorpassword/forgorpassword.component';
+import { ResetpasswordComponent } from './components/auth/resetpassword/resetpassword.component';
+import { InstructorresetpasswordComponent } from './components/instructorauth/instructorresetpassword/instructorresetpassword.component';
+import { InstructorforgotpasswordComponent } from './components/instructorauth/instructorforgotpassword/instructorforgotpassword.component';
+import { AdmindashboardComponent } from './components/admin/admindashboard/admindashboard.component';
+import { StudentListComponent } from './components/admin/student-list/student-list.component';
+import { InstructorListComponent } from './components/admin/instructor-list/instructor-list.component';
 
 export const routes: Routes = [
     {
@@ -24,13 +30,18 @@ export const routes: Routes = [
             }
         ]
     },
+
+    {
+        path:'resetpassword/:token',
+        component:ResetpasswordComponent
+    },
     {
         path: 'student',
         component: StudentcomponentComponent,
         children: [
             {
                 path: '',
-                component: HomeComponent
+                component: LandingpageComponent
             },
             {
                 path: 'register',
@@ -43,8 +54,24 @@ export const routes: Routes = [
             {
                 path: 'login',
                 component: LoginComponent
+            },
+            {
+                path:'forgotpassword',
+                component:ForgorpasswordComponent
+            },
+            {
+                path:'home',
+                component:LandingpageComponent
             }
+           
         ]
+    },
+
+
+
+    {
+        path:'instructorresetpassword/:token',
+        component:InstructorresetpasswordComponent
     },
     {
         path: 'instructor',
@@ -59,16 +86,20 @@ export const routes: Routes = [
                 component: InstructorRegisterComponent
             },
             {
-                path: 'otp',
+                path: 'instructorotp',
                 component: InstructorotpComponent
             },
             {
-                path: 'login',
+                path: 'instructorlogin',
                 component: InstructorLoginComponent
             },
             {
                 path: 'home', 
                 component: HomeinsComponent
+            },
+            {
+                path:'forgotpasswordins',
+                component:InstructorforgotpasswordComponent
             }
         ]
     },
@@ -84,6 +115,18 @@ export const routes: Routes = [
             {
                 path: 'login',
                 component: AdminloginComponent
+            },
+            {
+                path:'dashboard',
+                component:AdmindashboardComponent
+            },
+            {
+                path:'students',
+                component:StudentListComponent
+            },
+            {
+                path:'instructors',
+                component:InstructorListComponent
             }
         ]
     }
