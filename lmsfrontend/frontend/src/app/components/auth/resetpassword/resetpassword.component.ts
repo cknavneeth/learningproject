@@ -13,6 +13,7 @@ import { AuthserviceService } from '../../../services/authservice.service';
 export class ResetpasswordComponent {
    resetpasswordform:FormGroup
    message:string=''
+   errormessage:string=''
    token:string=''
 
    constructor(private fb:FormBuilder,private route:ActivatedRoute,private readonly authservice:AuthserviceService,private router:Router){
@@ -41,7 +42,7 @@ export class ResetpasswordComponent {
           },2000)
         },
         error=>{
-          this.message="Cant reset password"
+          this.errormessage=error.error.message
         }
        )
    }

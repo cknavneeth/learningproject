@@ -6,6 +6,19 @@
  
      <div class="form-wrapper">
          <h1>Registration Form</h1>
+
+         <div *ngIf="message" class="mb-4 p-4 rounded-md bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800">
+            <p class="text-green-700 dark:text-green-300 text-center text-sm font-medium">
+                {{ message }}
+            </p>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errormessage" class="mb-4 p-4 rounded-md bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800">
+            <p class="text-red-700 dark:text-red-300 text-center text-sm font-medium">
+                {{ errormessage }}
+            </p>
+        </div>
  
          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
              <!-- Username -->

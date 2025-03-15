@@ -17,6 +17,10 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   isDarkMode:boolean=true
    loginForm:FormGroup
+   message:string=''
+   errormessage:string=''
+
+
     constructor(private fb:FormBuilder,private service:AuthserviceService,private router:Router){
       this.loginForm=this.fb.group({
         email:['',[Validators.required,Validators.email]],
@@ -25,14 +29,20 @@ export class LoginComponent {
     }
 
     loginNow(){
+      this.errormessage=''
+      this.message=''
       if(this.loginForm.valid){
         this.service.login(this.loginForm.value).subscribe(
           response=>{
             console.log('login successfull')
-            this.router.navigate(['/student/home'])
+            this.message=response.message
+            setTimeout(()=>{
+
+              this.router.navigate(['/student/home'])
+            },1000)
           },
           error=>{
-            console.log('there is error in login')
+            this.errormessage=error.error.message
           }
         )
       }

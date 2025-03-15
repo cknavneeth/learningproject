@@ -15,6 +15,8 @@ import { Router, RouterModule } from '@angular/router';
 export class RegisterComponent {
    registerForm:FormGroup;
    isDarkMode:boolean=true
+   message:string=''
+   errormessage:string=''
 
    constructor(private fb:FormBuilder,private authservice:AuthserviceService,private router:Router){
     this.registerForm=this.fb.group(
@@ -38,11 +40,14 @@ export class RegisterComponent {
     if(this.registerForm.valid){
       this.authservice.register(this.registerForm.value).subscribe(
         response=>{
-        alert('registration successfull')
-        this.router.navigate(['student/sentotp'])
+          this.message=response.message
+        setTimeout(()=>{
+          
+          this.router.navigate(['student/sentotp'])
+        })
       },
       error=>{
-        alert('registration failed')
+          this.errormessage=error.error.message
       }
     )
     }

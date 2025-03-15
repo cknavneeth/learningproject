@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 })
 export class ForgorpasswordComponent {
    forgotstudentform:FormGroup
+   errormessage:string=''
+   message:string=''
 
    constructor(private fb:FormBuilder,private authservice:AuthserviceService){
          this.forgotstudentform=this.fb.group({
@@ -22,10 +24,10 @@ export class ForgorpasswordComponent {
     
       return this.authservice.forgotpassword(this.forgotstudentform.value.email).subscribe(
         response=>{
-          alert('reset link sented successfully')
+          this.message=response.message
         },
         error=>{
-          alert('error happened bro iam tired')
+          this.errormessage=error.error.message
         }
       )
    

@@ -16,7 +16,8 @@ export class AdminloginComponent implements OnInit {
     isDarkMode = false;
     showPassword = false;
     isLoading = false;
-    errorMessage = '';
+    errorMessage:string= '';
+    message:string=''
 
     constructor(
         private fb: FormBuilder,
@@ -30,7 +31,6 @@ export class AdminloginComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // Check for saved theme preference
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             this.enableDarkMode();
@@ -70,7 +70,11 @@ export class AdminloginComponent implements OnInit {
             
             this.adminservice.adminloginform(this.adminLogin.value).subscribe({
                 next: (response) => {
-                    this.router.navigate(['/admin/dashboard']);
+                    this.message=response.message
+                    setTimeout(()=>{
+
+                        this.router.navigate(['/admin/dashboard']);
+                    })
                 },
                 error: (error) => {
                     this.isLoading = false;

@@ -108,6 +108,10 @@ export class AuthService {
             throw new BadRequestException('User not found')
         }
 
+        if(user.isBlocked){
+            throw new BadRequestException('Your account has been Blocked')
+        }
+
         if(!user.isVerified){
             throw new BadRequestException('User is not verified')
         }
