@@ -19,7 +19,7 @@ export class InstructorLoginComponent {
 
   constructor(private fb:FormBuilder,private readonly instructorservice:InstructorauthserviceService,private router:Router){
     this.instructorLogin=this.fb.group({
-      emailaddress:['',[Validators.required]],
+      emailaddress:['',[Validators.required,Validators.email]],
       password:['',[Validators.required]]
     })
   }

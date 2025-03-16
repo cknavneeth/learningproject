@@ -56,7 +56,11 @@ export class OtpverificationComponent {
       response=>{
         console.log('otp verification successfull')
         this.message='OTP verified successfully'
-        this.router.navigate(['/student/login'])
+
+        setTimeout(()=>{
+
+          this.router.navigate(['/student/login'])
+        },2000)
       },
       error=>{
         this.errormessages='Invalid OTP.Please enter the correct OTP'

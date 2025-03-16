@@ -15,6 +15,7 @@ export class ResetpasswordComponent {
    message:string=''
    errormessage:string=''
    token:string=''
+   showPassword: boolean = false;
 
    constructor(private fb:FormBuilder,private route:ActivatedRoute,private readonly authservice:AuthserviceService,private router:Router){
     this.resetpasswordform=this.fb.group({
@@ -49,5 +50,8 @@ export class ResetpasswordComponent {
 
 
 
+   togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 
 }
