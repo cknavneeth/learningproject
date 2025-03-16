@@ -5,7 +5,9 @@
 
       <!-- Desktop Navigation -->
       <nav class="hidden md:flex space-x-8">
+        <a routerLink="/about" class="hover:text-red-400 transition">Courses</a>
           <a routerLink="/about" class="hover:text-red-400 transition">About Us</a>
+          <a routerLink="/about" class="hover:text-red-400 transition">Profile</a>
           <ng-container *ngIf="!isAuthenticated; else LoggedIn">
               <a [routerLink]="['/student/login']" class="hover:text-red-400 transition">Login</a>
               <a [routerLink]="['/student/register']" class="hover:text-red-400 transition">Register</a>

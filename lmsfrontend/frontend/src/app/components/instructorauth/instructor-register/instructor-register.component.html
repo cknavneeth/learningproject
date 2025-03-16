@@ -1,43 +1,168 @@
-<div class="container" [ngClass]="{ 'dark-mode': isDarkMode, 'light-mode': !isDarkMode }">
-   <!-- Theme Toggle Button -->
-   <button class="toggle-btn" (click)="toggleDarkMode()">
-       {{ isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode' }}
-   </button>
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900 py-6 flex flex-col justify-center sm:py-12">
+    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+        
+        <div class="relative px-4 py-10 bg-white dark:bg-gray-800 shadow-lg sm:rounded-3xl sm:p-20">
+            <div class="max-w-md mx-auto">
+                <!-- Dark Mode Toggle -->
+                <button 
+                    (click)="toggleDarkMode()"
+                    class="absolute top-4 right-4 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-200"
+                >
+                    {{ isDarkMode ? '🌞 Light' : '🌙 Dark' }}
+                </button>
 
-   <div class="form-wrapper">
-      
+                <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <h2 class="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">Instructor Registration</h2>
 
-       <h1>Instructor Registration</h1>
+                    <!-- Messages -->
+                    <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg">
+                        {{ successMessage }}
+                    </div>
+                    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg">
+                        {{ errorMessage }}
+                    </div>
 
-       <form [formGroup]="instructorRegistration" (ngSubmit)="insRegistration()" enctype="multipart/form-data">
-           <div class="input-group">
-               <label>Name:</label>
-               <input type="text" formControlName="instructorname">
-           </div>
+                    <form [formGroup]="instructorRegistration" (ngSubmit)="insRegistration()" class="space-y-6 pt-8">
+                        <!-- Name Input -->
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Instructor Name
+                            </label>
+                            <input 
+                                type="text" 
+                                formControlName="instructorname"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                placeholder="Enter your name"
+                            >
+                            <div *ngIf="instructorRegistration.get('instructorname')?.touched && instructorRegistration.get('instructorname')?.invalid" 
+                                 class="text-xs text-red-500 mt-1">
+                                <span *ngIf="instructorRegistration.get('instructorname')?.errors?.['required']">Name is required</span>
+                                <span *ngIf="instructorRegistration.get('instructorname')?.errors?.['pattern']">Only letters are allowed</span>
+                            </div>
+                        </div>
 
-           <div class="input-group">
-               <label>Email address:</label>
-               <input type="email" formControlName="emailaddress">
-           </div>
+                        <!-- Email Input -->
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Email Address
+                            </label>
+                            <input 
+                                type="email" 
+                                formControlName="emailaddress"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                placeholder="Enter your email"
+                            >
+                            <div *ngIf="instructorRegistration.get('emailaddress')?.touched && instructorRegistration.get('emailaddress')?.invalid" 
+                                 class="text-xs text-red-500 mt-1">
+                                <span *ngIf="instructorRegistration.get('emailaddress')?.errors?.['required']">Email is required</span>
+                                <span *ngIf="instructorRegistration.get('emailaddress')?.errors?.['email']">Please enter a valid email</span>
+                            </div>
+                        </div>
 
-           <div class="input-group">
-               <label>Password:</label>
-               <input type="password" formControlName="password">
-           </div>
+                        <!-- Password Input -->
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Password
+                            </label>
+                            <input 
+                                type="password" 
+                                formControlName="password"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                placeholder="Enter your password"
+                            >
+                            <div *ngIf="instructorRegistration.get('password')?.touched && instructorRegistration.get('password')?.invalid" 
+                                 class="text-xs text-red-500 mt-1">
+                                <span *ngIf="instructorRegistration.get('password')?.errors?.['required']">Password is required</span>
+                                <span *ngIf="instructorRegistration.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+                            </div>
+                        </div>
 
-           <div class="input-group">
-               <label>Confirm Password:</label>
-               <input type="password" formControlName="confirmpassword">
-           </div>
+                        <!-- Confirm Password Input -->
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Confirm Password
+                            </label>
+                            <input 
+                                type="password" 
+                                formControlName="confirmpassword"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                placeholder="Confirm your password"
+                            >
+                            <div *ngIf="instructorRegistration.get('confirmpassword')?.touched && 
+                                      (instructorRegistration.get('confirmpassword')?.invalid || instructorRegistration.hasError('passwordMismatch'))" 
+                                 class="text-xs text-red-500 mt-1">
+                                <span *ngIf="instructorRegistration.get('confirmpassword')?.errors?.['required']">Confirm password is required</span>
+                                <span *ngIf="instructorRegistration.hasError('passwordMismatch')">Passwords do not match</span>
+                            </div>
+                        </div>
 
-           <div class="input-group file-upload">
-               <label>Certificate:</label>
-               <input type="file" (change)="onFileSelect($event)">
-           </div>
+                        <!-- File Upload -->
+                        <div class="relative">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Upload Certificate
+                            </label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg">
+                                <div class="space-y-1 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                        <label class="relative cursor-pointer rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                            <span>Upload a file</span>
+                                            <input type="file" class="sr-only" (change)="onFileSelect($event)">
+                                        </label>
+                                        <p class="pl-1">or drag and drop</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        PDF, PNG, JPG up to 10MB
+                                    </p>
+                                </div>
+                            </div>
+                            <div *ngIf="fileError" class="text-xs text-red-500 mt-1">
+                                Please upload your certificate
+                            </div>
+                        </div>
 
-           <button class="action-btn" type="submit" [disabled]="instructorRegistration.invalid">Submit Form</button>
-       </form>
+                        <!-- Terms and Conditions -->
+                        <div class="relative flex items-start">
+                            <div class="flex items-center h-5">
+                                <input
+                                    id="terms"
+                                    type="checkbox"
+                                    formControlName="terms"
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                >
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="terms" class="font-medium text-gray-700 dark:text-gray-300">
+                                    I agree to the
+                                    <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-500">terms and conditions</a>
+                                </label>
+                            </div>
+                        </div>
 
-       <button class="mt-4 text-red-400" [routerLink]="['/instructor/login']">already registered?Login</button>
-   </div>
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit"
+                            [disabled]="instructorRegistration.invalid || !selectedFile"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Register
+                        </button>
+                    </form>
+
+                    <!-- Login Link -->
+                    <div class="text-center mt-6">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            Already have an account?
+                            <a routerLink="/instructor/login" class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500">
+                                Sign in
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

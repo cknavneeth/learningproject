@@ -1,55 +1,69 @@
-import { Component } from '@angular/core';
-import {FormGroup,FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms'
-import { passwordMatchValidator } from '../../../validators/password-match.validator';
-import { AuthserviceService } from '../../../services/authservice.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { passwordMatchValidator } from '../../../validators/password-match.validator';
 
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule,ReactiveFormsModule,RouterModule],
+  imports: [RouterModule,CommonModule,ReactiveFormsModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent {
-   registerForm:FormGroup;
-   isDarkMode:boolean=true
-   message:string=''
-   errormessage:string=''
+export class RegisterComponent implements OnInit {
+  registerForm: FormGroup;
+  message: string = '';
+  errormessage: string = '';
+  isDarkMode: boolean = false;
 
-   constructor(private fb:FormBuilder,private authservice:AuthserviceService,private router:Router){
-    this.registerForm=this.fb.group(
-      {
-      username:['',[Validators.required]],
-      email:['',[Validators.required,Validators.email]],
-      password:['',[Validators.required,Validators.minLength(6)]],
-      confirmpassword:['',[Validators.required]]
-    },
-    {
-      validators:passwordMatchValidator
-    })
-   }
-
-
-   toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
+  constructor(private fb: FormBuilder) {
+    this.registerForm = this.fb.group({
+      username: ['',[ Validators.required,Validators.pattern(/^[a-zA-Z]+$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmpassword: ['', Validators.required]
+    }, { validator: passwordMatchValidator });
   }
 
-   onSubmit(){
-    if(this.registerForm.valid){
-      this.authservice.register(this.registerForm.value).subscribe(
-        response=>{
-          this.message=response.message
-        setTimeout(()=>{
-          
-          this.router.navigate(['student/sentotp'])
-        })
-      },
-      error=>{
-          this.errormessage=error.error.message
-      }
-    )
+  ngOnInit(): void {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      this.enableDarkMode();
+    } else {
+      this.disableDarkMode();
     }
-   }
+  }
+
+  toggleDarkMode(): void {
+    if (document.documentElement.classList.contains('dark')) {
+      this.disableDarkMode();
+    } else {
+      this.enableDarkMode();
+    }
+  }
+
+  enableDarkMode(): void {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+    this.isDarkMode = true;
+  }
+
+  disableDarkMode(): void {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    this.isDarkMode = false;
+  }
+
+  // passwordMatchValidator(g: FormGroup) {
+  //   return g.get('password')?.value === g.get('confirmpassword')?.value
+  //     ? null : { 'passwordMismatch': true };
+  // }
+
+  onSubmit() {
+    if (this.registerForm.valid) {
+      // Your registration logic here
+      console.log(this.registerForm.value);
+    }
+  }
 }

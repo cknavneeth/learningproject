@@ -43,11 +43,15 @@ export class AuthserviceService {
     return this.tokenservice.getStudentToken()
   }
 
-  refreshToken(){
-    return this.http.post<{accesstoken:string}>(`${this.apiurl}/refreshtoken`,{},{withCredentials:true}).pipe(
+  refreshToken():Observable<any>{
+    return this.http.post<{success:boolean,accesstoken:string}>(`${this.apiurl}/refreshtoken`,{},{withCredentials:true}).pipe(
       tap(response=>{
-        this.saveAccesstoken(response.accesstoken)
-        this.tokenservice.setStudentToken(response.accesstoken)
+        if(response.success&&response.accesstoken){
+          this.saveAccesstoken(response.accesstoken)
+          this.tokenservice.setStudentToken(response.accesstoken)
+        }else{
+          throw new Error('Invalid refresh token response')
+        }
       }),
       catchError(error=>{
         console.log(error)

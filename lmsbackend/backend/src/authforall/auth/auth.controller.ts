@@ -49,7 +49,7 @@ export class AuthController {
     async refreshtoken(@Req() req:Request,@Res() res:Response){
 
       try {
-        const refreshtoken=req.cookies.refreshtoken
+        const refreshtoken=req.cookies.refreshToken
          if(!refreshtoken){
           return res.status(401).json({success:false,message:'refresh token is not available'})
          }

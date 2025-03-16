@@ -10,4 +10,13 @@ export class AdminController {
     async adminlogin(@Body() body:{email:string,password:string}){
         return this.authservice.adminLogin(body.email,body.password)
     }
+
+    @Post('logout')
+    async logoutadmin(){
+        console.log('jijo fuckin shibu')
+        return {
+            success:true,
+            message:'Logged out successfully'
+        }
+    }
 }

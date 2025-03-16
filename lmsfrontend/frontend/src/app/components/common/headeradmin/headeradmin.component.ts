@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SidebarService } from '../../../services/sidebar.service';
+import { AdminserviceService } from '../../../services/adminservice.service';
+import { TokenserviceService } from '../../../services/tokenservice.service';
 
 @Component({
   selector: 'app-headeradmin',
@@ -14,7 +16,7 @@ export class HeaderadminComponent {
   showProfileMenu = false;
   isDarkMode = false;
 
-  constructor(private sidebarService: SidebarService) { }
+  constructor(private sidebarService: SidebarService,private tokenService:TokenserviceService,private adminservice:AdminserviceService,private router:Router) { }
 
   ngOnInit(): void {
     // Check for saved theme preference
@@ -57,4 +59,27 @@ export class HeaderadminComponent {
     localStorage.setItem('theme', 'light');
     this.isDarkMode = false;
   }
+
+
+  
+  logoutadmin() {
+    this.adminservice.logoutAdmin().subscribe({
+      next: () => {
+        // Remove navigation delay and force page reload
+        this.router.navigate(['/admin/login'])
+          .then(() => {
+            window.location.reload();
+          });
+      },
+      error: (error) => {
+        console.error('Logout error:', error);
+        this.tokenService.removeAdminToken();
+        this.router.navigate(['/admin/login'])
+          .then(() => {
+            window.location.reload();
+          });
+      }
+    });
+  }
+  
 }

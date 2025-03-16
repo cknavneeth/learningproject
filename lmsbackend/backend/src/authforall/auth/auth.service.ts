@@ -167,6 +167,13 @@ export class AuthService {
                 error:'invalidTokenError'
               })
             }
+
+            if(user.isBlocked){
+                throw new UnauthorizedException({
+                    message:'Your account has been blocked',
+                    error:'invalidTokenError'
+                })
+            }
             return this.generateAccessToken(user)
         } catch (error) {
 

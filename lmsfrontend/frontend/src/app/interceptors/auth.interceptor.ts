@@ -11,6 +11,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const instructorauthservice=inject(InstructorauthserviceService)
   const tokenservice=inject(TokenserviceService)
 
+  if (req.url.includes('/auth/admin')) {
+    return next(req);
+  }
+
   let accesstoken:string|null=null
 
   let authreq=req

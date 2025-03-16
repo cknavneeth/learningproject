@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminserviceService } from '../../../services/adminservice.service';
 import { Router } from '@angular/router';
+import { TokenserviceService } from '../../../services/tokenservice.service';
 
 @Component({
   selector: 'app-adminlogin',
@@ -22,7 +23,8 @@ export class AdminloginComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private adminservice: AdminserviceService,
-        private router: Router
+        private router: Router,
+        private tokenService: TokenserviceService
     ) {
         this.adminLogin = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
@@ -31,6 +33,7 @@ export class AdminloginComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.tokenService.removeAdminToken();
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             this.enableDarkMode();

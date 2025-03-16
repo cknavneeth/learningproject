@@ -1,20 +1,29 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AdminLoginResponse, instructors } from '../interfaces/auth.interface';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { students } from '../interfaces/auth.interface';
+import { TokenserviceService } from './tokenservice.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminserviceService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient,private tokenService:TokenserviceService,private router:Router) { }
 
   private apiurl='http://localhost:5000/auth/admin';
 
   adminloginform(adminData:any):Observable<AdminLoginResponse>{
     return this.http.post<AdminLoginResponse>(`${this.apiurl}/login`,adminData)
+    .pipe(
+      tap(response=>{
+        if(response.accesstoken){
+          this.tokenService.setAdminToken(response.accesstoken)
+        }
+      })
+    )
   }
 
   fetchstudents():Observable<students[]>{
@@ -35,6 +44,15 @@ export class AdminserviceService {
 
   verifyInstructor(instructorId:string,isApproved:boolean):Observable<instructors>{
         return this.http.patch<instructors>(`${this.apiurl}/verifyinstructor/${instructorId}`,{isApproved})
+  }
+
+  logoutAdmin(): Observable<any> {
+    // Remove router navigation from service
+    return this.http.post(`${this.apiurl}/logout`, {}).pipe(
+      tap(() => {
+        this.tokenService.removeAdminToken();
+      })
+    );
   }
 
 }

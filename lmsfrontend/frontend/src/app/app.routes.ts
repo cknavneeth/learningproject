@@ -18,6 +18,9 @@ import { InstructorforgotpasswordComponent } from './components/instructorauth/i
 import { AdmindashboardComponent } from './components/admin/admindashboard/admindashboard.component';
 import { StudentListComponent } from './components/admin/student-list/student-list.component';
 import { InstructorListComponent } from './components/admin/instructor-list/instructor-list.component';
+import { authGuard, loginGuard } from './guards/student/auth.guard';
+import { instructorguardGuard, instructorLogin } from './guards/instructor/instructorguard.guard';
+import { adminauthGuard, adminLogin } from './guards/admin/adminauth.guard';
 
 export const routes: Routes = [
     {
@@ -45,7 +48,8 @@ export const routes: Routes = [
             },
             {
                 path: 'register',
-                component: RegisterComponent
+                component: RegisterComponent,
+                canActivate:[loginGuard]
             },
             {
                 path: 'sentotp',
@@ -53,7 +57,8 @@ export const routes: Routes = [
             },
             {
                 path: 'login',
-                component: LoginComponent
+                component: LoginComponent,
+                canActivate:[loginGuard]
             },
             {
                 path:'forgotpassword',
@@ -61,7 +66,8 @@ export const routes: Routes = [
             },
             {
                 path:'home',
-                component:LandingpageComponent
+                component:LandingpageComponent,
+                canActivate:[authGuard]
             }
            
         ]
@@ -83,7 +89,8 @@ export const routes: Routes = [
             },
             {
                 path: 'register',
-                component: InstructorRegisterComponent
+                component: InstructorRegisterComponent,
+                canActivate:[instructorLogin]
             },
             {
                 path: 'instructorotp',
@@ -91,11 +98,13 @@ export const routes: Routes = [
             },
             {
                 path: 'instructorlogin',
-                component: InstructorLoginComponent
+                component: InstructorLoginComponent,
+                canActivate:[instructorLogin]
             },
             {
                 path: 'home', 
-                component: HomeinsComponent
+                component: HomeinsComponent,
+                canActivate:[instructorguardGuard]
             },
             {
                 path:'forgotpasswordins',
@@ -114,11 +123,13 @@ export const routes: Routes = [
             },
             {
                 path: 'login',
-                component: AdminloginComponent
+                component: AdminloginComponent,
+                canActivate:[adminLogin]
             },
             {
                 path:'dashboard',
-                component:AdmindashboardComponent
+                component:AdmindashboardComponent,
+                canActivate:[adminauthGuard]
             },
             {
                 path:'students',
