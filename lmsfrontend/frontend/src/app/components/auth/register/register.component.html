@@ -84,52 +84,71 @@
                             </div>
 
                             <!-- Password -->
-                            <div class="relative">
-                                <input 
-                                    type="password" 
-                                    id="password" 
-                                    formControlName="password"
-                                    class="peer w-full border-b-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-transparent focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 bg-transparent"
-                                    placeholder="Password"
-                                    required
-                                >
-                                <label 
-                                    for="password"
-                                    class="absolute left-0 -top-3.5 text-gray-600 dark:text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 dark:peer-focus:text-gray-400 peer-focus:text-sm"
-                                >
-                                    Password
-                                </label>
-                                <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.controls['password'].hasError('required') && registerForm.controls['password'].touched">
-                                    Password is required
-                                </small>
-                                <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.controls['password'].hasError('minlength') && registerForm.controls['password'].touched">
-                                    Password must be at least 6 characters
-                                </small>
-                            </div>
+                           <!-- Password -->
+<div class="relative">
+    <div class="relative">
+        <input 
+            [type]="showPassword ? 'text' : 'password'"
+            id="password" 
+            formControlName="password"
+            class="peer w-full border-b-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-transparent focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 bg-transparent"
+            placeholder="Password"
+            required
+        >
+        <button 
+            type="button"
+            (click)="togglePassword()"
+            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none"
+        >
+            <i class="material-icons text-xl">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+        </button>
+        <label 
+            for="password"
+            class="absolute left-0 -top-3.5 text-gray-600 dark:text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 dark:peer-focus:text-gray-400 peer-focus:text-sm"
+        >
+            Password
+        </label>
+        <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.controls['password'].hasError('required') && registerForm.controls['password'].touched">
+            Password is required
+        </small>
+        <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.controls['password'].hasError('minlength') && registerForm.controls['password'].touched">
+            Password must be at least 6 characters
+        </small>
+    </div>
+</div>
 
-                            <!-- Confirm Password -->
-                            <div class="relative">
-                                <input 
-                                    type="password" 
-                                    id="confirmpassword" 
-                                    formControlName="confirmpassword"
-                                    class="peer w-full border-b-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-transparent focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 bg-transparent"
-                                    placeholder="Confirm Password"
-                                    required
-                                >
-                                <label 
-                                    for="confirmpassword"
-                                    class="absolute left-0 -top-3.5 text-gray-600 dark:text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 dark:peer-focus:text-gray-400 peer-focus:text-sm"
-                                >
-                                    Confirm Password
-                                </label>
-                                <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.controls['confirmpassword'].hasError('required') && registerForm.controls['confirmpassword'].touched">
-                                    Confirm Password is required
-                                </small>
-                                <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.hasError('passwordMismatch') && registerForm.controls['confirmpassword'].touched">
-                                    Passwords do not match
-                                </small>
-                            </div>
+<!-- Confirm Password -->
+<div class="relative">
+    <div class="relative">
+        <input 
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmpassword" 
+            formControlName="confirmpassword"
+            class="peer w-full border-b-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-transparent focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 bg-transparent"
+            placeholder="Confirm Password"
+            required
+        >
+        <button 
+            type="button"
+            (click)="toggleConfirmPassword()"
+            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none"
+        >
+            <i class="material-icons text-xl">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</i>
+        </button>
+        <label 
+            for="confirmpassword"
+            class="absolute left-0 -top-3.5 text-gray-600 dark:text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 dark:peer-focus:text-gray-400 peer-focus:text-sm"
+        >
+            Confirm Password
+        </label>
+        <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.controls['confirmpassword'].hasError('required') && registerForm.controls['confirmpassword'].touched">
+            Confirm Password is required
+        </small>
+        <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.hasError('passwordMismatch') && registerForm.controls['confirmpassword'].touched">
+            Passwords do not match
+        </small>
+    </div>
+</div>
 
                             <!-- Submit Button -->
                             <button 

@@ -14,6 +14,7 @@ export class InstructorotpComponent {
    emailaddress:string=''
    otp:string=''
    message:string=''
+   errormessage:string=''
    isDarkMode:boolean=true
    otpSent:boolean=false
 
@@ -27,6 +28,7 @@ export class InstructorotpComponent {
           this.message=response.message
         },
         error=>{
+          this.errormessage=error.error.message
           console.log('error sending in otp',error.message)
         }
       )
@@ -50,12 +52,12 @@ export class InstructorotpComponent {
    verifyOtp(){
       return this.instructorservice.verifyOtp(this.emailaddress,this.otp).subscribe(
         response=>{
-          alert('otp verified successfully')
           if(response )
           this.message='Otp verified successfully'
         this.router.navigate(['/instructor/instructorlogin'])
         },
         error=>{
+          this.errormessage=error.error.message
           console.log('invalid otp')
           console.log(error.message)
         }

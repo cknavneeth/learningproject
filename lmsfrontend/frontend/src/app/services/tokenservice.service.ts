@@ -40,23 +40,20 @@ export class TokenserviceService {
   //for admin sections ok 
 
   public removeAdminToken(): void {
-    // Remove only admin-related tokens
+    
     localStorage.removeItem(this.ADMIN_TOKEN_KEY);
-    localStorage.removeItem('admintoken'); // Remove lowercase version
-    localStorage.removeItem('adminToken'); // Remove mixed case version
+    localStorage.removeItem('admintoken'); 
+    localStorage.removeItem('adminToken'); 
   }
 
   public getAdminToken(): string | null {
-    // Check for all possible variants
     return localStorage.getItem(this.ADMIN_TOKEN_KEY) || 
            localStorage.getItem('admintoken') || 
            localStorage.getItem('adminToken');
   }
 
   public setAdminToken(token: string): void {
-    // Remove any existing admin tokens first
     this.removeAdminToken();
-    // Set with standardized key
     localStorage.setItem(this.ADMIN_TOKEN_KEY, token);
   }
 }

@@ -14,6 +14,8 @@ export class InstructorLoginComponent {
 
   instructorLogin:FormGroup
   isDarkMode:boolean=true
+  message:string=''
+  errormessage:string=''
 
   constructor(private fb:FormBuilder,private readonly instructorservice:InstructorauthserviceService,private router:Router){
     this.instructorLogin=this.fb.group({
@@ -23,25 +25,14 @@ export class InstructorLoginComponent {
   }
 
 
-  // onSubmit(){
-  //    return this.instructorservice.login(this.instructorLogin.value).subscribe({
-  //    next:( response)=>{
-  //       alert('login successfull')
-  //       this.router.navigate(['/instructor/home'])
-  //     },
-  //     error:(error)=>{
-  //       alert(error.message)
-  //     }
-  // })
-  // }
   onSubmit(){
      return this.instructorservice.login(this.instructorLogin.value).subscribe(
       response=>{
-        alert('login successfull')
+        this.message=response.message
         this.router.navigate(['/instructor/home'])
       },
       error=>{
-        alert(error.error?.message)
+        this.errormessage=error.error.message
       }
   )
   }

@@ -18,7 +18,7 @@ export class AdminService {
     }
 
     async fetchallstudents(){
-        return this.usermodel.find().select('username email isBlocked isVerified')
+        return this.usermodel.find().select('username email isBlocked isVerified').sort({createdAt:-1})
     }
 
     async toggleBlockStatus(studentId:string):Promise<user>{

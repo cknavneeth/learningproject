@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { passwordMatchValidator } from '../../../validators/password-match.validator';
+import { AuthserviceService } from '../../../services/authservice.service';
 
 
 @Component({
@@ -16,8 +17,10 @@ export class RegisterComponent implements OnInit {
   message: string = '';
   errormessage: string = '';
   isDarkMode: boolean = false;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private authservice:AuthserviceService,private router:Router) {
     this.registerForm = this.fb.group({
       username: ['',[ Validators.required,Validators.pattern(/^[a-zA-Z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
@@ -55,15 +58,34 @@ export class RegisterComponent implements OnInit {
     this.isDarkMode = false;
   }
 
-  // passwordMatchValidator(g: FormGroup) {
-  //   return g.get('password')?.value === g.get('confirmpassword')?.value
-  //     ? null : { 'passwordMismatch': true };
-  // }
+ 
 
   onSubmit() {
     if (this.registerForm.valid) {
-      // Your registration logic here
+      if(this.registerForm.valid){
+        this.authservice.register(this.registerForm.value).subscribe(
+          response=>{
+            this.message=response.message
+          setTimeout(()=>{
+            
+            this.router.navigate(['student/sentotp'])
+          })
+        },
+        error=>{
+            this.errormessage=error.error.message
+        }
+      )
+  
       console.log(this.registerForm.value);
     }
+  }
+}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }
