@@ -111,6 +111,10 @@ export class InstructorauthService {
              if(!instructor.isVerified){
                 throw new BadRequestException('instructor is not verified')
              }
+
+             if(instructor.isBlocked){
+                throw new BadRequestException('Your account has been blocked')
+             }
     
              let isPasswordvalid=await this.instructorService.comparePassword(password,instructor.password)
     

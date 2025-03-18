@@ -72,5 +72,11 @@ export class InstructorauthController {
       return this.authservice.resetPasswordInstructor(token,body.password)
     }
 
+    @Post('logout')
+    async logoutinstructor(@Req() req:Request,@Res() res:Response){
+      res.clearCookie('instructor_refreshToken',{httpOnly:true,secure:true,sameSite:'strict'})
+      return res.status(200).json({message:'Logged out successfully'})
+    } 
+
     
 }

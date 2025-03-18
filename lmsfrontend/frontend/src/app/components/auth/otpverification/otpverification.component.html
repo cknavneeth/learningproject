@@ -14,28 +14,11 @@
         <!-- Success Message -->
         <p *ngIf="message" class="text-green-500 text-center mb-4">{{ message }}</p>
 
-        <div *ngIf="!otpsent">
-            <div class="input-group">
-                <label for="email">Enter Email</label>
-                <input type="email" [(ngModel)]="email" placeholder="Enter your email" #emailInput="ngModel" required email>
-
-                <p class="error" *ngIf="emailInput.invalid && emailInput.touched">
-                    <span *ngIf="emailInput.errors?.['required']" class="text-red-500">Email is required</span>
-                    <span *ngIf="emailInput.errors?.['email']" class="text-red-500">Please enter a valid email</span>
-                </p>
-            </div>
-    
-            <!-- Send & Resend OTP Buttons -->
-            <div class="button-group">
-                <button class="action-btn" type="submit" (click)="sendOtp()" [disabled]="!emailInput.valid">Send OTP</button>
-                <button class="action-btn secondary" (click)="resendOtp()" [disabled]="!emailInput.valid">Resend OTP</button>
-            </div>
-
-        </div>
+       
 
         <!-- Email Input -->
 
-        <div *ngIf="otpsent">
+        <div >
             <div  class="input-group">
                 <input type="text" [(ngModel)]="otp" placeholder="Enter your OTP">
             </div>

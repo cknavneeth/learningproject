@@ -73,4 +73,17 @@ export class InstructorauthserviceService {
   resetpasswordinstructor(token:string,password:string):Observable<any>{
     return this.http.post(`${this.apiurl}/resetpasswordinstructor/${token}`,{password})
   }
+
+
+
+  logoutinstructor():Observable<any>{
+    return this.http.post(`${this.apiurl}/logout`,{},{withCredentials:true}).pipe(
+      tap(()=>{
+        this.tokenservice.removeInstructorToken()
+      }),
+      catchError((error)=>{
+        throw error
+      })
+    )
+  }
 }

@@ -63,6 +63,7 @@ export class OtpverificationComponent {
         },2000)
       },
       error=>{
+        console.log(error.error.message)
         this.errormessages='Invalid OTP.Please enter the correct OTP'
         console.log('error occured now')
       }
