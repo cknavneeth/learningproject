@@ -112,7 +112,10 @@
             Password is required
         </small>
         <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.controls['password'].hasError('minlength') && registerForm.controls['password'].touched">
-            Password must be at least 6 characters
+            Password must be at least 8 characters
+        </small>
+        <small class="text-red-500 text-xs mt-1" *ngIf="registerForm.controls['password'].hasError('pattern') && registerForm.controls['password'].touched">
+            Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character ("&#64;", $, !, %, *, ?)
         </small>
     </div>
 </div>

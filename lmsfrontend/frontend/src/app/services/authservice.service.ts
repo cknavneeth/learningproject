@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap } from 'rxjs';
 import { TokenserviceService } from './tokenservice.service';
+import { OtpVerificationData } from '../interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,15 @@ export class AuthserviceService {
   }
 
 
-  verifyotp(email:string,otp:string):Observable<any>{
-    return this.http.post(`${this.apiurl}/verifyotp`,{email,otp})
+  verifyotp(data: { email: string, otp: string }): Observable<any> {
+    console.log('enthano entho')
+    return this.http.post(`${this.apiurl}/verifyotp`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   login(userData:any):Observable<any>{
+    console.log('studentinte login service')
       return this.http.post(`${this.apiurl}/login`,userData,{withCredentials:true}).pipe(
         tap((response:any)=>{
           this.tokenservice.setStudentToken(response.accesstoken)

@@ -3,6 +3,10 @@ import { Document, Types } from "mongoose";
 
 export type instructorDocument=instructor & Document
 
+export enum InstructorRole {
+    INSTRUCTOR = 'instructor'
+}
+
 @Schema()
 export class instructor{
 
@@ -34,6 +38,9 @@ export class instructor{
 
     @Prop({type:Boolean,default:false})
     isBlocked:boolean
+
+    @Prop({type:String,enum:InstructorRole,default:InstructorRole.INSTRUCTOR})
+    role:InstructorRole
 }
 
 export const instructorSchema=SchemaFactory.createForClass(instructor)

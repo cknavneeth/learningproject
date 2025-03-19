@@ -31,6 +31,9 @@ export class InstructorauthController {
 
     @Post('verifyinsotp')
     async verifyOtp(@Body() body:{emailaddress:string,otp:string}){
+      console.log('why are you doing this to me bro',body.emailaddress,body.otp)
+      console.log('Received verification request:', body);
+     
         return this.authservice.verifyinstructorotp(body.emailaddress,body.otp)
     }
 

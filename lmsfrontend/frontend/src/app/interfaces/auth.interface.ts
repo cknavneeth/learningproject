@@ -20,3 +20,9 @@ export interface instructors{
     isApproved:boolean
     certificateUrl:string
 }
+
+export interface OtpVerificationData{
+    email?:string,
+    emailaddress?:string,
+    otp:string
+}

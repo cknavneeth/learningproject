@@ -53,12 +53,14 @@ export const routes: Routes = [
             },
             {
                 path: 'sentotp',
-                component: OtpverificationComponent
+                component: OtpverificationComponent,
+                data:{userType:'student'}
             },
             {
                 path: 'login',
                 component: LoginComponent,
-                canActivate:[loginGuard]
+                canActivate:[loginGuard],
+                data:{userType:'student'}
             },
             {
                 path:'forgotpassword',
@@ -94,12 +96,14 @@ export const routes: Routes = [
             },
             {
                 path: 'instructorotp',
-                component: InstructorotpComponent
+                component: OtpverificationComponent,
+                data:{userType:'instructor'}
             },
             {
                 path: 'instructorlogin',
-                component: InstructorLoginComponent,
-                canActivate:[instructorLogin]
+                component: LoginComponent,
+                canActivate:[instructorLogin],
+                data:{userType:'instructor'}
             },
             {
                 path: 'home', 

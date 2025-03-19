@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthserviceService } from '../../../services/authservice.service';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
+import { InstructorauthserviceService } from '../../../services/instructorauthservice.service';
 
 @Component({
   selector: 'app-login',
@@ -19,12 +20,20 @@ export class LoginComponent {
    loginForm:FormGroup
    message:string=''
    errormessage:string=''
+   userType:'student'|'instructor'='student'
 
 
-    constructor(private fb:FormBuilder,private service:AuthserviceService,private router:Router){
+    constructor(private fb:FormBuilder,private studentService:AuthserviceService,private instructorService:InstructorauthserviceService,private router:Router,private route:ActivatedRoute){
       this.loginForm=this.fb.group({
         email:['',[Validators.required,Validators.email]],
         password:['',[Validators.required]]
+      })
+    }
+
+    ngOnInit(){
+      this.route.data.subscribe(data=>{
+        this.userType=data['userType']
+        console.log('UserType from route data:', this.userType);
       })
     }
 
@@ -32,13 +41,23 @@ export class LoginComponent {
       this.errormessage=''
       this.message=''
       if(this.loginForm.valid){
-        this.service.login(this.loginForm.value).subscribe(
+        const logindata=this.userType==='instructor'?{
+          emailaddress:this.loginForm.value.email,
+          password:this.loginForm.value.password
+        }:this.loginForm.value
+
+        const service=this.userType==='instructor'?this.instructorService:this.studentService
+
+
+
+        service.login(logindata).subscribe(
           response=>{
             console.log('login successfull')
             this.message=response.message
             setTimeout(()=>{
+              const redirectPath=this.userType==='instructor'?'/instructor/home':'/student/home'
 
-              this.router.navigate(['/student/home'])
+              this.router.navigate([redirectPath])
             },1000)
           },
           error=>{
@@ -47,6 +66,13 @@ export class LoginComponent {
         )
       }
       
+    }
+
+    getRegisterLink():string{
+       return this.userType==='instructor'?'/instructor/register':'/student/register'
+    }
+    getForgotPasswordLink(){
+        return this.userType==='instructor'?'/instructor/forgotpasswordins':'/student/forgotpassword'
     }
 
 

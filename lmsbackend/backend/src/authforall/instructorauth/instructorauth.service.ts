@@ -23,9 +23,11 @@ export class InstructorauthService {
     
              let certificateUrl=await this.cloudinary.UploadedFile(certificate)
     
-             return this.instructorService.createInstructor(name,emailaddress,password,certificateUrl)
+             const registered=await this.instructorService.createInstructor(name,emailaddress,password,certificateUrl)
+
+             await this.sendinstructorotp(emailaddress)
     
-    
+             return registered
         }
 
          async sendMail(email:string,otp:string){
@@ -76,9 +78,18 @@ export class InstructorauthService {
         async verifyinstructorotp(emailaddress:string,otp:string){
             console.log('call backendil ethi')
             let instructor=await this.instructorService.findByEmail(emailaddress)
+            console.log('hello machy',instructor)
             if(!instructor){
                 throw new BadRequestException('invalid instructor')
             }
+
+            console.log('Comparing:', {
+                storedEmail: instructor.emailaddress,
+                receivedEmail: emailaddress,
+                storedOtp: instructor.otp,
+                receivedOtp: otp,
+                storedOtpExpires: instructor.otpExpires
+            });
     
             if(!instructor.otp|| !instructor.otpExpires){
                 throw new BadRequestException('invalid request')

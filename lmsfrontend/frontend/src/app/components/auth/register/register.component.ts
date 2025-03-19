@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { passwordMatchValidator } from '../../../validators/password-match.validator';
 import { AuthserviceService } from '../../../services/authservice.service';
+import { SharedemailService } from '../../../services/shared/sharedemail.service';
 
 
 @Component({
@@ -20,11 +21,16 @@ export class RegisterComponent implements OnInit {
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
 
-  constructor(private fb: FormBuilder,private authservice:AuthserviceService,private router:Router) {
+  constructor(private fb: FormBuilder,private authservice:AuthserviceService,private router:Router,private sharedemail:SharedemailService) {
     this.registerForm = this.fb.group({
       username: ['',[ Validators.required,Validators.pattern(/^[a-zA-Z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', 
+        [  
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+        ]],
       confirmpassword: ['', Validators.required]
     }, { validator: passwordMatchValidator });
   }
@@ -65,6 +71,7 @@ export class RegisterComponent implements OnInit {
       if(this.registerForm.valid){
         this.authservice.register(this.registerForm.value).subscribe(
           response=>{
+            this.sharedemail.setEmail(this.registerForm.value.email)
             this.message=response.message
           setTimeout(()=>{
             

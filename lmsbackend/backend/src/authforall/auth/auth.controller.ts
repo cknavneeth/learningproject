@@ -27,6 +27,7 @@ export class AuthController {
 
     @Post('verifyotp')
     async verifyotp(@Body() body:{email:string,otp:string}){
+      console.log('hello how are you my boy',body.email,body.otp)
         if(!body.email || !body.otp){
           throw new BadRequestException('there is no email and otp')
         }

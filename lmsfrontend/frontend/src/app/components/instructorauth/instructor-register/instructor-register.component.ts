@@ -4,6 +4,7 @@ import { passwordMatchValidator } from '../../../validators/password-match.valid
 import { InstructorauthserviceService } from '../../../services/instructorauthservice.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { SharedemailService } from '../../../services/shared/sharedemail.service';
 
 @Component({
   selector: 'app-instructor-register',
@@ -25,45 +26,23 @@ export class InstructorRegisterComponent {
   constructor(
     private fb: FormBuilder,
     private service: InstructorauthserviceService,
-    private router: Router
+    private router: Router,
+    private sharedemail:SharedemailService
   ) {
     this.instructorRegistration = this.fb.group({
       instructorname: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       emailaddress: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
       confirmpassword: ['', Validators.required],
       terms: [false, Validators.requiredTrue]
     }, {
       validators: passwordMatchValidator
     });
 
-    
-    this.instructorRegistration.get('password')?.valueChanges.subscribe(password => {
-      this.passwordStrength = this.calculatePasswordStrength(password);
-    });
+   
   }
 
-  calculatePasswordStrength(password: string): number {
-    let strength = 0;
-    if (!password) return strength;
-
-    // Length check
-    if (password.length >= 8) strength++;
-
-    // Contains number
-    if (/\d/.test(password)) strength++;
-
-    // Contains lowercase
-    if (/[a-z]/.test(password)) strength++;
-
-    // Contains uppercase
-    if (/[A-Z]/.test(password)) strength++;
-
-    // Contains special character
-    if (/[!@#$%^&*]/.test(password)) strength++;
-
-    return strength;
-  }
+  
 
   onFileSelect(event: any) {
     const file = event.target.files[0];
@@ -107,6 +86,7 @@ export class InstructorRegisterComponent {
 
     this.service.registerinstructor(formData).subscribe({
       next: (response) => {
+        this.sharedemail.setEmail(this.instructorRegistration.value.emailaddress)
         this.successMessage = 'Registration successful!';
         setTimeout(() => {
           this.router.navigate(['/instructor/instructorotp']);

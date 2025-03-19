@@ -49,20 +49,20 @@ export class InstructorotpComponent {
    }
 
 
-   verifyOtp(){
-      return this.instructorservice.verifyOtp(this.emailaddress,this.otp).subscribe(
-        response=>{
-          if(response )
-          this.message='Otp verified successfully'
-        this.router.navigate(['/instructor/instructorlogin'])
-        },
-        error=>{
-          this.errormessage=error.error.message
-          console.log('invalid otp')
-          console.log(error.message)
-        }
-      )
-   }
+  //  verifyOtp(){
+  //     return this.instructorservice.verifyotp(this.emailaddress,this.otp).subscribe(
+  //       response=>{
+  //         if(response )
+  //         this.message='Otp verified successfully'
+  //       this.router.navigate(['/instructor/instructorlogin'])
+  //       },
+  //       error=>{
+  //         this.errormessage=error.error.message
+  //         console.log('invalid otp')
+  //         console.log(error.message)
+  //       }
+  //     )
+  //  }
 
    toggleDarkMode(){
     this.isDarkMode=!this.isDarkMode

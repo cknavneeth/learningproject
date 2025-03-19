@@ -15,6 +15,10 @@
         <p *ngIf="message" class="text-green-500 text-center mb-4">{{ message }}</p>
 
        
+         <!-- Timer Display -->
+         <div class="timer-container" *ngIf="!showResendButton">
+            <p class="timer">Time remaining: {{ formatTime() }}</p>
+        </div>
 
         <!-- Email Input -->
 
@@ -27,6 +31,12 @@
             <button class="action-btn verify-btn" (click)="verifyOtp()">Verify OTP</button>
 
         </div>
+        <button 
+        *ngIf="showResendButton" 
+        class="action-btn resend-btn" 
+        (click)="resendOtp()">
+        Resend OTP
+    </button>
         
 
         <!-- OTP Input (Shown only when OTP is sent) -->

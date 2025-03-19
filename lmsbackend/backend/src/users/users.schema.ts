@@ -2,6 +2,11 @@ import { Prop,Schema,SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 
 export type userDocument = user & Document
+
+export enum UserRole {
+    STUDENT = 'student'
+}
+
 @Schema()
 export class user{
     _id: Types.ObjectId;
@@ -26,6 +31,9 @@ export class user{
 
     @Prop({type:Boolean,default:false})
     isBlocked:boolean
+
+    @Prop({type:String,enum:UserRole,default:UserRole.STUDENT})
+    role:UserRole
 
 }
 

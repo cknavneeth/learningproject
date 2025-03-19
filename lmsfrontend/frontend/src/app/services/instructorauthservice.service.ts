@@ -2,11 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap } from 'rxjs';
 import { TokenserviceService } from './tokenservice.service';
+import { OtpVerificationData } from '../interfaces/auth.interface';
 
 interface LoginResponse{
   accesstoken:string;
   message:string
 }
+
 
 @Injectable({
   providedIn: 'root'
@@ -26,11 +28,19 @@ export class InstructorauthserviceService {
     return this.http.post(`${this.apiurl}/insotp`,{emailaddress},{headers:{'Content-Type':'application/json'}})
   }
 
-  verifyOtp(emailaddress:string,otp:string){
-    return this.http.post(`${this.apiurl}/verifyinsotp`,{emailaddress,otp})
+  verifyotp(data:{emailaddress:string,otp:string}):Observable<any>{
+    
+    const fullUrl = `${this.apiurl}/verifyinsotp`;
+    console.log('INSTRUCTOR SERVICE - Making request to:', fullUrl);
+    console.log('INSTRUCTOR SERVICE - With data:', data);
+
+
+    
+    return this.http.post(`${this.apiurl}/verifyinsotp`,data,{headers:{'Content-Type':'application/json'}})
   }
 
   login(instructorData:any):Observable<any>{
+    console.log('instructor login service ahn ith')
     return this.http.post<LoginResponse>(`${this.apiurl}/inslogin`,instructorData,{withCredentials:true}).pipe(
       tap((response)=>{
         console.log('login is successfull')
