@@ -42,8 +42,8 @@ export class AdminserviceService {
       return this.http.patch<instructors>(`${this.apiurl}/blockinstructor/${instructorId}`, {})
   }
 
-  verifyInstructor(instructorId:string,isApproved:boolean):Observable<instructors>{
-        return this.http.patch<instructors>(`${this.apiurl}/verifyinstructor/${instructorId}`,{isApproved})
+  verifyInstructor(instructorId:string,isApproved:boolean,feedback?:string):Observable<instructors>{
+        return this.http.patch<instructors>(`${this.apiurl}/verifyinstructor/${instructorId}`,{isApproved,feedback})
   }
 
   logoutAdmin(): Observable<any> {

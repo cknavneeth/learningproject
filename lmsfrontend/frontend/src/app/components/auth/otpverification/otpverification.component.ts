@@ -33,6 +33,7 @@ export class OtpverificationComponent implements OnInit{
    timeLeft:number=300
    timerInterval:any
    showResendButton:boolean=false
+   private clockInterval: any;
 
    constructor(private route:ActivatedRoute,private studentservice:AuthserviceService ,private router:Router,private sharedemail:SharedemailService,private instructorservice:InstructorauthserviceService){}
 
@@ -43,8 +44,9 @@ export class OtpverificationComponent implements OnInit{
     });
 
     this.email = this.sharedemail.getEmail();
-    localStorage.removeItem("timerEndTime");
     this.startTimer()
+    // localStorage.removeItem("timerEndTime");
+    
    }
 
 
@@ -52,36 +54,47 @@ export class OtpverificationComponent implements OnInit{
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
     }
+    
   }
 
-   startTimer(){
-    const storedTime = localStorage.getItem("timerEndTime");
+  startTimer() {
+    const storedEndTime = localStorage.getItem("timerEndTime");
+    const currentTime = Date.now();
 
-  if (storedTime) {
-    const timeDiff = Math.floor((parseInt(storedTime) - Date.now()) / 1000);
-    this.timeLeft = timeDiff > 0 ? timeDiff : 0;
-  } else {
-    this.timeLeft = 300; 
-    localStorage.setItem("timerEndTime", (Date.now() + this.timeLeft * 1000).toString());
-  }
-
-  this.showResendButton = this.timeLeft === 0;
-
-  if (this.timerInterval) {
-    clearInterval(this.timerInterval);
-  }
-
-  this.timerInterval = setInterval(() => {
-    if (this.timeLeft > 0) {
-      this.timeLeft--;
+    // If timer exists, calculate remaining time
+    if (storedEndTime) {
+        const endTime = parseInt(storedEndTime);
+        const remainingTime = Math.floor((endTime - currentTime) / 1000);
+        this.timeLeft = Math.max(remainingTime, 0);
     } else {
-      this.showResendButton = true;
-      clearInterval(this.timerInterval);
-      localStorage.removeItem("timerEndTime"); 
+        // First time starting timer
+        this.timeLeft = 300;
+        const endTime = currentTime + (this.timeLeft * 1000);
+        localStorage.setItem("timerEndTime", endTime.toString());
     }
-  }, 1000);
 
-   }
+    // Update show resend button based on time left
+    this.showResendButton = this.timeLeft === 0;
+
+    // Clear any existing interval
+    if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+    }
+
+    // Only start interval if there's time remaining
+    if (this.timeLeft > 0) {
+        this.timerInterval = setInterval(() => {
+            this.timeLeft--;
+            
+            if (this.timeLeft <= 0) {
+                this.showResendButton = true;
+                clearInterval(this.timerInterval);
+                localStorage.removeItem("timerEndTime");
+            }
+        }, 1000);
+    }
+}
+  
 
 
 
@@ -108,44 +121,58 @@ export class OtpverificationComponent implements OnInit{
   //   )
   //  }
 
-   resendOtp(){
-    this.errormessages=''
-    this.message=''
-    if(this.userType==='student'){
-      this.studentservice.sendOtp(this.email).subscribe(
-        response=>{
-          console.log('otp resended successfully')
-          this.message='OTP sent successfully'
-          this.otpsent=true
-          this.timeLeft = 300;
-          this.showResendButton = false;
-          this.startTimer();
-        },
-        error=>{
-          this.errormessages='Failed to sent OTP,please try again'
-        }
-      )
-
-    }else{
-      this.instructorservice.sendOtp( this.email ).subscribe({
-        next: (response) => {
-            console.log('Instructor OTP resent successfully');
-            this.message = 'OTP sent successfully';
-            this.otpsent = true;
-            // Reset timer
-            this.timeLeft = 300;
-            this.showResendButton = false;
-            this.startTimer();
-        },
-        error: (error) => {
-            console.error('Error resending instructor OTP:', error);
-            this.errormessages = 'Failed to send OTP, please try again';
-        }
-    });
-
+  resendOtp() {
+    this.errormessages = '';
+    this.message = '';
+    
+    // Validate email before sending
+    if (!this.email) {
+        this.errormessages = 'Email not found';
+        return;
     }
-   
-   }
+
+    if (this.userType === 'student') {
+        this.studentservice.sendOtp(this.email).subscribe({
+            next: (response) => {
+                console.log('OTP resent successfully:', response);
+                this.message = 'OTP sent successfully';
+                this.otpsent = true;
+                
+                // Reset timer
+                const endTime = Date.now() + (300 * 1000);
+                localStorage.setItem("timerEndTime", endTime.toString());
+                this.timeLeft = 300;
+                this.showResendButton = false;
+                this.startTimer();
+            },
+            error: (error) => {
+                console.error('Error resending OTP:', error);
+                this.errormessages = error.error?.message || 'Failed to send OTP, please try again';
+            }
+        });
+    } else {
+        const emailData = { emailaddress: this.email }; // Make sure to match backend expected format
+        
+        this.instructorservice.sendOtp(this.email).subscribe({
+            next: (response) => {
+                console.log('Instructor OTP resent successfully:', response);
+                this.message = 'OTP sent successfully';
+                this.otpsent = true;
+                
+                // Reset timer
+                const endTime = Date.now() + (300 * 1000);
+                localStorage.setItem("timerEndTime", endTime.toString());
+                this.timeLeft = 300;
+                this.showResendButton = false;
+                this.startTimer();
+            },
+            error: (error) => {
+                console.error('Error resending instructor OTP:', error);
+                this.errormessages = error.error?.message || 'Failed to send OTP, please try again';
+            }
+        });
+    }
+}
 
    verifyOtp(){
     this.errormessages=''
@@ -232,4 +259,14 @@ else {
    toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
   }
+
+
+
+
+
+
+
+
+
+  
 }

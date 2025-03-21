@@ -144,3 +144,168 @@ input {
     cursor: not-allowed;
     opacity: 0.6;
 }
+// Existing styles remain the same...
+
+/* Timer Section Styles */
+.timer-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+/* Clock Styles */
+.clock {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.clock-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.clock-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background: #007bff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.clock-hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom;
+    background: #007bff;
+    border-radius: 4px;
+}
+
+.hour-hand {
+    width: 4px;
+    height: 30%;
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.minute-hand {
+    width: 3px;
+    height: 40%;
+    background: #0056b3;
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.second-hand {
+    width: 2px;
+    height: 45%;
+    background: #ff3860;
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.number {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 0.8rem;
+    color: inherit;
+    transform-origin: center;
+    &.n1 { transform: rotate(30deg); }
+    &.n2 { transform: rotate(60deg); }
+    &.n3 { transform: rotate(90deg); }
+    &.n4 { transform: rotate(120deg); }
+    &.n5 { transform: rotate(150deg); }
+    &.n6 { transform: rotate(180deg); }
+    &.n7 { transform: rotate(210deg); }
+    &.n8 { transform: rotate(240deg); }
+    &.n9 { transform: rotate(270deg); }
+    &.n10 { transform: rotate(300deg); }
+    &.n11 { transform: rotate(330deg); }
+    &.n12 { transform: rotate(0deg); }
+}
+
+/* Timer Display Styles */
+.timer-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.timer-label {
+    font-size: 0.9rem;
+    color: inherit;
+    opacity: 0.8;
+}
+
+.timer-value {
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #007bff;
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+.timer-progress {
+    width: 200px;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #00ff88);
+    transition: width 1s linear;
+}
+
+/* Enhanced Input Styles */
+.input-container {
+    margin-top: 2rem;
+}
+
+.otp-input {
+    text-align: center;
+    letter-spacing: 0.5em;
+    font-size: 1.2rem;
+}
+
+/* Enhanced Button Styles */
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    
+    .btn-icon {
+        font-size: 1.2rem;
+    }
+}
+
+/* Dark Mode Specific Styles */
+.dark-mode {
+    .clock {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .timer-progress {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}

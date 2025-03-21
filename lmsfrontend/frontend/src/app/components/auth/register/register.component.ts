@@ -74,7 +74,7 @@ export class RegisterComponent implements OnInit {
             this.sharedemail.setEmail(this.registerForm.value.email)
             this.message=response.message
           setTimeout(()=>{
-            
+            localStorage.removeItem('timerEndTime')
             this.router.navigate(['student/sentotp'])
           })
         },

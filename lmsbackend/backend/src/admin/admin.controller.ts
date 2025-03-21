@@ -28,7 +28,7 @@ export class AdminController {
 
 
     @Patch('verifyinstructor/:instructorId')
-    async verifyinstructor(@Param('instructorId') instructorId:string,@Body() body:{isApproved:boolean}){
-          return this.adminservice.verifyinstructor(instructorId,body.isApproved)
+    async verifyinstructor(@Param('instructorId') instructorId:string,@Body() body:{isApproved:boolean,feedback?:string}){
+          return this.adminservice.verifyinstructor(instructorId,body.isApproved,body.feedback)
     }
 }

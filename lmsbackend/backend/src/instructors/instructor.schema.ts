@@ -41,6 +41,15 @@ export class instructor{
 
     @Prop({type:String,enum:InstructorRole,default:InstructorRole.INSTRUCTOR})
     role:InstructorRole
+
+    @Prop({type:String,required:false})
+    rejectionFeedback?:string
+
+    @Prop({type:Boolean,default:true})
+    canReapply:boolean
+
+    @Prop({type:Date,required:false})
+    rejectedAt?:Date
 }
 
 export const instructorSchema=SchemaFactory.createForClass(instructor)

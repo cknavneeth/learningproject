@@ -1,45 +1,121 @@
-<div class="container" [ngClass]="{ 'dark-mode': isDarkMode, 'light-mode': !isDarkMode }">
-    <!-- Dark Mode Toggle Button -->
-    <button class="toggle-btn" (click)="toggleDarkMode()">
-        {{ isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode' }}
-    </button>
-
-    <div class="form-wrapper">
-        <h1>OTP Verification</h1>
-
-        <!-- Error Message -->
-
-        <p *ngIf="errormessages" class="text-red-500 text-center mb-4">{{ errormessages }}</p>
-
-        <!-- Success Message -->
-        <p *ngIf="message" class="text-green-500 text-center mb-4">{{ message }}</p>
-
-       
-         <!-- Timer Display -->
-         <div class="timer-container" *ngIf="!showResendButton">
-            <p class="timer">Time remaining: {{ formatTime() }}</p>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-2xl">
+        <!-- Header -->
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
+                OTP Verification
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                Please enter the verification code sent to your email
+            </p>
         </div>
 
-        <!-- Email Input -->
-
-        <div >
-            <div  class="input-group">
-                <input type="text" [(ngModel)]="otp" placeholder="Enter your OTP">
+        <!-- Messages -->
+        <div class="space-y-2">
+            <div *ngIf="errormessages" 
+                class="bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-400 p-3 rounded-lg text-sm text-center">
+                {{ errormessages }}
             </div>
-    
-            <!-- Verify OTP Button -->
-            <button class="action-btn verify-btn" (click)="verifyOtp()">Verify OTP</button>
-
+            <div *ngIf="message" 
+                class="bg-green-50 dark:bg-green-900/30 text-green-500 dark:text-green-400 p-3 rounded-lg text-sm text-center">
+                {{ message }}
+            </div>
         </div>
-        <button 
-        *ngIf="showResendButton" 
-        class="action-btn resend-btn" 
-        (click)="resendOtp()">
-        Resend OTP
-    </button>
-        
 
-        <!-- OTP Input (Shown only when OTP is sent) -->
-       
+        <!-- Timer Section -->
+        <div *ngIf="!showResendButton" class="flex flex-col items-center space-y-4">
+            <!-- Circular Timer -->
+            <div class="relative w-32 h-32">
+                <!-- Circular Progress -->
+                <div class="w-full h-full rounded-full bg-gray-200 dark:bg-gray-700">
+                    <div class="absolute inset-0">
+                        <div class="w-full h-full rounded-full border-4 border-transparent"
+                            [style.background]="'conic-gradient(#3B82F6 ' + (timeLeft/300)*360 + 'deg, transparent 0deg)'">
+                        </div>
+                    </div>
+                </div>
+                <!-- Timer Display -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-2xl font-bold text-gray-700 dark:text-gray-200">
+                        {{ formatTime() }}
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Linear Progress -->
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-1000"
+                    [style.width]="(timeLeft/300)*100 + '%'">
+                </div>
+            </div>
+        </div>
+
+        <!-- OTP Input -->
+        <div class="mt-8 space-y-6">
+            <div>
+                <label for="otp" class="sr-only">OTP Code</label>
+                <input type="text" 
+                    id="otp"
+                    [(ngModel)]="otp"
+                    maxlength="6"
+                    class="appearance-none relative block w-full px-3 py-4 border border-gray-300 dark:border-gray-600 
+                        placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white 
+                        rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                        dark:bg-gray-700 text-center text-2xl tracking-widest"
+                    placeholder="Enter OTP">
+            </div>
+
+            <!-- Verify Button -->
+            <button (click)="verifyOtp()"
+                class="group relative w-full flex justify-center py-3 px-4 border border-transparent 
+                    text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 
+                    transition-all duration-200 ease-in-out transform hover:-translate-y-0.5">
+                <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                    <!-- Lock Icon -->
+                    <svg class="h-5 w-5 text-blue-500 group-hover:text-blue-400" 
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" 
+                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" 
+                            clip-rule="evenodd" />
+                    </svg>
+                </span>
+                Verify OTP
+            </button>
+
+            <!-- Resend Button -->
+            <button *ngIf="showResendButton" 
+                (click)="resendOtp()"
+                class="group relative w-full flex justify-center py-3 px-4 border border-gray-300 
+                    dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 
+                    bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 
+                    transition-all duration-200 ease-in-out transform hover:-translate-y-0.5">
+                <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                    <!-- Refresh Icon -->
+                    <svg class="h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300" 
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" 
+                            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" 
+                            clip-rule="evenodd" />
+                    </svg>
+                </span>
+                Resend OTP
+            </button>
+        </div>
+
+        <!-- Dark Mode Toggle -->
+        <button (click)="toggleDarkMode()"
+            class="absolute top-4 right-4 p-2 rounded-lg bg-gray-200 dark:bg-gray-700 
+                hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
+            <svg *ngIf="!isDarkMode" class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+            </svg>
+            <svg *ngIf="isDarkMode" class="w-5 h-5 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+        </button>
     </div>
 </div>

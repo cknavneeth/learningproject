@@ -72,7 +72,7 @@ export class AdminService {
 
 
 
-    async verifyinstructor(instructorId:string,isApproved:boolean){
+    async verifyinstructor(instructorId:string,isApproved:boolean,feedback?:string){
         if(!instructorId){
             throw new NotFoundException('instructor not found')
         }
@@ -85,6 +85,15 @@ export class AdminService {
             throw new NotFoundException('instructor not found')
         }
         instructor.isApproved=isApproved
+        if(!isApproved&&feedback){
+            instructor.rejectionFeedback=feedback
+            instructor.rejectedAt=new Date()
+            instructor.canReapply=true
+        }else{
+            instructor.rejectionFeedback=undefined
+            instructor.rejectedAt=undefined
+            instructor.canReapply=false
+        }
         await instructor.save()
         return instructor
 

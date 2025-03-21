@@ -4,12 +4,16 @@ import { inject } from '@angular/core';
 import { catchError, switchMap, tap, throwError } from 'rxjs';
 import { InstructorauthserviceService } from '../services/instructorauthservice.service';
 import { TokenserviceService } from '../services/tokenservice.service';
+import { Router } from '@angular/router';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+
+  console.log('tholik')
 
   const studentauthservice=inject(AuthserviceService)
   const instructorauthservice=inject(InstructorauthserviceService)
   const tokenservice=inject(TokenserviceService)
+  const router=inject(Router)
 
   if (req.url.includes('/auth/admin')) {
     return next(req);
@@ -34,9 +38,47 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })
   }
   return next(authreq).pipe(
+    tap({
+      next: (response) => {
+        console.log('Response success:', response);
+      },
+      error: (error) => {
+        console.log('Response error in tap:', error);
+      },
+      complete: () => {
+        console.log('Request complete');
+      }
+    }),
+    
+    
     catchError(error=>{
-      if(error.status==401){
+      
+      console.log('Error caught in interceptor:', {
+        status: error.status,
+        error: error.error,
+        fullError: error
+      });
+      if(error.status==401&&error.error?.isBlocked){
+        console.log('user got blocked redirecting to login')
+         //my code for checking the user is blocked or not
+         
+          if(req.url.includes('/student')){
+            tokenservice.removeStudentToken()
+            router.navigate(['/student/login'])
+          }else if(req.url.includes('/instructor')){
+             tokenservice.removeInstructorToken()
+             router.navigate(['/instructor/login'])
+          }
+           return throwError(()=>error)
+      }
 
+
+
+
+
+      if(error.status==401){
+       
+        //my code for refreshing token
         const authservice=req.url.includes('/instructor/')?instructorauthservice:studentauthservice
         return authservice.refreshToken().pipe(
           switchMap((response)=>{

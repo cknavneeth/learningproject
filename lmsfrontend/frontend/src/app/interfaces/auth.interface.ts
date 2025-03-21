@@ -19,6 +19,9 @@ export interface instructors{
     isVerified:boolean
     isApproved:boolean
     certificateUrl:string
+    rejectionFeedback?:string
+    canReapply?:boolean
+    rejectedAt?:Date
 }
 
 export interface OtpVerificationData{
