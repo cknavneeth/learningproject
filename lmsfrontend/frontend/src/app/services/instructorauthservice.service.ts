@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap } from 'rxjs';
 import { TokenserviceService } from './tokenservice.service';
-import { OtpVerificationData } from '../interfaces/auth.interface';
+import { authResponse, OtpVerificationData, UserCredentials } from '../interfaces/auth.interface';
 
 interface LoginResponse{
   accesstoken:string;
@@ -28,7 +28,7 @@ export class InstructorauthserviceService {
     return this.http.post(`${this.apiurl}/insotp`,{emailaddress},{headers:{'Content-Type':'application/json'}})
   }
 
-  verifyotp(data:{emailaddress:string,otp:string}):Observable<any>{
+  verifyotp(data:{emailaddress:string,otp:string}):Observable<string>{
     
     const fullUrl = `${this.apiurl}/verifyinsotp`;
     console.log('INSTRUCTOR SERVICE - Making request to:', fullUrl);
@@ -36,10 +36,10 @@ export class InstructorauthserviceService {
 
 
     
-    return this.http.post(`${this.apiurl}/verifyinsotp`,data,{headers:{'Content-Type':'application/json'}})
+    return this.http.post<string>(`${this.apiurl}/verifyinsotp`,data,{headers:{'Content-Type':'application/json'}})
   }
 
-  login(instructorData:any):Observable<any>{
+  login(instructorData:UserCredentials):Observable<authResponse>{
     console.log('instructor login service ahn ith')
     return this.http.post<LoginResponse>(`${this.apiurl}/inslogin`,instructorData,{withCredentials:true}).pipe(
       tap((response)=>{
@@ -75,19 +75,19 @@ export class InstructorauthserviceService {
 
 
 
-  forgotpasswordInstructor(emailaddress:string):Observable<any>{
-         return this.http.post(`${this.apiurl}/forgotpasswordinstructor`,{emailaddress})
+  forgotpasswordInstructor(emailaddress:string):Observable<{message:string}>{
+         return this.http.post<{message:string}>(`${this.apiurl}/forgotpasswordinstructor`,{emailaddress})
   }
 
 
-  resetpasswordinstructor(token:string,password:string):Observable<any>{
-    return this.http.post(`${this.apiurl}/resetpasswordinstructor/${token}`,{password})
+  resetpasswordinstructor(token:string,password:string):Observable<{message:string}>{
+    return this.http.post<{message:string}>(`${this.apiurl}/resetpasswordinstructor/${token}`,{password})
   }
 
 
 
-  logoutinstructor():Observable<any>{
-    return this.http.post(`${this.apiurl}/logout`,{},{withCredentials:true}).pipe(
+  logoutinstructor():Observable<void>{
+    return this.http.post<void>(`${this.apiurl}/logout`,{},{withCredentials:true}).pipe(
       tap(()=>{
         this.tokenservice.removeInstructorToken()
       }),

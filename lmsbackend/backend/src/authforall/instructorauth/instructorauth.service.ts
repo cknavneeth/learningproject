@@ -177,7 +177,6 @@ export class InstructorauthService {
             } catch (error) {
                 throw new BadRequestException('Error while accessing token')
             }
-            
         }
     
     

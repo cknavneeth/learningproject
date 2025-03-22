@@ -34,9 +34,10 @@ export class AuthService {
             throw new BadRequestException('user already exists')
         }
         
-        const registered=await this.userservice.createUser(username,email,password)
+        await this.userservice.createUser(username,email,password)
         await this.sendOtp(email)
-        return registered
+        // return registered
+        return {message:'Registration successfull,OTP is in email'}
     }
 
     async sendOtp(email:string){

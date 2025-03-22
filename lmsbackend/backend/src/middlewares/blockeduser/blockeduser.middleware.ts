@@ -23,6 +23,8 @@ export class BlockeduserMiddleware implements NestMiddleware {
 
           const decoded=this.jwtService.verify(token)
 
+          console.log('decoded',decoded)
+
           if(req.url.includes('/student')){
             const user=await this.userService.findByEmail(decoded.email)
             if(user?.isBlocked){
@@ -45,7 +47,12 @@ export class BlockeduserMiddleware implements NestMiddleware {
 
           next()
         } catch (error) {
-          throw new UnauthorizedException('Your account has been blocked')
+          console.log('middleware error',error)
+          throw new UnauthorizedException({
+            message: 'Your account has been blocked',
+            isBlocked: true,
+            statusCode: 401
+          })
         }
     }
 

@@ -29,3 +29,33 @@ export interface OtpVerificationData{
     emailaddress?:string,
     otp:string
 }
+
+
+export interface UserCredentials{
+    emailaddress?:string,
+    email?:string,
+    password:string
+}
+
+export interface RegisterData extends UserCredentials{
+    username:string
+}
+
+export interface authResponse {
+    accesstoken?:string,
+    refreshtoken?:string,
+    message:string
+}
+
+export interface otpResponse{
+    message:string
+}
+
+export interface forgotpasswordResponse{
+    message:string
+}
+
+export interface resetpasswordResponse{
+    message:string
+}
+

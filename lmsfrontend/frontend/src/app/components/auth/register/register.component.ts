@@ -76,7 +76,7 @@ export class RegisterComponent implements OnInit {
           setTimeout(()=>{
             localStorage.removeItem('timerEndTime')
             this.router.navigate(['student/sentotp'])
-          })
+          },1000)
         },
         error=>{
             this.errormessage=error.error.message

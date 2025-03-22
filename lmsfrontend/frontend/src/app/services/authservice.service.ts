@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap } from 'rxjs';
 import { TokenserviceService } from './tokenservice.service';
-import { OtpVerificationData } from '../interfaces/auth.interface';
+import { authResponse, forgotpasswordResponse, otpResponse, OtpVerificationData, RegisterData, resetpasswordResponse, UserCredentials } from '../interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class AuthserviceService {
 
   constructor(private http:HttpClient,private tokenservice:TokenserviceService) { }
 
-  register(userData:any):Observable<any>{
-    return this.http.post(`${this.apiurl}/register`,userData)
+  register(userData:RegisterData):Observable<authResponse>{
+    return this.http.post<authResponse>(`${this.apiurl}/register`,userData)
   }
 
   sendOtp(email:string):Observable<any>{
@@ -22,16 +22,16 @@ export class AuthserviceService {
   }
 
 
-  verifyotp(data: { email: string, otp: string }): Observable<any> {
+  verifyotp(data: { email: string, otp: string }): Observable<otpResponse> {
     console.log('enthano entho')
-    return this.http.post(`${this.apiurl}/verifyotp`, data, {
+    return this.http.post<otpResponse>(`${this.apiurl}/verifyotp`, data, {
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  login(userData:any):Observable<any>{
+  login(userData:UserCredentials):Observable<authResponse>{
     console.log('studentinte login service')
-      return this.http.post(`${this.apiurl}/login`,userData,{withCredentials:true}).pipe(
+      return this.http.post<authResponse>(`${this.apiurl}/login`,userData,{withCredentials:true}).pipe(
         tap((response:any)=>{
           this.tokenservice.setStudentToken(response.accesstoken)
         })
@@ -67,8 +67,8 @@ export class AuthserviceService {
   }
 
 
-  logoutthestudent():Observable<any>{
-    return this.http.post(`${this.apiurl}/logout`,{},{withCredentials:true}).pipe(
+  logoutthestudent():Observable<void>{
+    return this.http.post<void>(`${this.apiurl}/logout`,{},{withCredentials:true}).pipe(
       tap(()=>{
         this.tokenservice.removeStudentToken()
       }),
@@ -79,12 +79,12 @@ export class AuthserviceService {
   }
 
 
-  forgotpassword(email:string):Observable<any>{
-    return this.http.post(`${this.apiurl}/forgotpassword`,{email})
+  forgotpassword(email:string):Observable<forgotpasswordResponse>{
+    return this.http.post<forgotpasswordResponse>(`${this.apiurl}/forgotpassword`,{email})
   }
 
-  resetpassword(token:string,password:string):Observable<any>{
-    return this.http.post(`${this.apiurl}/resetpassword/${token}`,{password})
+  resetpassword(token:string,password:string):Observable<resetpasswordResponse>{
+    return this.http.post<resetpasswordResponse>(`${this.apiurl}/resetpassword/${token}`,{password})
   }
 
 

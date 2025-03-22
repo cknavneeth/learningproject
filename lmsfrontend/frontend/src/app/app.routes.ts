@@ -36,7 +36,8 @@ export const routes: Routes = [
 
     {
         path:'resetpassword/:token',
-        component:ResetpasswordComponent
+        component:ResetpasswordComponent,
+        data:{userType:'student'}
     },
     {
         path: 'student',
@@ -64,7 +65,8 @@ export const routes: Routes = [
             },
             {
                 path:'forgotpassword',
-                component:ForgorpasswordComponent
+                component:ForgorpasswordComponent,
+                data:{userType:'student'}
             },
             {
                 path:'home',
@@ -79,7 +81,8 @@ export const routes: Routes = [
 
     {
         path:'instructorresetpassword/:token',
-        component:InstructorresetpasswordComponent
+        component:ResetpasswordComponent,
+        data:{userType:'instructor'}
     },
     {
         path: 'instructor',
@@ -112,7 +115,8 @@ export const routes: Routes = [
             },
             {
                 path:'forgotpasswordins',
-                component:InstructorforgotpasswordComponent
+                component:ForgorpasswordComponent,
+                data:{userType:'instructor'}
             }
         ]
     },

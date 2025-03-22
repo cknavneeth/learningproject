@@ -58,7 +58,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         error: error.error,
         fullError: error
       });
-      if(error.status==401&&error.error?.isBlocked){
+
+      console.log('hey hey hey',error.error.isBlocked)
+      if(error.status===401 && error.error?.isBlocked===true){
         console.log('user got blocked redirecting to login')
          //my code for checking the user is blocked or not
          
@@ -76,7 +78,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 
 
-      if(error.status==401){
+      if(error.status===401){
        
         //my code for refreshing token
         const authservice=req.url.includes('/instructor/')?instructorauthservice:studentauthservice
