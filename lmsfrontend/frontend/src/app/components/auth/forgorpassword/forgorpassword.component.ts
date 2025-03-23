@@ -16,6 +16,7 @@ export class ForgorpasswordComponent implements OnInit{
    errormessage:string=''
    message:string=''
    userType:'student'|'instructor'='student'
+   isSubmitted:boolean=false
 
    
 
@@ -37,6 +38,7 @@ export class ForgorpasswordComponent implements OnInit{
 
    onSubmit(){
     //new content
+    this.isSubmitted=true;
     if(!this.forgotstudentform.valid){
       return;
     }

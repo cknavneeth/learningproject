@@ -96,7 +96,7 @@ export class InstructorRegisterComponent {
         setTimeout(() => {
           localStorage.removeItem('timerEndTime')
           this.router.navigate(['/instructor/instructorotp']);
-        }, 2000);
+        }, 1000);
       },
       error: (error) => {
         this.errorMessage = error.error?.message || 'An error occurred during registration';

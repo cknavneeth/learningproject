@@ -21,6 +21,7 @@ export class LoginComponent {
    message:string=''
    errormessage:string=''
    userType:'student'|'instructor'='student'
+   showPassword:boolean=false
 
 
     constructor(private fb:FormBuilder,private studentService:AuthserviceService,private instructorService:InstructorauthserviceService,private router:Router,private route:ActivatedRoute){
@@ -78,5 +79,10 @@ export class LoginComponent {
 
     toggleDarkMode() {
       this.isDarkMode = !this.isDarkMode;
+    }
+
+
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
     }
 }

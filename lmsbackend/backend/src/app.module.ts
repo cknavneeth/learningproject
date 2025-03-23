@@ -39,8 +39,8 @@ export class AppModule implements NestModule{
         '/auth/student/forgotpassword',
         '/auth/student/resetpassword/:token',
 
-        '/auth/instructor/login',
-        '/auth/instructor/register',
+        '/auth/instructor/inslogin',
+        '/auth/instructor/instructorRegister',
         '/auth/instructor/sendotp',
         '/auth/instructor/verifyotp',
         '/auth/instructor/forgotpassword',
