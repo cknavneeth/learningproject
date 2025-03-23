@@ -21,7 +21,7 @@ export class ResetpasswordComponent {
 
    constructor(private fb:FormBuilder,private route:ActivatedRoute,private readonly authservice:AuthserviceService,private router:Router,private instructorservice:InstructorauthserviceService){
     this.resetpasswordform=this.fb.group({
-      password:['',[Validators.required,Validators.minLength(6)]]
+      password:['',[Validators.required,Validators.minLength(6),Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/)]],
     })
 
    }
@@ -55,7 +55,7 @@ export class ResetpasswordComponent {
     }else{
       this.handleInstructorReset(password)
     }
-
+    
    }
 
 
@@ -108,6 +108,20 @@ export class ResetpasswordComponent {
 
    togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+
+  get passwordErrors() {
+    const passwordControl = this.resetpasswordform.get('password');
+    if (passwordControl?.hasError('required')) {
+      return 'Password is required';
+    }
+    if (passwordControl?.hasError('minlength')) {
+      return 'Password must be at least 6 characters long';
+    }
+    if (passwordControl?.hasError('pattern')) {
+      return 'Password must include an uppercase letter, a lowercase letter, a number, and a special character';
+    }
+    return '';
   }
 
 }

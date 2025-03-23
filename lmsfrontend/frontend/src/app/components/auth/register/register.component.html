@@ -156,10 +156,10 @@
                             <!-- Submit Button -->
                             <button 
                                 type="submit" 
-                                [disabled]="registerForm.invalid"
+                                [disabled]="registerForm.invalid || isSubmitted"
                                 class="w-full py-3 mt-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Register
+                                {{isSubmitted?'Registering...':'Register'}}
                             </button>
 
                             <!-- Login Link -->

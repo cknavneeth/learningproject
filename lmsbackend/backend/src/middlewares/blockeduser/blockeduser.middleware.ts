@@ -28,7 +28,7 @@ export class BlockeduserMiddleware implements NestMiddleware {
           if(req.url.includes('/student')){
             const user=await this.userService.findByEmail(decoded.email)
             if(user?.isBlocked){
-              throw new UnauthorizedException({
+              return res.status(401).json({
                 message:'Your account has been blocked',
                 isBlocked:true,
                 statusCode:401
@@ -37,7 +37,7 @@ export class BlockeduserMiddleware implements NestMiddleware {
           }else if(req.url.includes('/instructor')){
             const instructor=await this.instructorService.findByEmail(decoded.emailaddress)
             if(instructor?.isBlocked){
-              throw new UnauthorizedException({
+              return res.status(401).json({
                 message:'Your account has been blocked',
                 isBlocked:true,
                 statusCode:401

@@ -22,6 +22,9 @@ export class InstructorRegisterComponent {
   errorMessage: string = '';
   successMessage: string = '';
   passwordStrength: number = 0;
+  isSubmitted:boolean=false
+  showPassword:boolean=false
+  showConfirmPassword:boolean=false
 
   constructor(
     private fb: FormBuilder,
@@ -78,6 +81,8 @@ export class InstructorRegisterComponent {
       return;
     }
 
+    this.isSubmitted=true
+
     const formData = new FormData();
     formData.append('name', this.instructorRegistration.value.instructorname);
     formData.append('emailaddress', this.instructorRegistration.value.emailaddress);
@@ -89,6 +94,7 @@ export class InstructorRegisterComponent {
         this.sharedemail.setEmail(this.instructorRegistration.value.emailaddress)
         this.successMessage = 'Registration successful!';
         setTimeout(() => {
+          localStorage.removeItem('timerEndTime')
           this.router.navigate(['/instructor/instructorotp']);
         }, 2000);
       },
@@ -125,6 +131,19 @@ export class InstructorRegisterComponent {
     } else {
       this.disableDarkMode();
     }
+  }
+
+
+
+
+  togglePasswordVisibility() {
+    console.log('clicked toggle buton')
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    console.log('closed eye button')
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
 }

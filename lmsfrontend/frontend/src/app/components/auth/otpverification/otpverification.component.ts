@@ -46,8 +46,22 @@ export class OtpverificationComponent implements OnInit{
     this.email = this.sharedemail.getEmail();
     this.startTimer()
     // localStorage.removeItem("timerEndTime");
+
+    const darkModePref = localStorage.getItem('isDarkMode');
+    this.isDarkMode = darkModePref === null ? true : darkModePref === 'true';
+    this.updateDarkModeClass();
     
    }
+
+
+   private updateDarkModeClass() {
+    const htmlElement = document.documentElement; // <html> element
+    if (this.isDarkMode) {
+      htmlElement.classList.add('dark');
+    } else {
+      htmlElement.classList.remove('dark');
+    }
+  }
 
 
    ngOnDestroy() {
@@ -61,27 +75,24 @@ export class OtpverificationComponent implements OnInit{
     const storedEndTime = localStorage.getItem("timerEndTime");
     const currentTime = Date.now();
 
-    // If timer exists, calculate remaining time
     if (storedEndTime) {
         const endTime = parseInt(storedEndTime);
         const remainingTime = Math.floor((endTime - currentTime) / 1000);
         this.timeLeft = Math.max(remainingTime, 0);
     } else {
-        // First time starting timer
+      
         this.timeLeft = 300;
         const endTime = currentTime + (this.timeLeft * 1000);
         localStorage.setItem("timerEndTime", endTime.toString());
     }
 
-    // Update show resend button based on time left
     this.showResendButton = this.timeLeft === 0;
 
-    // Clear any existing interval
     if (this.timerInterval) {
         clearInterval(this.timerInterval);
     }
 
-    // Only start interval if there's time remaining
+    
     if (this.timeLeft > 0) {
         this.timerInterval = setInterval(() => {
             this.timeLeft--;
@@ -125,7 +136,6 @@ export class OtpverificationComponent implements OnInit{
     this.errormessages = '';
     this.message = '';
     
-    // Validate email before sending
     if (!this.email) {
         this.errormessages = 'Email not found';
         return;
@@ -151,7 +161,7 @@ export class OtpverificationComponent implements OnInit{
             }
         });
     } else {
-        const emailData = { emailaddress: this.email }; // Make sure to match backend expected format
+        const emailData = { emailaddress: this.email }; 
         
         this.instructorservice.sendOtp(this.email).subscribe({
             next: (response) => {
@@ -237,6 +247,7 @@ else {
     console.log('OTP verification successful');
     this.message = 'OTP verified successfully';
     setTimeout(() => {
+      localStorage.removeItem('timerEndTime');
       this.router.navigate([redirectPath]);
     }, 2000);
   }
@@ -258,6 +269,7 @@ else {
 
    toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('isDarkMode', this.isDarkMode.toString());
   }
 
 

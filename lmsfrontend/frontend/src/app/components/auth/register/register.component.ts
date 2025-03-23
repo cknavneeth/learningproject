@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
   isDarkMode: boolean = false;
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
+  isSubmitted:boolean=false
 
   constructor(private fb: FormBuilder,private authservice:AuthserviceService,private router:Router,private sharedemail:SharedemailService) {
     this.registerForm = this.fb.group({
@@ -68,6 +69,9 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.registerForm.valid) {
+      this.errormessage='';
+      this.message=''
+      this.isSubmitted=true
       if(this.registerForm.valid){
         this.authservice.register(this.registerForm.value).subscribe(
           response=>{

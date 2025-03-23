@@ -66,13 +66,20 @@
                                 Password
                             </label>
                             <input 
-                                type="password" 
+                                [type]="showPassword ? 'text' : 'password'"
                                 formControlName="password"
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                 placeholder="Enter your password"
                             >
+                            <div 
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                (click)="togglePasswordVisibility()"
+                            >
+                                <span *ngIf="showPassword" class="text-gray-600 dark:text-gray-300">🙈</span>
+                                <span *ngIf="!showPassword" class="text-gray-600 dark:text-gray-300">👁️</span>
+                            </div>
                             <div *ngIf="instructorRegistration.get('password')?.touched && instructorRegistration.get('password')?.invalid" 
-                                 class="text-xs text-red-500 mt-1">
+                                class="text-xs text-red-500 mt-1">
                                 <span *ngIf="instructorRegistration.get('password')?.errors?.['required']">Password is required</span>
                                 <span *ngIf="instructorRegistration.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
                                 <small class="text-red-500 text-xs mt-1" *ngIf="instructorRegistration.controls['password'].hasError('pattern') && instructorRegistration.controls['password'].touched">
@@ -87,11 +94,18 @@
                                 Confirm Password
                             </label>
                             <input 
-                                type="password" 
+                            [type]="showConfirmPassword ? 'text' : 'password'"
                                 formControlName="confirmpassword"
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                 placeholder="Confirm your password"
                             >
+                            <div 
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                            (click)="toggleConfirmPasswordVisibility()"
+                        >
+                            <span *ngIf="showConfirmPassword" class="text-gray-600 dark:text-gray-300">🙈</span>
+                            <span *ngIf="!showConfirmPassword" class="text-gray-600 dark:text-gray-300">👁️</span>
+                        </div>
                             <div *ngIf="instructorRegistration.get('confirmpassword')?.touched && 
                                       (instructorRegistration.get('confirmpassword')?.invalid || instructorRegistration.hasError('passwordMismatch'))" 
                                  class="text-xs text-red-500 mt-1">
@@ -149,10 +163,10 @@
                         <!-- Submit Button -->
                         <button 
                             type="submit"
-                            [disabled]="instructorRegistration.invalid || !selectedFile"
+                            [disabled]="instructorRegistration.invalid || !selectedFile || isSubmitted"
                             class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
                         >
-                            Register
+                            {{isSubmitted?'Registering...':'Register'}}
                         </button>
                     </form>
 

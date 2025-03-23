@@ -19,8 +19,6 @@ export class InstructorauthService {
                 throw new BadRequestException('User already exists')
              }
     
-             console.log('rone',emailaddress)
-    
              let certificateUrl=await this.cloudinary.UploadedFile(certificate)
     
              const registered=await this.instructorService.createInstructor(name,emailaddress,password,certificateUrl)
