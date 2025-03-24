@@ -35,7 +35,6 @@ export class TablecomponentComponent implements OnInit,OnChanges{
   @Output() searchChange=new EventEmitter<string>()
 
 
-  //pagination properties for students
   currentPage:number=1;
   filteredData:any[]=[];
   searchTerm:string='';
@@ -76,14 +75,14 @@ export class TablecomponentComponent implements OnInit,OnChanges{
         val?.toString().toLowerCase().includes(this.searchTerm)
       )
     );
-    this.currentPage = 1; // Reset to first page after search
+    this.currentPage = 1; 
     this.searchChange.emit(this.searchTerm);
   }
 
   getPageNumbers(): number[] {
     const totalPages = this.totalPages;
     const currentPage = this.currentPage;
-    const maxPages = 5; // Maximum number of page buttons to show
+    const maxPages = 5;
 
     if (totalPages <= maxPages) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);

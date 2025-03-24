@@ -5,10 +5,11 @@ import { InstructorauthserviceService } from '../../../services/instructorauthse
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { SharedemailService } from '../../../services/shared/sharedemail.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-instructor-register',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule,MatIconModule],
   templateUrl: './instructor-register.component.html',
   styleUrl: './instructor-register.component.scss',
   standalone: true

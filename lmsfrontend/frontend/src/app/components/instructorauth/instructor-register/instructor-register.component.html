@@ -75,8 +75,9 @@
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                                 (click)="togglePasswordVisibility()"
                             >
-                                <span *ngIf="showPassword" class="text-gray-600 dark:text-gray-300">🙈</span>
-                                <span *ngIf="!showPassword" class="text-gray-600 dark:text-gray-300">👁️</span>
+                                <!-- <span *ngIf="showPassword" class="text-gray-600 dark:text-gray-300">🙈</span>
+                                <span *ngIf="!showPassword" class="text-gray-600 dark:text-gray-300">👁️</span> -->
+                                <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                             </div>
                             <div *ngIf="instructorRegistration.get('password')?.touched && instructorRegistration.get('password')?.invalid" 
                                 class="text-xs text-red-500 mt-1">
@@ -103,8 +104,10 @@
                             class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                             (click)="toggleConfirmPasswordVisibility()"
                         >
-                            <span *ngIf="showConfirmPassword" class="text-gray-600 dark:text-gray-300">🙈</span>
-                            <span *ngIf="!showConfirmPassword" class="text-gray-600 dark:text-gray-300">👁️</span>
+                            <!-- <span *ngIf="showConfirmPassword" class="text-gray-600 dark:text-gray-300">🙈</span>
+                            <span *ngIf="!showConfirmPassword" class="text-gray-600 dark:text-gray-300">👁️</span> -->
+                            <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+
                         </div>
                             <div *ngIf="instructorRegistration.get('confirmpassword')?.touched && 
                                       (instructorRegistration.get('confirmpassword')?.invalid || instructorRegistration.hasError('passwordMismatch'))" 

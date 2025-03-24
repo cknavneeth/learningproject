@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AdminserviceService } from '../../../services/adminservice.service';
 import { Router } from '@angular/router';
 import { TokenserviceService } from '../../../services/tokenservice.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-adminlogin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,MatIconModule],
   templateUrl: './adminlogin.component.html',
   styleUrl: './adminlogin.component.scss'
 })
