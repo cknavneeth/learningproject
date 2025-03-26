@@ -14,7 +14,10 @@ async function bootstrap() {
   });
 
   console.log('JWT_SECRET_KEY:', process.env.JWT_SECRET_KEY);
-  
+
+  console.log('Server running on port:', process.env.PORT);
+
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

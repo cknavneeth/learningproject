@@ -104,5 +104,41 @@
           <a [routerLink]="getForgotPasswordLink()" class="forgot-password text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-300">Forgot password?</a>
         </div>
       </form>
+
+      <!-- <div id="g_id_onload"
+      [attr.data-client_id]="googleClientId"
+      data-context="signin"
+      data-callback="handleCredentialResponse"
+      data-auto_prompt="false">
+   </div>
+   <div class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left">
+   </div> -->
+
+
+
+   <div class="mt-6 w-full">
+    <!-- Divider -->
+    <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300 dark:border-gray-700"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Or continue with</span>
+        </div>
+    </div>
+
+    <!-- Google Sign-In Container -->
+    <div class="mt-6 flex justify-center">
+        <div id="googleSignInDiv" class="g_id_signin"></div>
+    </div>
+</div>
+
+
     </div>
   </div>

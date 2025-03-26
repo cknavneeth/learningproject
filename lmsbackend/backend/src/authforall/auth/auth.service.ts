@@ -15,6 +15,7 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { instructorDocument } from 'src/instructors/instructor.schema';
 import { AdminService } from 'src/admin/admin.service';
 import * as bcrypt from 'bcryptjs'
+import { OAuth2Client } from 'google-auth-library';
 
 
 
@@ -24,9 +25,14 @@ import * as bcrypt from 'bcryptjs'
 @Injectable()
 export class AuthService {
 
-    constructor(private readonly userservice:UsersService,private readonly cloudinary:CloudinaryService,private readonly instructorService:InstructorsService ,private readonly adminService:AdminService,private jwtService:JwtService){}
+    private googleClient:OAuth2Client
+
+    constructor(private readonly userservice:UsersService,private readonly cloudinary:CloudinaryService,private readonly instructorService:InstructorsService ,private readonly adminService:AdminService,private jwtService:JwtService,private readonly configservice:ConfigService){
+        this.googleClient=new OAuth2Client(this.configservice.get<string>('GOOGLE_CLIENT_ID'))
+    }
 
     private accessToken:string|null=null
+   
 
     async register(username:string,email:string,password:string){
         let existinguser=await this.userservice.findByEmail(email)
@@ -140,12 +146,12 @@ export class AuthService {
           return {accesstoken,refreshtoken,message:'Login successfull'}
     }
 
-    generateAccessToken(user:userDocument){
+    generateAccessToken(user:user|userDocument){
        return jwt.sign({userId:user._id.toString(),email:user.email},process.env.JWT_SECRET_KEY as string,{expiresIn:process.env.JWT_EXPIRES_IN})
     }
 
 
-    generateRefreshToken(user:user){
+    generateRefreshToken(user:user|userDocument){
         return jwt.sign({userId:user._id,email:user.email},process.env.REFRESH_TOKEN_SECRET as string,{expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN})
     }
 
@@ -251,6 +257,81 @@ export class AuthService {
         throw new BadRequestException('invalid or expired token')
     }
    }
-   
+
+
+
+   //for google authentication
+   async handleGoogleSignIn(credential:string,res:Response){
+    try{
+       const ticket=await this.googleClient.verifyIdToken({
+        idToken:credential,
+        audience:this.configservice.get<string>('GOOGLE_CLIENT_ID')
+       })
+
+       const payload=ticket.getPayload()
+
+       if(!payload || !payload.email){
+          throw new BadRequestException('Invalid google Token')
+       }
+
+       const {email,name,email_verified,sub:googleId}=payload
+       if(!email_verified){
+        throw new BadRequestException('Email not verified')
+       }
+
+       let user=await this.userservice.findByEmail(email)
+
+       if (user && !user.googleId) {
+        throw new BadRequestException('Email already exists. Please use regular login');
+    }
+
+       if (!user) {
+        const randomPassword = this.generateRandomPassword();
+        user = await this.userservice.createGoogleUser(
+            name || email.split('@')[0],
+            email,
+            randomPassword,
+            googleId
+        );
+    }
+
+
+    // const accesstoken = jwt.sign(
+    //     { userId: user?._id.toString(), email: user?.email },
+    //     process.env.JWT_SECRET_KEY as string,
+    //     { expiresIn: process.env.JWT_EXPIRES_IN }
+    // );
+
+    const accesstoken=this.generateAccessToken(user!)
+    const refreshtoken=this.generateRefreshToken(user!)
+
+    // const refreshtoken = jwt.sign(
+    //     { userId: user?._id.toString(), email: user?.email },
+    //     process.env.REFRESH_TOKEN_SECRET as string,
+    //     { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN }
+    // );
+
+       res.cookie('refreshToken', refreshtoken, {
+           httpOnly: true,
+           secure: process.env.NODE_ENV === 'production',
+           sameSite: 'strict',
+           maxAge: 7 * 24 * 60 * 60 * 1000
+       });
+
+       return res.json({
+           accesstoken,
+           refreshtoken,
+           message: 'Google sign-in successful'
+       });
+    }catch(error){
+         throw new BadRequestException('Invalid google Token')
+    }
+   }
+
+
+   private generateRandomPassword(): string {
+    return Math.random().toString(36).slice(-8) + 
+           Math.random().toString(36).slice(-8);
+}
    
 }

@@ -35,6 +35,13 @@ export class user{
     @Prop({type:String,enum:UserRole,default:UserRole.STUDENT})
     role:UserRole
 
+
+    @Prop({type: String, required: false, unique: true, sparse: true})
+    googleId?: string
+
+    @Prop({type: Boolean, default: false})
+    isGoogleUser: boolean
+
 }
 
 export const userSchema=SchemaFactory.createForClass(user)

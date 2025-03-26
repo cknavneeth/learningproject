@@ -92,5 +92,12 @@ export class AuthController {
     }
    
 
+    @Post('google')
+    async googleAuth(@Body() body:{credential:string},@Res() res:Response){
+      if(!body.credential){
+        throw new BadRequestException('No Credential Provided')
+      }
+      return this.authservice.handleGoogleSignIn(body.credential,res)
+    }
    
 }

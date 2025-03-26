@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { user, userDocument } from './users.schema';
 import { Model } from 'mongoose';
@@ -9,7 +9,7 @@ export class UsersService {
 
     constructor(@InjectModel(user.name) private usermodel:Model<userDocument>){}
 
-    async findByEmail(email:string):Promise<userDocument | null>{
+    async findByEmail(email:string):Promise<userDocument|null>{
        return  this.usermodel.findOne({email}).exec()
     }
 
@@ -39,6 +39,30 @@ export class UsersService {
 
    async updatepassword(userId:string,hashedpassword:string):Promise<void>{
     await this.usermodel.findByIdAndUpdate(userId,{password:hashedpassword})
+   }
+
+
+
+   async createGoogleUser(name: string, email: string, password: string,googleId:string): Promise<userDocument | null> {
+    const existingUser = await this.findByEmail(email);
+        if (existingUser) {
+            throw new BadRequestException('User already exists');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new this.usermodel({
+            username: name,
+            email,
+            password: hashedPassword,
+            isVerified: true, 
+            googleId,
+            isGoogleUser: true,
+        });
+        const savedUser = await newUser.save();
+        if(!savedUser){
+            throw new BadRequestException('Failed to create user')
+        }
+        return savedUser
    }
     
 }
