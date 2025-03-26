@@ -1,2 +1,106 @@
-<p>homeins works!</p>
-<button (click)="logoutinstructor()">logout</button>
+<div class="p-4 bg-gray-900 min-h-screen">
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="bg-gray-800 rounded-lg shadow p-4 text-white">
+        <h3 class="text-gray-400 text-sm">Total Courses</h3>
+        <p class="text-2xl font-bold">12</p>
+        <div class="flex items-center text-green-400 text-sm">
+          <span>↑ 12%</span>
+          <span class="ml-1">from last month</span>
+        </div>
+      </div>
+  
+      <div class="bg-gray-800 rounded-lg shadow p-4 text-white">
+        <h3 class="text-gray-400 text-sm">Active Students</h3>
+        <p class="text-2xl font-bold">256</p>
+        <div class="flex items-center text-green-400 text-sm">
+          <span>↑ 8%</span>
+          <span class="ml-1">from last month</span>
+        </div>
+      </div>
+  
+      <div class="bg-gray-800 rounded-lg shadow p-4 text-white">
+        <h3 class="text-gray-400 text-sm">Total Revenue</h3>
+        <p class="text-2xl font-bold">$3,426</p>
+        <div class="flex items-center text-green-400 text-sm">
+          <span>↑ 15%</span>
+          <span class="ml-1">from last month</span>
+        </div>
+      </div>
+  
+      <div class="bg-gray-800 rounded-lg shadow p-4 text-white">
+        <h3 class="text-gray-400 text-sm">Course Rating</h3>
+        <p class="text-2xl font-bold">4.8</p>
+        <div class="flex items-center text-yellow-400 text-sm">
+          <span>★★★★★</span>
+          <span class="ml-1 text-gray-400">Average</span>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Recent Activity and Quick Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Recent Activity -->
+      <div class="lg:col-span-2 bg-gray-800 rounded-lg shadow">
+        <div class="p-4 border-b border-gray-700">
+          <h2 class="text-lg font-semibold text-white">Recent Activity</h2>
+        </div>
+        <div class="p-4">
+          <div class="space-y-4">
+            <div class="flex items-center p-3 bg-gray-700 rounded-lg">
+              <div class="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
+                <i class="fas fa-user-graduate text-blue-400"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-white">New student enrolled in "Advanced Web Development"</p>
+                <p class="text-xs text-gray-400">2 hours ago</p>
+              </div>
+            </div>
+  
+            <div class="flex items-center p-3 bg-gray-700 rounded-lg">
+              <div class="w-10 h-10 bg-green-900 rounded-full flex items-center justify-center">
+                <i class="fas fa-comment text-green-400"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-white">New review on "JavaScript Fundamentals"</p>
+                <p class="text-xs text-gray-400">5 hours ago</p>
+              </div>
+            </div>
+  
+            <div class="flex items-center p-3 bg-gray-700 rounded-lg">
+              <div class="w-10 h-10 bg-purple-900 rounded-full flex items-center justify-center">
+                <i class="fas fa-certificate text-purple-400"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-white">Course completion certificate issued</p>
+                <p class="text-xs text-gray-400">1 day ago</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Quick Actions -->
+      <div class="bg-gray-800 rounded-lg shadow">
+        <div class="p-4 border-b border-gray-700">
+          <h2 class="text-lg font-semibold text-white">Quick Actions</h2>
+        </div>
+        <div class="p-4">
+          <div class="space-y-3">
+            <button class="w-full bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 transition-colors">
+              Create New Course
+            </button>
+            <button class="w-full bg-gray-700 text-gray-200 rounded-lg px-4 py-2 hover:bg-gray-600 transition-colors">
+              View Analytics
+            </button>
+            <button class="w-full bg-gray-700 text-gray-200 rounded-lg px-4 py-2 hover:bg-gray-600 transition-colors">
+              Schedule Live Session
+            </button>
+            <button class="w-full bg-gray-700 text-gray-200 rounded-lg px-4 py-2 hover:bg-gray-600 transition-colors">
+              View Messages
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

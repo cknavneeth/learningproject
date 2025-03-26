@@ -12,11 +12,5 @@ import { Router } from '@angular/router';
 export class HomeinsComponent {
 
   constructor(private service:InstructorauthserviceService,private router:Router){}
-    logoutinstructor(){
-      this.service.logoutinstructor().subscribe(
-        response => {
-          this.router.navigate(['/instructor/instructorlogin']);
-        }
-      );
-    }
+    
 }

@@ -1,0 +1,39 @@
+<div 
+  class="min-h-screen bg-gray-900 fixed left-0 top-0 z-50 w-64 transition-transform duration-300 transform lg:transform-none"
+  [ngClass]="{'translate-x-0': isOpen, '-translate-x-full': !isOpen}">
+  
+  <!-- Logo Section -->
+  <div class="p-4 border-b border-gray-700 flex items-center justify-between">
+    <h2 class="text-white text-2xl font-bold">ScholarSync</h2>
+    <!-- Close button for mobile -->
+    <button 
+      class="lg:hidden text-gray-400 hover:text-white focus:outline-none"
+      (click)="isOpen = false">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="mt-6">
+    <div class="px-4 space-y-2">
+      <ng-container *ngFor="let item of menuItems">
+        <a [routerLink]="item.route" 
+           routerLinkActive="bg-gray-800 text-white"
+           class="flex items-center px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-lg transition-colors"
+           (click)="isOpen = false">
+          <i [class]="item.icon + ' w-5 h-5 mr-3'"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      </ng-container>
+    </div>
+  </nav>
+</div>
+
+<!-- Overlay for mobile -->
+<div 
+  *ngIf="isOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+  (click)="isOpen = false">
+</div>
