@@ -1,0 +1,17 @@
+<div class="container">
+    <div *ngIf="message" class="alert alert-success mt-3">{{ message }}</div>
+    <div *ngIf="errormessage" class="alert alert-danger mt-3">{{ errormessage }}</div>
+    
+    <div *ngIf="!studentData" class="text-center mt-5">
+      Loading profile...
+    </div>
+  
+    <app-profilecomponent
+      *ngIf="studentData"
+      [userType]="'student'"
+      [userData]="studentData"
+      (profileUpdate)="updateProfile($event)"
+      (passwordUpdate)="updatePassword($event)"
+    >
+    </app-profilecomponent>
+  </div>

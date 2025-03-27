@@ -21,6 +21,7 @@ import { InstructorListComponent } from './components/admin/instructor-list/inst
 import { authGuard, loginGuard } from './guards/student/auth.guard';
 import { instructorguardGuard, instructorLogin } from './guards/instructor/instructorguard.guard';
 import { adminauthGuard, adminLogin } from './guards/admin/adminauth.guard';
+import { StudentprofileComponent } from './components/studentmain/studentprofile/studentprofile.component';
 
 export const routes: Routes = [
     {
@@ -71,6 +72,11 @@ export const routes: Routes = [
             {
                 path:'home',
                 component:LandingpageComponent,
+                canActivate:[authGuard]
+            },
+            {
+                path:'profile',
+                component:StudentprofileComponent,
                 canActivate:[authGuard]
             }
            

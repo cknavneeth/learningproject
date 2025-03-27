@@ -3,11 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { user, userDocument } from './users.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs'
+import { UserRepository } from './repositories/user/user.repository';
 
 @Injectable()
 export class UsersService {
 
-    constructor(@InjectModel(user.name) private usermodel:Model<userDocument>){}
+    constructor(@InjectModel(user.name) private usermodel:Model<userDocument>,private readonly userRepository:UserRepository){}
 
     async findByEmail(email:string):Promise<userDocument|null>{
        return  this.usermodel.findOne({email}).exec()
@@ -63,6 +64,20 @@ export class UsersService {
             throw new BadRequestException('Failed to create user')
         }
         return savedUser
+   }
+
+
+
+   //for profiling of students
+   async getProfile(userId:string){
+    const user=await this.userRepository.findById(userId)
+    if(!user){
+        throw new BadRequestException('User not found')
+    }
+
+    const {password,...userProfile}=user.toObject()
+
+    return userProfile
    }
     
 }
