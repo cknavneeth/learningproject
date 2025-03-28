@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { InstructorprofileService } from '../../../services/instructorservice/instructorprofile.service';
+import { ProfilecomponentComponent } from '../../../shared/profilecomponent/profilecomponent.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-instructorprofile',
-  imports: [],
+  imports: [ProfilecomponentComponent,CommonModule],
   templateUrl: './instructorprofile.component.html',
   styleUrl: './instructorprofile.component.scss'
 })
@@ -12,19 +14,36 @@ export class InstructorprofileComponent {
   instructorData:any
   message:string=''
   errormessage:string=''
+  certificateUrl:string=''
 
   constructor(private instructorprofile:InstructorprofileService){}
 
 
-  ngOnInit():void{
-    this.instructorprofile.getInstructorProfile().subscribe(
-      response=>{
-        this.instructorData=response
+  ngOnInit(): void {
+    this.loadInstructorProfile();
+  }
+
+  loadInstructorProfile(): void {
+    this.instructorprofile.getInstructorProfile().subscribe({
+      next: (response) => {
+        console.log('Raw API response:', response);
+        this.certificateUrl=response.certificateUrl
+        
+        this.instructorData = {
+          username: response.name || '',
+          email: response.emailaddress || '',
+          phone: response.phone || '',
+          bio: response.bio || '',
+          certificateUrl:response.certificateUrl
+        };
+        
+        console.log('Formatted instructor data:', this.instructorData);
       },
-      error=>{
-        this.errormessage=error.error.message
+      error: (error) => {
+        console.error('Profile fetch error:', error);
+        this.errormessage = error.error?.message || 'Failed to load profile';
       }
-    )
+    });
   }
 
   updateProfile(profileData:any){

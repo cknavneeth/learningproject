@@ -40,7 +40,9 @@ export class StudentprofileComponent {
   updateProfile(profileData:any){
     this.service.updateStudentProfile(profileData).subscribe(
       response=>{
-        console.log('profile updated successfully')
+        console.log('profile updated successfully',response)
+        this.message
+        this.ngOnInit()
       },
       error=>{
         this.errormessage=error.error.message
@@ -52,7 +54,9 @@ export class StudentprofileComponent {
   updatePassword(passwordData:any){
     this.service.updateStudentPassword(passwordData).subscribe(
       response=>{
-        console.log('password updated successfully')
+        console.log('password updated successfully',response)
+        this.message=response.message
+        this.ngOnInit()
       },
       error=>{
         this.errormessage=error.error.message
@@ -60,4 +64,6 @@ export class StudentprofileComponent {
       }
     )
   }
+
+
 }

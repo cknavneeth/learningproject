@@ -1,74 +1,141 @@
 <div class="container mx-auto p-4">
-    <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-      <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
-        {{ userType === 'student' ? 'Student' : 'Instructor' }} Profile
-      </h2>
-  
-      <!-- Profile Form -->
-      <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
-          <input type="text" formControlName="name" 
-                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-        </div>
-  
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-          <input type="email" formControlName="email" 
-                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-        </div>
-  
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
-          <input type="tel" formControlName="phone" 
-                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-        </div>
-  
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bio</label>
-          <textarea formControlName="bio" rows="4" 
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-        </div>
-  
-        <button type="submit" 
-                [disabled]="!profileForm.valid"
-                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-          Update Profile
-        </button>
-      </form>
-  
-      <!-- Password Reset Section -->
-      <div class="mt-8">
-        <button (click)="togglePasswordForm()" 
-                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-          {{ showPassword ? 'Hide Password Form' : 'Change Password' }}
-        </button>
-  
-        <form *ngIf="showPassword" [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()" class="mt-4 space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Password</label>
-            <input type="password" formControlName="currentPassword" 
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-          </div>
-  
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">New Password</label>
-            <input type="password" formControlName="newPassword" 
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-          </div>
-  
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm New Password</label>
-            <input type="password" formControlName="confirmPassword" 
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-          </div>
-  
-          <button type="submit" 
-                  [disabled]="!passwordForm.valid"
-                  class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-            Update Password
-          </button>
-        </form>
+  <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+      {{ userType === 'student' ? 'Student' : 'Instructor' }} Profile
+    </h2>
+
+    <!-- Profile Form -->
+    <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+        <input type="text" formControlName="username" 
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        <span class="text-red-500 text-xs" *ngIf="getProfileFormError('name')">
+          {{ getProfileFormError('name') }}
+        </span>
       </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+        <input type="email" formControlName="email" 
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        <span class="text-red-500 text-xs" *ngIf="getProfileFormError('email')">
+          {{ getProfileFormError('email') }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
+        <input type="tel" formControlName="phone" 
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        <span class="text-red-500 text-xs" *ngIf="getProfileFormError('phone')">
+          {{ getProfileFormError('phone') }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bio</label>
+        <textarea formControlName="bio" rows="4" 
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+        <span class="text-red-500 text-xs" *ngIf="getProfileFormError('bio')">
+          {{ getProfileFormError('bio') }}
+        </span>
+      </div>
+
+      <!--just showing certificate here ok-->
+      
+
+      <!--showing certificate here-->
+
+      <button type="submit" 
+              [disabled]="!profileForm.valid"
+              [class.opacity-50]="!profileForm.valid"
+              class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        Update Profile
+      </button>
+    </form>
+
+    <!-- Password Reset Section -->
+    <div class="mt-8">
+      <button (click)="togglePasswordForm()" 
+              class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+        {{ showPassword ? 'Hide Password Form' : 'Change Password' }}
+      </button>
+
+      <form *ngIf="showPassword" [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Password</label>
+          <input type="password" formControlName="currentPassword" 
+                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+          <span class="text-red-500 text-xs" *ngIf="getPasswordFormError('currentPassword')">
+            {{ getPasswordFormError('currentPassword') }}
+          </span>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">New Password</label>
+          <input type="password" formControlName="newPassword" 
+                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+          <span class="text-red-500 text-xs" *ngIf="getPasswordFormError('newPassword')">
+            {{ getPasswordFormError('newPassword') }}
+          </span>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm New Password</label>
+          <input type="password" formControlName="confirmPassword" 
+                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+          <span class="text-red-500 text-xs" *ngIf="getPasswordFormError('confirmPassword')">
+            {{ getPasswordFormError('confirmPassword') }}
+          </span>
+        </div>
+
+        <button type="submit" 
+                [disabled]="!passwordForm.valid"
+                [class.opacity-50]="!passwordForm.valid"
+                class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+          Update Password
+        </button>
+
+        <div *ngIf="errormessage" class="text-red-500 text-sm mt-2">{{ errormessage }}</div>
+        <div *ngIf="message" class="text-green-500 text-sm mt-2">{{ message }}</div>
+      </form>
     </div>
+
+
+
+    <ng-container *ngIf="userType === 'instructor'">
+      <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+          Teaching Certificate
+        </h3>
+        
+        <!-- Certificate Display -->
+        <ng-container *ngIf="certificateUrl">
+          <div class="border dark:border-gray-700 rounded-lg overflow-hidden">
+            <img 
+              [src]="certificateUrl" 
+              alt="Teaching Certificate" 
+              class="w-full h-auto object-contain max-h-96"
+            />
+          </div>
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+            This is your verified teaching certificate uploaded during registration.
+          </p>
+        </ng-container>
+        
+        <!-- No Certificate Message -->
+        <ng-container *ngIf="!certificateUrl">
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            You haven't uploaded a teaching certificate yet.
+          </p>
+        </ng-container>
+      </div>
+    </ng-container>
+
+
+
+
+
   </div>
+</div>

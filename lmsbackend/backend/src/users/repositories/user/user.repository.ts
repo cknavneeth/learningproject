@@ -9,9 +9,16 @@ export class UserRepository implements IUserRepository{
      constructor(@InjectModel(user.name) private usermodel:Model<userDocument>){}
 
      async findById(userId:string):Promise<userDocument|null>{
-         return this.usermodel.findById(userId).exec()
+         return  await this.usermodel.findById(userId).exec()
      }
 
-    //  async updateProfile()
+    //gonna do update profile
+    async updateProfile(userId:string,profileData:Partial<user>):Promise<userDocument>{
+        const user=await this.usermodel.findByIdAndUpdate(userId,{$set:profileData},{new:true}).exec()
+        if(!user){
+            throw new Error('User not found')
+        }
+        return user
+    }
      
 }

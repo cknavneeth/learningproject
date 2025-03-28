@@ -13,6 +13,7 @@ export class InstructorprofileService {
 
   //for getting student instructor profile
   getInstructorProfile():Observable<any>{
+    console.log('getting instructor profile')
     return this.http.get<any>(`${this.apiurl}/profile`)
   }
 

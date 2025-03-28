@@ -12,6 +12,7 @@ export class ProfilecomponentComponent {
    
   @Input() userType:'student'|'instructor'='student'
   @Input() userData:any
+  @Input() certificateUrl:string=''
   @Output() profileUpdate=new EventEmitter<any>()
   @Output() passwordUpdate=new EventEmitter<any>()
 
@@ -23,7 +24,7 @@ export class ProfilecomponentComponent {
 
   constructor(private fb:FormBuilder){
        this.profileForm=this.fb.group({
-        name:['',[Validators.required]],
+        username:['',[Validators.required]],
         email:['',[Validators.required,Validators.email]],
         phone:['',[Validators.required,Validators.pattern(/^\d{10}$/)]],
         bio:['',[Validators.required]]
@@ -38,17 +39,20 @@ export class ProfilecomponentComponent {
       }
 
       ngOnInit(){
+        console.log('profile component received',this.userData)
         if(this.userData){
           this.updateFormWithUserData()
         }
       }
+
       private updateFormWithUserData() {
         this.profileForm.patchValue({
-          name: this.userData.username || '',  
+          username: this.userData.username || '',  
           email: this.userData.email || '',
           phone: this.userData.phone || '',
           bio: this.userData.bio || ''
         });
+        console.log('Form updated with values:', this.profileForm.value); 
       }
 
 
@@ -77,4 +81,28 @@ export class ProfilecomponentComponent {
     this.showPassword = !this.showPassword;
   }
   
+
+
+  //profileformerrors
+  getProfileFormError(controlName: string): string {
+    const control = this.profileForm.get(controlName);
+    if (control?.errors && control.touched) {
+      if (control.errors['required']) return `${controlName} is required`;
+      if (control.errors['email']) return 'Invalid email format';
+      if (control.errors['pattern']) return 'Invalid phone number format';
+    }
+    return '';
+  }
+
+
+  ///passwaord form errors
+  getPasswordFormError(controlName: string): string {
+    const control = this.passwordForm.get(controlName);
+    if (control?.errors && control.touched) {
+      if (control.errors['required']) return `${controlName} is required`;
+      if (control.errors['minlength']) return 'Password must be at least 6 characters';
+      if (control.errors['pattern']) return 'Password must contain uppercase, lowercase, number and special character';
+    }
+    return '';
+  }
 }

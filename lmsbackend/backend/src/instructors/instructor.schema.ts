@@ -13,7 +13,7 @@ export class instructor{
     _id: Types.ObjectId;
 
     @Prop({required:true})
-    name:string
+    username:string
 
     @Prop({required:true,unique:true})
     emailaddress:string
@@ -50,6 +50,19 @@ export class instructor{
 
     @Prop({type:Date,required:false})
     rejectedAt?:Date
+
+    @Prop()
+    phone:string
+
+    @Prop()
+    bio:string
+
+    @Prop()
+    googleId:string
+
+    @Prop()
+    isGoogleUser:boolean
+
 }
 
 export const instructorSchema=SchemaFactory.createForClass(instructor)

@@ -42,6 +42,13 @@ export class user{
     @Prop({type: Boolean, default: false})
     isGoogleUser: boolean
 
+    @Prop()
+    phone:string
+
+    @Prop()
+    bio:string
+
+
 }
 
 export const userSchema=SchemaFactory.createForClass(user)

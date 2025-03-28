@@ -80,4 +80,53 @@ export class UsersService {
     return userProfile
    }
     
+
+   //updating profle
+   async updateProfile(userId:string,profileData:Partial<user>){
+    const user=await this.userRepository.findById(userId)
+    if(!user){
+        throw new BadRequestException('User not found')
+    }
+    const updateduser=await this.userRepository.updateProfile(userId,{
+        username:profileData.username,
+        phone:profileData.phone,
+        bio:profileData.bio
+    })
+
+    if(!updateduser){
+        throw new BadRequestException('Failed to update profile')
+    }
+
+    const {password,...userProfile}=updateduser.toObject()
+
+    return {
+        message:'Profile updated successfully',
+        userProfile
+    }
+   }
+
+
+
+
+   //updatestudentpassword
+   async updateStudentPassword(userId:string,passwordData:{currentPassword:string,newPassword:string}){
+        const user=await this.userRepository.findById(userId)
+        if(!user){
+            throw new BadRequestException('User not found')
+        }
+
+        //verify the confirm password here
+        const isPasswordValid=await this.comparePassword(passwordData.currentPassword,user.password)
+        if(!isPasswordValid){
+            throw new BadRequestException('Current password is not matching')
+        }
+
+        const hashedPassword=await bcrypt.hash(passwordData.newPassword,10)
+
+        await this.updatepassword(userId,hashedPassword)
+
+        return {message:'password updated succesfully'}
+   }
+
+   
 }

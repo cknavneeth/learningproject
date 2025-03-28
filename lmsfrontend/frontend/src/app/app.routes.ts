@@ -22,6 +22,7 @@ import { authGuard, loginGuard } from './guards/student/auth.guard';
 import { instructorguardGuard, instructorLogin } from './guards/instructor/instructorguard.guard';
 import { adminauthGuard, adminLogin } from './guards/admin/adminauth.guard';
 import { StudentprofileComponent } from './components/studentmain/studentprofile/studentprofile.component';
+import { InstructorprofileComponent } from './components/insMaincomponent/instructorprofile/instructorprofile.component';
 
 export const routes: Routes = [
     {
@@ -123,6 +124,11 @@ export const routes: Routes = [
                 path:'forgotpasswordins',
                 component:ForgorpasswordComponent,
                 data:{userType:'instructor'}
+            },
+            {
+                path:'profile',
+                component:InstructorprofileComponent,
+                canActivate:[instructorguardGuard]
             }
         ]
     },

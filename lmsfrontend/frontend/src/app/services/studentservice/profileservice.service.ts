@@ -2,6 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+interface ProfileResponse {
+  username: string;
+  email: string;
+  phone?: string;
+  bio?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,8 +23,8 @@ export class ProfileserviceService {
   }
 
 
-  updateStudentProfile(profileData:any):Observable<any>{
-    return this.http.put(`${this.apiurl}/profile`,profileData)
+  updateStudentProfile(profileData:any):Observable<ProfileResponse>{
+    return this.http.put<ProfileResponse>(`${this.apiurl}/profile`,profileData)
   }
 
   updateStudentPassword(passwordData:any):Observable<any>{

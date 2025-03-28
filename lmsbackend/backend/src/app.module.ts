@@ -12,6 +12,7 @@ import { InstructorauthModule } from './authforall/instructorauth/instructorauth
 import { AdminauthModule } from './authforall/adminauth/adminauth.module';
 import { BlockeduserMiddleware } from './middlewares/blockeduser/blockeduser.middleware';
 import { JwtModule } from '@nestjs/jwt';
+import { GuardGuard } from './authentication/guard/guard.guard';
 
 console.log(process.env.MONGO_URI)
 @Module({
@@ -26,7 +27,7 @@ console.log(process.env.MONGO_URI)
     })
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,GuardGuard],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
