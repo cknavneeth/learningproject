@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { IInstructorRepository } from '../instructor.repository.interface';
 import { userDocument } from 'src/users/users.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -25,6 +25,23 @@ export class InstructorRepository implements IInstructorRepository{
 
     async updatePassword(instructorId:string,hashedpassword:string):Promise<void>{
         await this.instructorModel.findByIdAndUpdate(instructorId,{$set:{password:hashedpassword}}).exec()
+    }
+
+
+    async updateReapplyStatus(instructorId:string,canReapply:boolean):Promise<instructorDocument>{
+        const instructor=await this.instructorModel.findByIdAndUpdate(instructorId,{
+            $set:{
+                canReapply:canReapply,
+                isApproved:false,
+                rejectionFeedback:null,
+                rejectedAt:null
+            }
+        },{new:true})
+
+        if(!instructor){
+            throw new NotFoundException('instructor not found')
+        }
+        return instructor
     }
 
 }

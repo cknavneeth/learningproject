@@ -13,7 +13,7 @@ export class instructor{
     _id: Types.ObjectId;
 
     @Prop({required:true})
-    username:string
+    name:string
 
     @Prop({required:true,unique:true})
     emailaddress:string

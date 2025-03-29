@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationcomponentComponent } from '../../components/common/confirmationcomponent/confirmationcomponent.component';
 
 @Component({
   selector: 'app-profilecomponent',
@@ -15,17 +17,21 @@ export class ProfilecomponentComponent {
   @Input() certificateUrl:string=''
   @Output() profileUpdate=new EventEmitter<any>()
   @Output() passwordUpdate=new EventEmitter<any>()
+  @Output() reapplyRequest=new EventEmitter<void>()
 
   profileForm:FormGroup;
   passwordForm:FormGroup;
   showPassword:boolean=false;
   message:string=''
   errormessage:string=''
+  showCurrentPassword=false
+  showNewPassword=false
+  initialFormValues:any
 
-  constructor(private fb:FormBuilder){
+  constructor(private fb:FormBuilder,private dialog:MatDialog){
        this.profileForm=this.fb.group({
         username:['',[Validators.required]],
-        email:['',[Validators.required,Validators.email]],
+        email:[{ value: '', disabled: true },[Validators.required,Validators.email]],
         phone:['',[Validators.required,Validators.pattern(/^\d{10}$/)]],
         bio:['',[Validators.required]]
        })
@@ -42,6 +48,7 @@ export class ProfilecomponentComponent {
         console.log('profile component received',this.userData)
         if(this.userData){
           this.updateFormWithUserData()
+          this.initialFormValues=this.profileForm.value
         }
       }
 
@@ -77,9 +84,9 @@ export class ProfilecomponentComponent {
   }
   
 
-  togglePasswordForm() {
-    this.showPassword = !this.showPassword;
-  }
+  // togglePasswordForm() {
+  //   this.showPassword = !this.showPassword;
+  // }
   
 
 
@@ -104,5 +111,57 @@ export class ProfilecomponentComponent {
       if (control.errors['pattern']) return 'Password must contain uppercase, lowercase, number and special character';
     }
     return '';
+  }
+
+
+  //for reapplying as an instructor
+  showReapplyConfirmation(){
+    const dialogRef=this.dialog.open
+    (ConfirmationcomponentComponent,{
+      data:{
+        title:'Reapply Confirmation',
+        message:'Are you sure you want to reapply as an instructor?',
+        confirmText:'Reapply',
+        cancelText:'Cancel'
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(result=>{
+      if(result){
+        this.reapplyRequest.emit()
+      }
+    })
+  }
+
+
+  canReapply(){
+    return this.userType==='instructor'&&this.userData?.canReapply===true&&this.userData?.rejectionFeedback
+  }
+
+
+
+
+
+
+
+  //related to password and form
+  isFormDirty(): boolean {
+    if (!this.initialFormValues) return false;
+    return JSON.stringify(this.initialFormValues) !== JSON.stringify(this.profileForm.value);
+  }
+
+  togglePasswordForm() {
+    this.showPassword = !this.showPassword;
+    if (!this.showPassword) {
+      this.passwordForm.reset();
+    }
+  }
+
+  toggleCurrentPasswordVisibility() {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  }
+
+  toggleNewPasswordVisibility() {
+    this.showNewPassword = !this.showNewPassword;
   }
 }

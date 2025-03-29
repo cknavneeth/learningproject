@@ -12,7 +12,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenservice = inject(TokenserviceService)
   const router = inject(Router)
 
-  // Skip interceptor for refresh token requests to avoid infinite loops
+  
   if (req.url.includes('/refreshtoken') || req.url.includes('/auth/admin')) {
     return next(req);
   }
@@ -22,8 +22,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (req.url.includes('/student')) {
     accesstoken = tokenservice.getStudentToken()
+   
+
   } else if (req.url.includes('/instructor')) {
     accesstoken = tokenservice.getInstructorToken()
+    
+
   }
 
   if (accesstoken) {
@@ -37,10 +41,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authreq).pipe(
     catchError(error => {
       if (error.status === 401 && !error.error?.isBlocked) {
+        console.log('Attempting token refresh...');
         const authservice = req.url.includes('/instructor/') ? instructorauthservice : studentauthservice
         
         return authservice.refreshToken().pipe(
           switchMap(response => {
+            console.log('Refresh token response:', response);
             if (!response.accesstoken) {
               // If no new access token, logout
               if (req.url.includes('/student')) {
@@ -67,6 +73,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               tokenservice.removeStudentToken()
               router.navigate(['/student/login'])
             } else {
+              console.log('Removing instructor token and redirecting to login');
               tokenservice.removeInstructorToken()
               router.navigate(['/instructor/instructorlogin'])
             }

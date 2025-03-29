@@ -26,6 +26,10 @@ export class InstructorprofileService {
   updateInstructorPassword(passwordData:any):Observable<any>{
     return this.http.put(`${this.apiurl}/changepassword`,passwordData)
   }
+
+  reapplyAsInstructor():Observable<any>{
+    return this.http.post(`${this.apiurl}/reapply`,{})
+  }
   
 
  

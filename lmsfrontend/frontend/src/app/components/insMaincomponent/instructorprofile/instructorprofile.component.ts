@@ -34,7 +34,12 @@ export class InstructorprofileComponent {
           email: response.emailaddress || '',
           phone: response.phone || '',
           bio: response.bio || '',
-          certificateUrl:response.certificateUrl
+          certificateUrl:response.certificateUrl,
+          isApproved:response.isApproved,
+          isVerified:response.isVerified,
+          rejectionFeedback:response.rejectionFeedback,
+          canReapply:response.canReapply,
+          rejectedAt:response.rejectedAt
         };
         
         console.log('Formatted instructor data:', this.instructorData);
@@ -51,6 +56,7 @@ export class InstructorprofileComponent {
       response=>{
         console.log('profile updated successfully')
         this.message=response.message
+        this.loadInstructorProfile()
       },
       error=>{
         this.errormessage=error.error.message
@@ -63,6 +69,23 @@ export class InstructorprofileComponent {
     this.instructorprofile.updateInstructorPassword(passwordData).subscribe(
       response=>{
         console.log('password updated successfully')
+        this.message=response.message
+      },
+      error=>{
+        this.errormessage=error.error.message
+        console.log(error.error.message)
+      }
+    )
+  }
+
+
+  //updating the instructor request
+  handleReapplyRequest(){
+    this.instructorprofile.reapplyAsInstructor().subscribe(
+      response=>{
+        console.log('reapply request sent successfully')
+        this.message=response.message
+        this.loadInstructorProfile()
       },
       error=>{
         this.errormessage=error.error.message

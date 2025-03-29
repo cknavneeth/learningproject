@@ -19,7 +19,8 @@
             [userData]="instructorData"
             [certificateUrl]="instructorData.certificateUrl"
             (profileUpdate)="updateProfile($event)"
-            (passwordUpdate)="updatePassword($event)">
+            (passwordUpdate)="updatePassword($event)"
+            (reapplyRequest)="handleReapplyRequest()">
         </app-profilecomponent>
     </ng-container>
 </div>

@@ -47,15 +47,19 @@ export class InstructorauthController {
 
     @Post('getinsAccess')
     async refreshaccesstoken(@Req() req:Request,@Res() res:Response){
+      console.log('backend for refreshing accesstoken')
          try {
             let refreshtoken=req.cookies.instructor_refreshToken
+            console.log('refresh token',refreshtoken)
             if(!refreshtoken){
               return res.status(401).json({success:false,message:'refresh token is not available'})
             }
 
             const newaccesstoken=this.authservice.accesstokenretry(refreshtoken)
+            return newaccesstoken
          } catch (error) {
-          
+             console.log('refresh token error',error)
+             return res.status(401).json({success:false,message:'refresh token is not available'})
          }
     }
 

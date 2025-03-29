@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Put, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Put, Req, Request, UseGuards } from '@nestjs/common';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { InstructorsService } from './instructors.service';
 
@@ -28,4 +28,14 @@ export class InstructorsController {
     const instructorId=req.user.InstructorId
     return this.instructorservice.resetPassword(instructorId,passwordData)
    }
+
+
+   @Post('reapply')
+   @UseGuards(GuardGuard)
+   async reapplyAsInstructor(@Req() req:any){
+      console.log('reapply request received')
+      const instructorId=req.user.InstructorId
+      return this.instructorservice.reapplyAsInstructor(instructorId)
+   }
+
 }

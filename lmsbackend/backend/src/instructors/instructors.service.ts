@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { instructor, instructorDocument } from './instructor.schema';
 import { Model } from 'mongoose';
@@ -54,14 +54,14 @@ export class InstructorsService {
     }
 
 
-    async updateProfile(instructorId:string,profileData:Partial<instructor>){
+    async updateProfile(instructorId:string,profileData:Partial<any>){
         const instructor=await this.instructorRepository.findById(instructorId)
         if(!instructor){
             throw new NotFoundException('instructor not found')
         }
 
         const updatedInstructor=await this.instructorRepository.updateProfile(instructorId,{
-            username:profileData.username,
+            name:profileData.username,
             phone:profileData.phone,
             bio:profileData.bio
         })
@@ -79,15 +79,54 @@ export class InstructorsService {
         if(!instructor){
             throw new NotFoundException('instructor not found')
         }
-        const isPasswordValid=await this.comparePassword(passwordData.newPassword,instructor.password)
+        console.log('Current password provided:', passwordData.currentPassword);
+        console.log('Stored hashed password:', instructor.password);
+        const isPasswordValid=await bcrypt.compare(passwordData.currentPassword,instructor.password)
+
+        console.log('Password comparison result:', isPasswordValid);
         if(!isPasswordValid){
             throw new NotFoundException('Current password is not matching')
         }
 
+       
         const hashedPassword=await bcrypt.hash(passwordData.newPassword,10)
 
         await this.instructorRepository.updatePassword(instructorId,hashedPassword)
 
         return {message:'password updated successfully'}
+    }
+
+
+    async reapplyAsInstructor(instructorId:string){
+
+        console.log('reapply request received in service')
+        //first i can check the status of instructor
+        const instructor=await this.instructorRepository.findById(instructorId)
+        if(!instructor){
+            throw new NotFoundException('instructor not found')
+        }
+        if(!instructor.canReapply){
+            throw new NotFoundException('You cannot reapply')
+        }
+        if(instructor.isBlocked){
+            throw new NotFoundException('You are Blocked')
+        }
+        if (instructor.rejectedAt) {
+            const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+            if (instructor.rejectedAt > twentyFourHoursAgo) {
+                const hoursLeft = Math.ceil(
+                    (instructor.rejectedAt.getTime() - twentyFourHoursAgo.getTime()) / (1000 * 60 * 60)
+                );
+                throw new BadRequestException(
+                    `Please wait ${hoursLeft} more hours before reapplying`
+                );
+            }
+        }
+        const updatedInstructor=await this.instructorRepository.updateReapplyStatus(instructorId,false)
+
+        return {
+            success:true,
+            message:'Reapply request sent successfully'
+        }
     }
 }

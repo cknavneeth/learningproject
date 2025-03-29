@@ -49,8 +49,10 @@ export class AuthserviceService {
   }
 
   refreshToken():Observable<any>{
+    console.log('Attempting to refresh token');
     return this.http.post<{success:boolean,accesstoken:string}>(`${this.apiurl}/refreshtoken`,{},{withCredentials:true}).pipe(
       tap(response=>{
+        console.log('Refresh token success:', response);
         if(response.success&&response.accesstoken){
           this.saveAccesstoken(response.accesstoken)
           this.tokenservice.setStudentToken(response.accesstoken)
@@ -59,6 +61,7 @@ export class AuthserviceService {
         }
       }),
       catchError(error=>{
+        console.log('Refresh token error:', error);
         console.log(error)
         this.tokenservice.removeStudentToken()
         throw error
