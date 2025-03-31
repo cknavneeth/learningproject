@@ -13,6 +13,8 @@ import { AdminauthModule } from './authforall/adminauth/adminauth.module';
 import { BlockeduserMiddleware } from './middlewares/blockeduser/blockeduser.middleware';
 import { JwtModule } from '@nestjs/jwt';
 import { GuardGuard } from './authentication/guard/guard.guard';
+import { CloudinaryService } from './shared/cloudinary/cloudinary.service';
+import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
 
 console.log(process.env.MONGO_URI)
 @Module({
@@ -24,10 +26,11 @@ console.log(process.env.MONGO_URI)
         secret: configService.get('JWT_SECRET_KEY'),
         signOptions: { expiresIn: '15m' },
       }),
-    })
+    }),
+    CloudinaryModule
   ],
   controllers: [AppController],
-  providers: [AppService,GuardGuard],
+  providers: [AppService,GuardGuard, CloudinaryService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

@@ -63,10 +63,15 @@ export class InstructorauthserviceService {
   refreshToken(){
     return this.http.post<LoginResponse>(`${this.apiurl}/getinsAccess`,{},{withCredentials:true}).pipe(
       tap((response)=>{
-        this.saveAccesstoken(response.accesstoken)
-        this.tokenservice.setInstructorToken(response.accesstoken)
+        if(response.accesstoken){
+            this.saveAccesstoken(response.accesstoken)
+            this.tokenservice.setInstructorToken(response.accesstoken)
+        }else{
+          throw new Error('Invalid refresh token response')
+        }
       }),
       catchError((error)=>{
+        console.log('Refresh token error:', error);
         this.tokenservice.removeInstructorToken()
         throw error
       })

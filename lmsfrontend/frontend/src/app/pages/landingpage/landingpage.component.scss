@@ -1,0 +1,32 @@
+// Gradient text animation
+@keyframes gradient-x {
+    0%, 100% {
+        background-size: 200% 200%;
+        background-position: left center;
+    }
+    50% {
+        background-size: 200% 200%;
+        background-position: right center;
+    }
+}
+
+.animate-gradient-x {
+    animation: gradient-x 15s ease infinite;
+}
+
+// Floating animation for cards
+@keyframes floating {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.floating {
+    animation: floating 3s ease-in-out infinite;
+}

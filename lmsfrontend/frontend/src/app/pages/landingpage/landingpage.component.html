@@ -1,112 +1,222 @@
 <div class="pt-16">
   <!-- Hero Section -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <section class="bg-gray-900 text-white text-center py-20 px-6 font-poppins">
-    <div class="max-w-5xl mx-auto">
-      <h1 class="text-4xl md:text-6xl font-bold tracking-tight gradient-text">
-        Welcome to ScholarSync
-      </h1>
-        <p class="mt-4 text-lg text-gray-300">
+  <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gray-900 text-white text-center px-6 font-poppins">
+    <!-- Animated background -->
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(17,24,39,1),rgba(17,24,39,0.7))]"></div>
+        <!-- Animated dots/stars -->
+        <div class="absolute inset-0" style="background-image: radial-gradient(#ffffff33 1px, transparent 1px); background-size: 50px 50px;"></div>
+        <!-- Gradient overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-900/50 via-gray-900/80 to-gray-900"></div>
+        <!-- Moving gradient effect -->
+        <div class="absolute inset-0 bg-gradient-to-r from-red-500/10 via-purple-500/10 to-blue-500/10 animate-gradient"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative max-w-5xl mx-auto">
+        <h1 class="text-5xl md:text-7xl font-bold tracking-tight gradient-text mb-8 animate-fade-in">
+            Welcome to ScholarSync
+        </h1>
+        <p class="mt-4 text-xl md:text-2xl text-gray-300 animate-fade-in-delay">
             A platform that connects students and educators with seamless learning tools.
         </p>
-        <!-- <img src="" alt="ScholarSync" class="mt-6 w-full md:w-3/4 mx-auto rounded-lg shadow-lg"> -->
+        <div class="mt-12 flex justify-center gap-6">
+            <button class="px-8 py-4 bg-gradient-to-r from-red-500 to-red-600 rounded-full text-lg font-semibold hover:from-red-600 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-red-500/25">
+                Get Started
+            </button>
+            <button class="px-8 py-4 bg-gray-800 rounded-full text-lg font-semibold hover:bg-gray-700 transform hover:scale-105 transition-all duration-300 shadow-lg border border-gray-700">
+                Learn More
+            </button>
+        </div>
     </div>
 </section>
 
   <!-- Features Section -->
-  <section class="py-16 px-6 bg-gray-100">
-      <div class="max-w-6xl mx-auto">
-          <!-- Feature 1 -->
-          <div class="flex flex-col md:flex-row items-center mb-12">
-              <img src="learning2.avif" alt="Feature 1" class="w-full md:w-1/2 rounded-lg shadow-md">
-              <div class="md:w-1/2 md:pl-8 text-center md:text-left">
-                  <h2 class="text-3xl font-semibold text-gray-900">Collaborative Learning</h2>
-                  <p class="mt-4 text-gray-600">
-                      Engage with peers and instructors through interactive discussions and shared resources.
-                  </p>
-              </div>
-          </div>
+  <section class="py-20 px-6 bg-gradient-to-b from-gray-50 to-gray-100">
+    <div class="max-w-6xl mx-auto">
+        <!-- Section Title -->
+        <h1 class="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-900 animate-slide-up">
+            Our Features
+            <div class="w-20 h-1 bg-red-500 mx-auto mt-4 rounded-full"></div>
+        </h1>
 
-          <!-- Feature 2 (Reversed Layout) -->
-          <div class="flex flex-col md:flex-row-reverse items-center mb-12">
-              <img src="certificate1.jpg" alt="Feature 2" class="w-full md:w-1/2 rounded-lg shadow-md">
-              <div class="md:w-1/2 md:pr-8 text-center md:text-left">
-                  <h2 class="text-3xl font-semibold text-gray-900">Smart Analytics</h2>
-                  <p class="mt-4 text-gray-600">
-                      Get real-time insights and personalized learning recommendations.
-                  </p>
-              </div>
-          </div>
+        <!-- Feature 1 -->
+        <div class="flex flex-col md:flex-row items-center mb-20 feature-card">
+            <div class="md:w-1/2 relative group">
+                <img src="learning2.avif" alt="Feature 1" 
+                     class="w-full rounded-xl shadow-2xl transform transition-all duration-500 hover:scale-105 hover:-rotate-2 group-hover:shadow-xl">
+                <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-purple-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <div class="md:w-1/2 md:pl-12 text-center md:text-left mt-8 md:mt-0 animate-slide-right">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Collaborative Learning</h2>
+                <p class="text-xl text-gray-600 leading-relaxed">
+                    Engage with peers and instructors through interactive discussions and shared resources.
+                </p>
+            </div>
+        </div>
 
-          <!-- Feature 3 -->
-          <div class="flex flex-col md:flex-row items-center">
-              <img src="landingpageimage1.avif" alt="Feature 3" class="w-full md:w-1/2 rounded-lg shadow-md">
-              <div class="md:w-1/2 md:pl-8 text-center md:text-left">
-                  <h2 class="text-3xl font-semibold text-gray-900">Easy Course Management</h2>
-                  <p class="mt-4 text-gray-600">
-                      Create, manage, and track courses effortlessly with our streamlined dashboard.
-                  </p>
-              </div>
-          </div>
-      </div>
-  </section>
+        <!-- Feature 2 -->
+        <div class="flex flex-col md:flex-row-reverse items-center mb-20 feature-card">
+            <div class="md:w-1/2 relative group">
+                <img src="certificate1.jpg" alt="Feature 2" 
+                     class="w-full rounded-xl shadow-2xl transform transition-all duration-500 hover:scale-105 hover:rotate-2 group-hover:shadow-xl">
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <div class="md:w-1/2 md:pr-12 text-center md:text-left mt-8 md:mt-0 animate-slide-left">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Smart Analytics</h2>
+                <p class="text-xl text-gray-600 leading-relaxed">
+                    Get real-time insights and personalized learning recommendations.
+                </p>
+            </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="flex flex-col md:flex-row items-center feature-card">
+            <div class="md:w-1/2 relative group">
+                <img src="landingpageimage1.avif" alt="Feature 3" 
+                     class="w-full rounded-xl shadow-2xl transform transition-all duration-500 hover:scale-105 hover:-rotate-2 group-hover:shadow-xl">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-red-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <div class="md:w-1/2 md:pl-12 text-center md:text-left mt-8 md:mt-0 animate-slide-right">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Easy Course Management</h2>
+                <p class="text-xl text-gray-600 leading-relaxed">
+                    Create, manage, and track courses effortlessly with our streamlined dashboard.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
   <!-- Top Instructors Section -->
-  <section class="py-16 px-6 bg-white">
-      <div class="max-w-6xl mx-auto text-center">
-          <h2 class="text-4xl font-bold text-gray-900 mb-8">Top Instructors</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <!-- Instructor 1 -->
-              <div class="bg-gray-100 p-6 rounded-lg shadow-md">
-                  <img src="instructor1.jpg" alt="Instructor 1" class="w-full h-55 object-cover rounded-lg mb-4">
-                  <h3 class="text-xl font-semibold text-gray-800">Bruce Wayne</h3>
-                  <p class="text-gray-600">Expert in Money Making and Leadership</p>
-              </div>
-              <!-- Instructor 2 -->
-              <div class="bg-gray-100 p-6 rounded-lg shadow-md">
-                  <img src="instructor2.jpg" alt="Instructor 2" class="w-full h-55 object-cover rounded-lg mb-4">
-                  <h3 class="text-xl font-semibold text-gray-800">Walter white</h3>
-                  <p class="text-gray-600">Specialist in Chemistry and Business.</p>
-              </div>
-              <!-- Instructor 3 -->
-              <div class="bg-gray-100 p-6 rounded-lg shadow-md">
-                <img src="instructor4.jpg" alt="Instructor 2" class="w-full h-55 object-cover rounded-lg mb-4">
-                <h3 class="text-xl font-semibold text-gray-800">Carey Mulligan</h3>
-                <p class="text-gray-600">Specialist in Driving and Business.</p>
+  <section class="py-20 px-6 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
+    <!-- Animated background effects -->
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute inset-0" style="background-image: radial-gradient(#ffffff33 1px, transparent 1px); background-size: 50px 50px;"></div>
+    </div>
+    
+    <div class="max-w-6xl mx-auto text-center relative z-10">
+        <!-- Section Title with animated underline -->
+        <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 mb-4 animate-gradient-x">
+            Top Instructors
+        </h2>
+        <p class="text-gray-400 mb-16 text-xl">Learn from the industry's finest mentors</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Instructor 1 -->
+            <div class="group relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-red-500 to-purple-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative bg-gray-900 ring-1 ring-gray-700 rounded-xl p-8 transform transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
+                    <div class="relative overflow-hidden rounded-lg mb-6 group">
+                        <img src="instructor5.jpg" alt="Bruce Wayne" 
+                             class="w-full h-64 object-cover transform transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Bruce Wayne</h3>
+                    <p class="text-gray-400 mb-4">Expert in Money Making and Leadership</p>
+                    <div class="flex justify-center space-x-4 opacity-0 transform translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                    </div>
+                </div>
             </div>
-              
+
+            <!-- Instructor 2 -->
+            <div class="group relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative bg-gray-900 ring-1 ring-gray-700 rounded-xl p-8 transform transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
+                    <div class="relative overflow-hidden rounded-lg mb-6 group">
+                        <img src="instructor2.jpg" alt="Walter White" 
+                             class="w-full h-64 object-cover transform transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Walter White</h3>
+                    <p class="text-gray-400 mb-4">Specialist in Chemistry and Business</p>
+                    <div class="flex justify-center space-x-4 opacity-0 transform translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Instructor 3 -->
+            <div class="group relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-red-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative bg-gray-900 ring-1 ring-gray-700 rounded-xl p-8 transform transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
+                    <div class="relative overflow-hidden rounded-lg mb-6 group">
+                        <img src="instructor3.jpg" alt="Carey Mulligan" 
+                             class="w-full h-64 object-cover transform transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Carey Mulligan</h3>
+                    <p class="text-gray-400 mb-4">Specialist in Driving and Business</p>
+                    <div class="flex justify-center space-x-4 opacity-0 transform translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                        <span class="text-yellow-500">★</span>
+                    </div>
+                </div>
             </div>
-            </section>
+        </div>
+    </div>
+</section>
 
 
-            <section class="py-12 bg-white">
-              <div class="container mx-auto px-4">
-                  <h2 class="text-3xl font-bold text-center mb-8">Why Choose Us</h2>
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
-                          <div class="text-4xl text-indigo-900 mb-4">
-                              <i class="fas fa-shipping-fast"></i>
-                          </div>
-                          <h3 class="font-bold text-xl mb-2">Quality coaching</h3>
-                          <p class="text-gray-600">Top instructors are assigned for you!</p>
-                      </div>
-                      
-                      <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
-                          <div class="text-4xl text-indigo-900 mb-4">
-                              <i class="fas fa-undo"></i>
-                          </div>
-                          <h3 class="font-bold text-xl mb-2">Ultra Productive study plan</h3>
-                          <p class="text-gray-600">Simply learn things in an effective way</p>
-                      </div>
-                      
-                      <div class="bg-gray-50 p-6 rounded-lg shadow text-center">
-                          <div class="text-4xl text-indigo-900 mb-4">
-                              <i class="fas fa-lock"></i>
-                          </div>
-                          <h3 class="font-bold text-xl mb-2">100% Secure Checkout</h3>
-                          <p class="text-gray-600">PayPal / MasterCard / Visa</p>
-                      </div>
-                  </div>
-              </div>
-          </section>
+<section class="py-24 bg-gradient-to-b from-gray-900 to-gray-800 relative overflow-hidden">
+    <!-- Animated background pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: radial-gradient(#ffffff33 1px, transparent 1px); background-size: 30px 30px;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 animate-gradient-x">
+            Why Choose ScholarSync
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Quality Coaching Card -->
+            <div class="group relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-red-500 to-purple-500 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative p-8 bg-gray-900 rounded-lg transform transition-all duration-500 hover:scale-105 hover:-translate-y-2 ring-1 ring-gray-800">
+                    <div class="text-5xl text-red-500 mb-6 transform transition-transform group-hover:scale-110 group-hover:rotate-6">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Quality Coaching</h3>
+                    <p class="text-gray-400">Expert instructors dedicated to your success and growth</p>
+                </div>
+            </div>
+
+            <!-- Study Plan Card -->
+            <div class="group relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative p-8 bg-gray-900 rounded-lg transform transition-all duration-500 hover:scale-105 hover:-translate-y-2 ring-1 ring-gray-800">
+                    <div class="text-5xl text-purple-500 mb-6 transform transition-transform group-hover:scale-110 group-hover:rotate-6">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Smart Study Plan</h3>
+                    <p class="text-gray-400">Personalized learning paths optimized for your success</p>
+                </div>
+            </div>
+
+            <!-- Secure Checkout Card -->
+            <div class="group relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-red-500 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative p-8 bg-gray-900 rounded-lg transform transition-all duration-500 hover:scale-105 hover:-translate-y-2 ring-1 ring-gray-800">
+                    <div class="text-5xl text-blue-500 mb-6 transform transition-transform group-hover:scale-110 group-hover:rotate-6">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Secure Payments</h3>
+                    <p class="text-gray-400">Trusted payment methods with bulletproof security</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

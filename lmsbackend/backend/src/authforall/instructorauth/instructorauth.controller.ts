@@ -49,6 +49,9 @@ export class InstructorauthController {
     async refreshaccesstoken(@Req() req:Request,@Res() res:Response){
       console.log('backend for refreshing accesstoken')
          try {
+          if(!req.cookies){
+            return res.status(401).json({success:false,message:'No cookies present'})
+          }
             let refreshtoken=req.cookies.instructor_refreshToken
             console.log('refresh token',refreshtoken)
             if(!refreshtoken){
@@ -56,7 +59,10 @@ export class InstructorauthController {
             }
 
             const newaccesstoken=this.authservice.accesstokenretry(refreshtoken)
-            return newaccesstoken
+            return res.status(200).json({
+              accesstoken:newaccesstoken,
+              success:true
+            })
          } catch (error) {
              console.log('refresh token error',error)
              return res.status(401).json({success:false,message:'refresh token is not available'})
