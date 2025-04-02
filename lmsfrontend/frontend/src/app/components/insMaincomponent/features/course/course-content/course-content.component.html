@@ -1,0 +1,88 @@
+<form [formGroup]="contentForm" (ngSubmit)="onSubmit()" class="max-w-4xl mx-auto">
+    <div class="space-y-6">
+      <div formArrayName="sections">
+        <div *ngFor="let section of sections.controls; let i=index" [formGroupName]="i" 
+             class="border rounded-lg p-4 mb-4">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Section {{i + 1}}</h3>
+            <button type="button" mat-icon-button color="warn" (click)="removeSection(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+  
+          <mat-form-field class="w-full">
+            <mat-label>Section Title</mat-label>
+            <input matInput formControlName="title" placeholder="Enter section title">
+          </mat-form-field>
+  
+          <mat-form-field class="w-full">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+          </mat-form-field>
+  
+          <div class="mb-4">
+            <input type="file" 
+                   (change)="onVideoSelected($event, i)" 
+                   accept="video/*" 
+                   class="hidden" 
+                   #videoInput>
+            <button type="button" mat-raised-button (click)="videoInput.click()" [disabled]="isUploading[i]">
+              {{ isUploading[i] ? 'Uploading...' : 'Upload Video' }}
+            </button>
+
+            <mat-spinner *ngIf="isUploading[i]" 
+            diameter="20" 
+            class="inline-block ml-2">
+</mat-spinner>
+
+
+            <span *ngIf="section.get('videoUrl')?.value" class="ml-2 text-green-600">
+              Video uploaded successfully
+            </span>
+          </div>
+  
+          <mat-form-field class="w-full">
+            <mat-label>Duration (minutes)</mat-label>
+            <input matInput type="number" formControlName="duration">
+          </mat-form-field>
+  
+          <div [formArrayName]="'resources'" class="mt-4">
+            <h4 class="font-medium mb-2">Resources</h4>
+            <div *ngFor="let resource of getResources(i).controls; let j=index" 
+                 [formGroupName]="j" class="flex gap-2 mb-2">
+              <mat-form-field class="flex-1">
+                <mat-label>Resource Title</mat-label>
+                <input matInput formControlName="title">
+              </mat-form-field>
+              
+              <input type="file" 
+                     (change)="onResourceSelected($event, i, j)" 
+                     class="hidden" 
+                     #resourceInput>
+              <button type="button" mat-stroked-button (click)="resourceInput.click()">
+                Upload File
+              </button>
+              
+              <button type="button" mat-icon-button color="warn" (click)="removeResource(i, j)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <button type="button" mat-stroked-button (click)="addResource(i)" class="mt-2">
+              Add Resource
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <button type="button" mat-stroked-button (click)="addSection()" class="w-full">
+        Add New Section
+      </button>
+  
+      <div class="flex justify-end gap-4 mt-6">
+        <button type="button" mat-button (click)="onPrevious()">Previous</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!contentForm.valid">
+          Next
+        </button>
+      </div>
+    </div>
+  </form>

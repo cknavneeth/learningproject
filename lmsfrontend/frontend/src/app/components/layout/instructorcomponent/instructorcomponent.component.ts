@@ -18,7 +18,7 @@ export class InstructorcomponentComponent {
 
     constructor(private router:Router){
       this.router.events.subscribe(()=>{
-        const authroutes=['instructor/instructorlogin','instructor/register','instructor/sentotp']
+        const authroutes=['instructor/instructorlogin','instructor/register','instructor/sentotp','instructor/instructorotp']
         this.showLayout=!authroutes.includes(this.router.url.slice(1))
       })
     }

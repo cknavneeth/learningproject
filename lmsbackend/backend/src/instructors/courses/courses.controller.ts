@@ -1,10 +1,13 @@
-import { Body, Controller, Get, Param, Post,Put,Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post,Put,Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { Course } from './course.schema';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as path from 'path';
+import { memoryStorage } from 'multer';
 
-@Controller('courses')
+@Controller('auth/instructor/courses')
 export class CoursesController {
 
     constructor(private readonly coursesService:CoursesService){}
@@ -18,7 +21,18 @@ export class CoursesController {
 
 
     @Post('upload-video')
-    @UseInterceptors(FileInterceptor('video'))
+    @UseInterceptors(FileInterceptor('video',{
+        storage: memoryStorage(),
+        fileFilter: (req, file, cb) => {
+            if (!file.mimetype.includes('video')) {
+                return cb(new BadRequestException('Only video files are allowed!'), false);
+            }
+            cb(null, true);
+        },
+        limits: {
+            fileSize: 1024 * 1024 * 100 // 100 MB
+        }
+    }))
     async uploadVideo(@UploadedFile() file:Express.Multer.File){
         console.log('file received',file)
         const videoUrl=await this.coursesService.uploadVideo(file)
@@ -55,5 +69,20 @@ export class CoursesController {
     async publishCourse(@Param('courseId') courseId:string,@Request() req){
         const instructorId=req.user.InstructorId
         return this.coursesService.publishCourse(courseId,instructorId)
+    }
+
+
+    @Post('upload-resource')
+    @UseGuards(GuardGuard)
+    @UseInterceptors(FileInterceptor('resource',{
+        storage: memoryStorage(),
+        limits: {
+            fileSize: 1024 * 1024 * 25 // 25MB
+        }
+    }))
+    async uploadResource(@UploadedFile() file:Express.Multer.File){
+        console.log('resource file received',file)
+        const fileUrl=await this.coursesService.uploadResource(file)
+        return {fileUrl}
     }
 }

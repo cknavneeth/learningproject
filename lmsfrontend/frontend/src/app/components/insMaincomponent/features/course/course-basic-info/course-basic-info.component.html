@@ -1,0 +1,63 @@
+<form [formGroup]="basicInfoForm" (ngSubmit)="onSubmit()" class="max-w-2xl mx-auto">
+    <div class="space-y-6">
+        <mat-form-field class="w-full">
+          <mat-label>Course Title</mat-label>
+          <input matInput formControlName="title" placeholder="Enter course title">
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Course Category</mat-label>
+            <mat-select formControlName="category">
+              <mat-option *ngFor="let category of categories" [value]="category">
+                {{category}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-full">
+            <mat-label>Course Topic</mat-label>
+            <input matInput formControlName="courseTopic" placeholder="Enter course topic">
+          </mat-form-field>
+
+
+          <mat-form-field class="w-full">
+            <mat-label>Price (USD)</mat-label>
+            <input matInput type="number" formControlName="price" placeholder="Enter course price">
+          </mat-form-field>
+
+
+          <mat-form-field class="w-full">
+            <mat-label>Language</mat-label>
+            <mat-select formControlName="courseLanguage">
+              <mat-option *ngFor="let language of languages" [value]="language">
+                {{language}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-full">
+            <mat-label>Duration (hours)</mat-label>
+            <input matInput type="number" formControlName="duration" placeholder="Enter course duration">
+          </mat-form-field>
+
+
+          <mat-form-field class="w-full">
+            <mat-label>Level</mat-label>
+            <mat-select formControlName="courseLevel">
+              <mat-option *ngFor="let level of levels" [value]="level">
+                {{level}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+          <div class="flex justify-end">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!basicInfoForm.valid">
+              Next
+            </button>
+          </div>
+        </div>
+      </form>
+          

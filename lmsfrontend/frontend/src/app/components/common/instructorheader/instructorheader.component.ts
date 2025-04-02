@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { InstructorauthserviceService } from '../../../services/instructorauthservice.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-instructorheader',
-  imports: [CommonModule],
+  imports: [CommonModule,RouterModule],
   templateUrl: './instructorheader.component.html',
   styleUrl: './instructorheader.component.scss'
 })

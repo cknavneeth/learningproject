@@ -9,7 +9,7 @@ import { AuthenticationModule } from 'src/authentication/auth.module';
 import { CoursesController } from './courses/courses.controller';
 import { CoursesService } from './courses/courses.service';
 import { CoursesModule } from './courses/courses.module';
-import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
 
 @Module({
   imports:[MongooseModule.forFeature([{name:instructor.name,schema:instructorSchema}]),AuthenticationModule, CoursesModule,CloudinaryModule],

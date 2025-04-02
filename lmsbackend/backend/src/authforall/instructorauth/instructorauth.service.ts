@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 import { instructorDocument } from 'src/instructors/instructor.schema';
 import { InstructorsService } from 'src/instructors/instructors.service';
 import * as jwt from 'jsonwebtoken';

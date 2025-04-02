@@ -1,0 +1,58 @@
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-6">Create New Course</h1>
+  
+  <mat-stepper #stepper>
+    <!-- Basic Information Step -->
+    <mat-step [completed]="basicInfoComplete">
+      <ng-template matStepLabel>Basic Information</ng-template>
+      <app-course-basic-info
+        [(courseData)]="courseData"
+        (formValid)="onBasicInfoValidityChange($event)"
+        (submitStep)="stepper.next()">
+      </app-course-basic-info>
+      <div class="mt-4">
+        <button mat-button matStepperNext [disabled]="!basicInfoComplete">Next</button>
+      </div>
+    </mat-step>
+
+    <!-- Course Details Step -->
+    <mat-step [completed]="detailsComplete">
+      <ng-template matStepLabel>Course Details</ng-template>
+      <app-course-details
+        [(courseData)]="courseData"
+        (formValid)="onDetailsValidityChange($event)"
+        (submitStep)="stepper.next()">
+      </app-course-details>
+      <div class="mt-4">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext [disabled]="!detailsComplete">Next</button>
+      </div>
+    </mat-step>
+
+    <!-- Course Content Step -->
+    <mat-step [completed]="contentComplete">
+      <ng-template matStepLabel>Course Content</ng-template>
+      <app-course-content
+        [(courseData)]="courseData"
+        (formValid)="onContentValidityChange($event)"
+        (submitStep)="stepper.next()">
+      </app-course-content>
+      <div class="mt-4">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext [disabled]="!contentComplete">Next</button>
+      </div>
+    </mat-step>
+
+    <!-- Review & Publish Step -->
+    <mat-step>
+      <ng-template matStepLabel>Review & Publish</ng-template>
+      <app-course-publish
+        [courseData]="courseData"
+        (publishCourse)="onPublishCourse()">
+      </app-course-publish>
+      <div class="mt-4">
+        <button mat-button matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</div>

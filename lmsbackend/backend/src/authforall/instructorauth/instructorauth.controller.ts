@@ -3,7 +3,7 @@ import { InstructorauthService } from './instructorauth.service';
 import { BadRequestException, Body, Get, Post, Req, Res, UnauthorizedException, UploadedFile, UseInterceptors } from '@nestjs/common';
 import {Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 
 @Controller('auth/instructor')
 export class InstructorauthController {

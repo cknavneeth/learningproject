@@ -29,8 +29,20 @@ export class Course{
     @Prop({required:true})
     price:number
 
+    @Prop({required:true})
+    courseTopic:string
+
+    @Prop({required:true})
+    courseLanguage:string
+
+    @Prop({required:true})
+    courseLevel:string
+
     @Prop()
     thumbnailUrl:string
+
+    @Prop()
+    courseRequirements:string[]
 
     @Prop([String])
     targetAudience:string[]
@@ -73,3 +85,4 @@ export class Course{
 
 
 export const CourseSchema=SchemaFactory.createForClass(Course)
+

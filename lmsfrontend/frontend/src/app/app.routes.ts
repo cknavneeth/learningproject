@@ -23,6 +23,11 @@ import { instructorguardGuard, instructorLogin } from './guards/instructor/instr
 import { adminauthGuard, adminLogin } from './guards/admin/adminauth.guard';
 import { StudentprofileComponent } from './components/studentmain/studentprofile/studentprofile.component';
 import { InstructorprofileComponent } from './components/insMaincomponent/instructorprofile/instructorprofile.component';
+import { CoursecreationComponent } from './components/insMaincomponent/coursecreation/coursecreation.component';
+import { CourseBasicInfoComponent } from './components/insMaincomponent/features/course/course-basic-info/course-basic-info.component';
+import { CourseDetailsComponent } from './components/insMaincomponent/features/course/course-details/course-details.component';
+import { CourseContentComponent } from './components/insMaincomponent/features/course/course-content/course-content.component';
+import { CoursePublishComponent } from './components/insMaincomponent/features/course/course-publish/course-publish.component';
 
 export const routes: Routes = [
     {
@@ -129,6 +134,34 @@ export const routes: Routes = [
                 path:'profile',
                 component:InstructorprofileComponent,
                 canActivate:[instructorguardGuard]
+            },
+            {
+                path:'courses',
+                canActivate:[instructorguardGuard],
+                children:[
+                    {
+                        path:'',
+                        component: CoursecreationComponent,
+                        // children: [
+                        //     {
+                        //         path: '',
+                        //         component: CourseBasicInfoComponent
+                        //     },
+                        //     {
+                        //         path: 'details',
+                        //         component: CourseDetailsComponent
+                        //     },
+                        //     {
+                        //         path: 'content',
+                        //         component: CourseContentComponent
+                        //     },
+                        //     {
+                        //         path: 'publish',
+                        //         component: CoursePublishComponent
+                        //     }
+                        // ]
+                    }
+                ]
             }
         ]
     },

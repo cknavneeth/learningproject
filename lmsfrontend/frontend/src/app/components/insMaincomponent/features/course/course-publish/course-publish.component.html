@@ -1,0 +1,99 @@
+<div class="max-w-4xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-6">Review Your Course</h2>
+
+  <div *ngIf="courseData">
+    <mat-card class="mb-6">
+      <mat-card-header>
+        <mat-card-title>Basic Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p class="font-semibold">Title:</p>
+            <p>{{ courseData.title }}</p>
+          </div>
+          <div>
+            <p class="font-semibold">Category:</p>
+            <p>{{ courseData.category }}</p>
+          </div>
+          <div>
+            <p class="font-semibold">Price:</p>
+            <p>{{ courseData.price | currency }}</p>
+          </div>
+          <div>
+            <p class="font-semibold">Language:</p>
+            <p>{{ courseData.courseLanguage }}</p>
+          </div>
+          <div>
+            <p class="font-semibold">Level:</p>
+            <p>{{ courseData.courseLevel }}</p>
+          </div>
+          <div>
+            <p class="font-semibold">Total Duration:</p>
+            <p>{{ courseData.duration }} minutes</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mb-6">
+      <mat-card-header>
+        <mat-card-title>Course Details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-4">
+        <div class="mb-4">
+          <p class="font-semibold">Description:</p>
+          <p>{{ courseData.description }}</p>
+        </div>
+
+        <div class="mb-4">
+          <p class="font-semibold">Target Audience:</p>
+          <ul class="list-disc ml-6">
+            <li *ngFor="let audience of courseData.targetAudience">{{ audience }}</li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="font-semibold">Requirements:</p>
+          <ul class="list-disc ml-6">
+            <li *ngFor="let requirement of courseData.courseRequirements">{{ requirement }}</li>
+          </ul>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mb-6">
+      <mat-card-header>
+        <mat-card-title>Course Content</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-4">
+        <div *ngFor="let section of courseData.sections" class="mb-4">
+          <h3 class="text-lg font-semibold">Section {{ section.order }}: {{ section.title }}</h3>
+          <p class="text-gray-600">{{ section.description }}</p>
+          <p class="text-sm">Duration: {{ section.duration }} minutes</p>
+          
+          <div *ngIf="section.resources?.length" class="mt-2">
+            <p class="font-semibold">Resources:</p>
+            <ul class="list-disc ml-6">
+              <li *ngFor="let resource of section.resources">{{ resource.title }}</li>
+            </ul>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="flex justify-between mt-6">
+      <button mat-button color="primary" (click)="onPrevious()">
+        Back
+      </button>
+      <button mat-raised-button color="primary" (click)="onPublish()">
+        Publish Course
+      </button>
+    </div>
+  </div>
+
+  <!-- Show message if no course data -->
+  <div *ngIf="!courseData" class="text-center py-8">
+    <p>No course data available for review.</p>
+  </div>
+</div>

@@ -11,7 +11,7 @@ import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 
 import { InstructorsService } from 'src/instructors/instructors.service';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
 import { instructorDocument } from 'src/instructors/instructor.schema';
 import { AdminService } from 'src/admin/admin.service';
 import * as bcrypt from 'bcryptjs'

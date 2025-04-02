@@ -14,7 +14,7 @@ export class InstructorsidebarComponent {
    menuItems = [
     
     { icon: 'fas fa-tachometer-alt', label: 'Dashboard', route: '/instructor/home' },
-    { icon: 'fas fa-plus-circle', label: 'Create Course', route: '/instructor/create-course' },
+    { icon: 'fas fa-plus-circle', label: 'Create Course', route: '/instructor/courses' },
     { icon: 'fas fa-book', label: 'My Courses', route: '/instructor/my-courses' },
     { icon: 'fas fa-dollar-sign', label: 'Earnings', route: '/instructor/earnings' },
     { icon: 'fas fa-envelope', label: 'Messages', route: '/instructor/messages' }

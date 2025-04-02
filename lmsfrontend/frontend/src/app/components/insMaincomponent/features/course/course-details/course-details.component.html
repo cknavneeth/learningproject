@@ -1,0 +1,65 @@
+<form [formGroup]="detailsForm" (ngSubmit)="onSubmit()" class="max-w-2xl mx-auto">
+    <div class="space-y-6">
+      <div class="mb-6">
+        <input type="file" 
+               (change)="onThumbnailSelected($event)" 
+               accept="image/*" 
+               class="hidden" 
+               #thumbnailInput>
+        <div class="border-2 border-dashed p-4 text-center">
+          <img *ngIf="thumbnailPreview" [src]="thumbnailPreview" class="max-w-xs mx-auto mb-4">
+          <button type="button" mat-raised-button (click)="thumbnailInput.click()">
+            Upload Thumbnail
+          </button>
+        </div>
+      </div>
+
+
+      <mat-form-field class="w-full">
+        <mat-label>Course Description</mat-label>
+        <textarea matInput formControlName="description" rows="4"></textarea>
+      </mat-form-field>
+
+
+      <div formArrayName="targetAudience" class="space-y-4">
+        <h3>Target Audience</h3>
+        <div *ngFor="let audience of targetAudience.controls; let i=index" class="flex gap-2">
+          <mat-form-field class="flex-1">
+            <input matInput [formControlName]="i" placeholder="Enter target audience">
+          </mat-form-field>
+          <button type="button" mat-icon-button color="warn" (click)="removeTargetAudience(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <button type="button" mat-stroked-button (click)="addTargetAudience()">
+          Add Target Audience
+        </button>
+      </div>
+
+
+
+      
+      <div formArrayName="courseRequirements" class="space-y-4">
+        <h3>Course Requirements</h3>
+        <div *ngFor="let req of courseRequirements.controls; let i=index" class="flex gap-2">
+          <mat-form-field class="flex-1">
+            <input matInput [formControlName]="i" placeholder="Enter requirement">
+          </mat-form-field>
+          <button type="button" mat-icon-button color="warn" (click)="removeCourseRequirement(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <button type="button" mat-stroked-button (click)="addCourseRequirement()">
+          Add Requirement
+        </button>
+      </div>
+
+
+      <div class="flex justify-end gap-4">
+        <button type="button" mat-button (click)="onPrevious()">Previous</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!detailsForm.valid">
+          Next
+        </button>
+      </div>
+    </div>
+  </form>

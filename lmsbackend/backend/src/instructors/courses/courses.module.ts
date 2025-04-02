@@ -4,8 +4,8 @@ import { CoursesService } from './courses.service';
 import { CoursesController } from './courses.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Course, CourseSchema } from './course.schema';
-import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
-import { AuthenticationModule } from 'src/authentication/auth.module';
+import { CloudinaryModule } from '../../shared/cloudinary/cloudinary.module';
+import { AuthenticationModule } from '../../authentication/auth.module';
 
 
 @Module({

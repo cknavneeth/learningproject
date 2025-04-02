@@ -15,14 +15,30 @@ export class CloudinaryService {
 
 
     async UploadedFile(file:Express.Multer.File):Promise<string>{
+        if(!file){
+            throw new Error('No file provided')
+        }
+
+
+        if(!file.buffer){
+            throw new Error('File buffer is empty')
+        }
+
         const uploadPreset=this.configservice.get<string>('CLOUDINARY_UPLOAD_PRESET')
         const isVideo=file.mimetype.includes('video')
+
+        console.log('Preparing to upload file:', {
+            mimetype: file.mimetype,
+            size: file.size,
+            isVideo,
+            uploadPreset
+        });
 
         try{
             const result:UploadApiResponse=await new Promise((resolve,reject)=>{
                 const stream=cloudinary.uploader.upload_stream({
                     upload_preset:uploadPreset,
-                    folder:isVideo?'course-videos':'course-thumbnails',
+                    folder:isVideo?'course-videos':file.fieldname==='certificate'?'instructor-certificate': 'course-thumbnails',
                     resource_type:'auto',
                     chunk_size:6000000,
                     eager:isVideo?[{format:'mp4',quality:'auto'}]:undefined

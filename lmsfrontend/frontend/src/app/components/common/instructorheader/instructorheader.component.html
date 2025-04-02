@@ -28,7 +28,7 @@
         <div 
           class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-700"
           [ngClass]="{'hidden': !showProfileMenu}">
-          <a routerLink="/instructor/profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
+          <a [routerLink]="'/instructor/profile'" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
           <a routerLink="/instructor/settings" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Settings</a>
           <div class="border-t border-gray-700"></div>
           <button (click)="logoutinstructor()" class="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">
