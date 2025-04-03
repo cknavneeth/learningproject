@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +19,7 @@ MatButtonModule
   templateUrl: './course-basic-info.component.html',
   styleUrl: './course-basic-info.component.scss'
 })
-export class CourseBasicInfoComponent {
+export class CourseBasicInfoComponent implements OnInit,OnChanges{
     @Input() courseData:any;
     @Output() courseDataChange=new EventEmitter<boolean>()
     @Output() formValid=new EventEmitter<boolean>()
@@ -57,6 +57,38 @@ export class CourseBasicInfoComponent {
       }
     }
 
+
+
+    ngOnInit() {
+      // Patch form with existing data if available
+      if (this.courseData) {
+        this.basicInfoForm.patchValue({
+          title: this.courseData.title || '',
+          category: this.courseData.category || '',
+          courseTopic: this.courseData.courseTopic || '',
+          price: this.courseData.price || '',
+          courseLanguage: this.courseData.courseLanguage || '',
+          duration: this.courseData.duration || '',
+          courseLevel: this.courseData.courseLevel || ''
+        });
+      }
+    }
+
+
+    ngOnChanges(changes: SimpleChanges) {
+      if (changes['courseData'] && this.courseData) {
+        this.basicInfoForm.patchValue({
+          title: this.courseData.title || '',
+          category: this.courseData.category || '',
+          courseTopic: this.courseData.courseTopic || '',
+          price: this.courseData.price || '',
+          courseLanguage: this.courseData.courseLanguage || '',
+          duration: this.courseData.duration || '',
+          courseLevel: this.courseData.courseLevel || ''
+        });
+      }
+    }
+    
 }
 
 

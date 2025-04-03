@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,7 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './course-content.component.html',
   styleUrl: './course-content.component.scss'
 })
-export class CourseContentComponent {
+export class CourseContentComponent implements OnInit{
 
   @Input() courseData:any;
   @Output() courseDataChange=new EventEmitter<any>()
@@ -146,6 +146,52 @@ export class CourseContentComponent {
 
   onPrevious(){
     this.previousStep.emit()
+  }
+
+  ngOnInit(){
+     if(this.courseData?.section?.length){
+      this.patchFormData()
+     }
+  }
+
+  ngOnChanges(changes:SimpleChanges){
+     if(changes['courseData']&&this.courseData?.section?.length){
+      this.patchFormData()
+     }
+  }
+
+
+  private patchFormData() {
+    // Clear existing sections
+    while (this.sections.length) {
+      this.sections.removeAt(0);
+    }
+
+    // Add sections from courseData
+    this.courseData.sections.forEach((section: any) => {
+      const sectionGroup = this.createSection();
+      sectionGroup.patchValue({
+        title: section.title,
+        description: section.description,
+        videoUrl: section.videoUrl,
+        duration: section.duration,
+        order: section.order
+      });
+
+
+      if (section.resources?.length) {
+        const resourcesArray = sectionGroup.get('resources') as FormArray;
+        section.resources.forEach((resource: any) => {
+          resourcesArray.push(this.fb.group({
+            title: resource.title,
+            fileUrl: resource.fileUrl,
+            fileType: resource.fileType
+          }));
+        });
+      }
+
+      this.sections.push(sectionGroup);
+    });
   }
 
   

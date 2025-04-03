@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CourseRepository } from './repositories/course/course.repository';
 import { Course, CourseStatus } from './course.schema';
 import { Types } from 'mongoose';
@@ -57,8 +57,49 @@ export class CoursesService {
         return this.courseRepository.findByInstructor(instructorId)
     }
 
-    async updateCourse(courseId:string,courseData:Partial<Course>,instructorId:string){
-         return this.courseRepository.update(courseId,courseData,instructorId)
+    async updateCourse(courseId: string, courseData: Partial<Course>, instructorId: string) {
+        const existingCourse = await this.courseRepository.findById(courseId);
+        if (!existingCourse) {
+            throw new NotFoundException('Course not found initially');
+        }
+
+        if (existingCourse.instructor.toString() !== instructorId) {
+            throw new UnauthorizedException('Not authorized to update this course');
+        }
+
+        // Sanitize the courseData by removing MongoDB-specific fields
+        const sanitizedData = { ...courseData };
+        delete (sanitizedData as any)._id;
+        delete (sanitizedData as any).createdAt;
+        delete (sanitizedData as any).updatedAt;
+        delete (sanitizedData as any).__v;
+        delete sanitizedData.instructor;
+
+        console.log('sanitized daatta',sanitizedData)
+        // Handle status updates
+        if (sanitizedData.status) {
+            if (sanitizedData.status === CourseStatus.DRAFT) {
+                sanitizedData.status = CourseStatus.DRAFT;
+            } else if (sanitizedData.status === CourseStatus.PUBLISHED) {
+                sanitizedData.status = CourseStatus.PUBLISHED;
+            } else if (sanitizedData.status === CourseStatus.PENDING_REVIEW) {
+                sanitizedData.status = CourseStatus.PENDING_REVIEW;
+            } else if (sanitizedData.status === CourseStatus.REJECTED) {
+                sanitizedData.status = CourseStatus.REJECTED;
+            }
+        }
+
+        const updatedCourse = await this.courseRepository.update(
+            courseId,
+            sanitizedData,
+            instructorId
+        );
+
+        if (!updatedCourse) {
+            throw new NotFoundException('Course not found');
+        }
+
+        return updatedCourse;
     }
 
 
@@ -78,4 +119,53 @@ export class CoursesService {
             throw new BadRequestException(`failed to upload resource ${error.message}`)
         }
     }
+
+
+    //for drafts instructor ok lets cod
+    async getDrafts(instructorId:string){
+       try {
+        const drafts=await this.courseRepository.findByInstructorAndStatus(instructorId,CourseStatus.DRAFT)
+        return drafts
+       } catch (error) {
+          throw new BadRequestException('Failed to fetch drafts')
+       }
+    }
+
+
+    async deleteDraft(draftId:string,instructorId:string){
+        try {
+            const draft=await this.courseRepository.findById(draftId)
+             if(!draft){
+                throw new NotFoundException('Draft not found')
+             }
+             if(draft.instructor.toString()!==instructorId){
+                   throw new BadRequestException('Unauthorized to delete this draft')
+
+             }
+             const result=await this.courseRepository.findByIdAndDelete(draftId)
+             return result
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException('Failed to delete draft');
+        }
+        
+    }
+
+
+
+    async getCourseById(courseId:string,instructorId:string){
+        const course=await this.courseRepository.findById(courseId)
+        if(!course){
+            throw new NotFoundException('Course not found')
+        }
+
+        if(course.instructor.toString()!==instructorId){
+            throw new BadRequestException('Unauthorized to access this course')
+        }
+
+        return course
+    }
+
 }

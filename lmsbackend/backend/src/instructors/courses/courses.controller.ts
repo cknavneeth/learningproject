@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post,Put,Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post,Put,Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { Course } from './course.schema';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
@@ -14,7 +14,7 @@ export class CoursesController {
 
     @Post()
     @UseGuards(GuardGuard)
-    async createCourse(@Body() courseData:Partial<Course>,@Request() req){
+    async createCourse(@Body() courseData:{isDraft:boolean}&Partial<Course>,@Request() req){
         const instructorId=req.user.InstructorId
         return this.coursesService.createCourse(courseData,instructorId)
     }
@@ -59,8 +59,19 @@ export class CoursesController {
     @Put(':courseId')
     @UseGuards(GuardGuard)
     async updateCourse(@Param('courseId') courseId:string,@Body() courseData:Partial<Course>,@Request() req){
+        console.log('Updating course:', { courseId, courseData }); 
         const instructorId=req.user.InstructorId
-        return this.coursesService.updateCourse(courseId,courseData,instructorId)
+        try {
+            const updatedCourse=await this.coursesService.updateCourse(courseId,courseData,instructorId)
+            if(!updatedCourse){
+                throw new NotFoundException('Course not found')
+            }
+            return updatedCourse
+        } catch (error) {
+            console.error('error updating course',error)
+            throw error
+        }
+        // return this.coursesService.updateCourse(courseId,courseData,instructorId)
     }
 
 
@@ -85,4 +96,53 @@ export class CoursesController {
         const fileUrl=await this.coursesService.uploadResource(file)
         return {fileUrl}
     }
+
+
+    //controllers related to drafts
+    @Get('drafts')
+    @UseGuards(GuardGuard)
+    async getDrafts(@Request() req){
+        try {
+            const instructorId=req.user.InstructorId
+            const drafts=await this.coursesService.getDrafts(instructorId)
+            return drafts
+        } catch (error) {
+            throw new BadRequestException('failed to fetch drafts')
+        }
+    }
+
+
+
+    @Delete('draft/:id')
+    @UseGuards(GuardGuard)
+    async deleteDraft(@Param('id') draftId:string,@Request() req){
+        try {
+            const instructorId=req.user.InstructorId
+            const result=await this.coursesService.deleteDraft(draftId,instructorId)
+            if(!result){
+               throw new NotFoundException('Draft not found')
+            }
+            return {message:'Draft deleted successfully'}
+        } catch (error) {
+            if(error instanceof NotFoundException){
+                throw error
+            }
+            throw new BadRequestException('Failed to delete draft')
+        }
+    }
+
+
+    @Get(':id')
+    @UseGuards(GuardGuard)
+    async getCourseById(@Param('id') id:string,@Request() req){
+         const instructorId=req.user.InstructorId
+         return this.coursesService.getCourseById(id,instructorId)
+    }
+
+
+
+
+
+
+
 }

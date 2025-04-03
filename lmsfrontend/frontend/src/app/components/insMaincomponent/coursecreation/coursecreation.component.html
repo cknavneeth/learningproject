@@ -1,5 +1,14 @@
 <div class="container mx-auto p-4">
-  <h1 class="text-2xl font-bold mb-6">Create New Course</h1>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">{{ isEditMode ? 'Edit Course' : 'Create New Course' }}</h1>
+    <button 
+      mat-raised-button
+      color="accent"
+      (click)="saveDraft()"
+      class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition duration-200">
+      Save as Draft
+    </button>
+  </div>
   
   <mat-stepper #stepper>
     <!-- Basic Information Step -->
@@ -10,7 +19,8 @@
         (formValid)="onBasicInfoValidityChange($event)"
         (submitStep)="stepper.next()">
       </app-course-basic-info>
-      <div class="mt-4">
+      <div class="mt-4 flex justify-between">
+        <button mat-button (click)="saveDraft()">Save as Draft</button>
         <button mat-button matStepperNext [disabled]="!basicInfoComplete">Next</button>
       </div>
     </mat-step>
@@ -23,8 +33,11 @@
         (formValid)="onDetailsValidityChange($event)"
         (submitStep)="stepper.next()">
       </app-course-details>
-      <div class="mt-4">
-        <button mat-button matStepperPrevious>Back</button>
+      <div class="mt-4 flex justify-between">
+        <div>
+          <button mat-button matStepperPrevious class="mr-2">Back</button>
+          <button mat-button (click)="saveDraft()">Save as Draft</button>
+        </div>
         <button mat-button matStepperNext [disabled]="!detailsComplete">Next</button>
       </div>
     </mat-step>
@@ -37,8 +50,11 @@
         (formValid)="onContentValidityChange($event)"
         (submitStep)="stepper.next()">
       </app-course-content>
-      <div class="mt-4">
-        <button mat-button matStepperPrevious>Back</button>
+      <div class="mt-4 flex justify-between">
+        <div>
+          <button mat-button matStepperPrevious class="mr-2">Back</button>
+          <button mat-button (click)="saveDraft()">Save as Draft</button>
+        </div>
         <button mat-button matStepperNext [disabled]="!contentComplete">Next</button>
       </div>
     </mat-step>
@@ -50,8 +66,12 @@
         [courseData]="courseData"
         (publishCourse)="onPublishCourse()">
       </app-course-publish>
-      <div class="mt-4">
-        <button mat-button matStepperPrevious>Back</button>
+      <div class="mt-4 flex justify-between">
+        <div>
+          <button mat-button matStepperPrevious class="mr-2">Back</button>
+          <button mat-button (click)="saveDraft()">Save as Draft</button>
+        </div>
+        <button mat-raised-button color="primary" (click)="onPublishCourse()">Publish Course</button>
       </div>
     </mat-step>
   </mat-stepper>

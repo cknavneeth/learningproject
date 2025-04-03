@@ -23,7 +23,9 @@ export class Course{
     @Prop({required:true})
     duration:number
 
-    @Prop({required:true})
+    @Prop({required:function(){
+        return this.status!==CourseStatus.DRAFT
+    }})
     description:string
 
     @Prop({required:true})

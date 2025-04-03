@@ -28,6 +28,7 @@ import { CourseBasicInfoComponent } from './components/insMaincomponent/features
 import { CourseDetailsComponent } from './components/insMaincomponent/features/course/course-details/course-details.component';
 import { CourseContentComponent } from './components/insMaincomponent/features/course/course-content/course-content.component';
 import { CoursePublishComponent } from './components/insMaincomponent/features/course/course-publish/course-publish.component';
+import { CourseDraftComponent } from './components/insMaincomponent/features/course/course-draft/course-draft.component';
 
 export const routes: Routes = [
     {
@@ -142,27 +143,15 @@ export const routes: Routes = [
                     {
                         path:'',
                         component: CoursecreationComponent,
-                        // children: [
-                        //     {
-                        //         path: '',
-                        //         component: CourseBasicInfoComponent
-                        //     },
-                        //     {
-                        //         path: 'details',
-                        //         component: CourseDetailsComponent
-                        //     },
-                        //     {
-                        //         path: 'content',
-                        //         component: CourseContentComponent
-                        //     },
-                        //     {
-                        //         path: 'publish',
-                        //         component: CoursePublishComponent
-                        //     }
-                        // ]
+                       
                     }
                 ]
+            },
+            {
+                path:'drafts',
+                component:CourseDraftComponent
             }
+
         ]
     },
     {
