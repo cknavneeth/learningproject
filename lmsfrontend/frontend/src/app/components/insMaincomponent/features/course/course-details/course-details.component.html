@@ -1,65 +1,116 @@
-<form [formGroup]="detailsForm" (ngSubmit)="onSubmit()" class="max-w-2xl mx-auto">
-    <div class="space-y-6">
-      <div class="mb-6">
-        <input type="file" 
-               (change)="onThumbnailSelected($event)" 
-               accept="image/*" 
-               class="hidden" 
-               #thumbnailInput>
-        <div class="border-2 border-dashed p-4 text-center">
-          <img *ngIf="thumbnailPreview" [src]="thumbnailPreview" class="max-w-xs mx-auto mb-4">
-          <button type="button" mat-raised-button (click)="thumbnailInput.click()">
-            Upload Thumbnail
-          </button>
-        </div>
-      </div>
-
-
-      <mat-form-field class="w-full">
-        <mat-label>Course Description</mat-label>
-        <textarea matInput formControlName="description" rows="4"></textarea>
-      </mat-form-field>
-
-
-      <div formArrayName="targetAudience" class="space-y-4">
-        <h3>Target Audience</h3>
-        <div *ngFor="let audience of targetAudience.controls; let i=index" class="flex gap-2">
-          <mat-form-field class="flex-1">
-            <input matInput [formControlName]="i" placeholder="Enter target audience">
-          </mat-form-field>
-          <button type="button" mat-icon-button color="warn" (click)="removeTargetAudience(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-        <button type="button" mat-stroked-button (click)="addTargetAudience()">
-          Add Target Audience
-        </button>
-      </div>
-
-
-
-      
-      <div formArrayName="courseRequirements" class="space-y-4">
-        <h3>Course Requirements</h3>
-        <div *ngFor="let req of courseRequirements.controls; let i=index" class="flex gap-2">
-          <mat-form-field class="flex-1">
-            <input matInput [formControlName]="i" placeholder="Enter requirement">
-          </mat-form-field>
-          <button type="button" mat-icon-button color="warn" (click)="removeCourseRequirement(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-        <button type="button" mat-stroked-button (click)="addCourseRequirement()">
-          Add Requirement
-        </button>
-      </div>
-
-
-      <div class="flex justify-end gap-4">
-        <button type="button" mat-button (click)="onPrevious()">Previous</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!detailsForm.valid">
-          Next
-        </button>
-      </div>
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 sm:p-6 md:p-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-10 animate-fadeIn">
+      <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 mb-3">
+        Course Details
+      </h1>
+      <p class="text-gray-400 text-sm md:text-base">
+        Add detailed information about your course
+      </p>
     </div>
-  </form>
+
+    <!-- Form -->
+    <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()" class="space-y-6 p-6">
+      <!-- Thumbnail Upload -->
+      <div class="input-container">
+        <label class="text-gray-300 text-sm mb-1 block">Course Thumbnail</label>
+        <div class="input-wrapper">
+          <input 
+            type="file"
+            #thumbnailInput
+            (change)="onThumbnailSelected($event)"
+            accept="image/*"
+            class="input-field"
+          >
+          <mat-icon class="input-icon text-blue-400">image</mat-icon>
+        </div>
+        <div *ngIf="thumbnailPreview" class="mt-4">
+          <img [src]="thumbnailPreview" class="max-w-xs rounded-lg shadow-lg">
+        </div>
+      </div>
+
+      <!-- Course Description -->
+      <div class="input-container">
+        <label class="text-gray-300 text-sm mb-1 block">Course Description</label>
+        <div class="input-wrapper">
+          <textarea 
+            formControlName="description"
+            rows="4"
+            placeholder="Describe what students will learn in this course"
+            class="input-field"
+          ></textarea>
+          <mat-icon class="input-icon text-blue-400">description</mat-icon>
+        </div>
+        <div *ngIf="detailsForm.get('description')?.invalid && detailsForm.get('description')?.touched" 
+             class="text-red-500 text-sm mt-1 animate-fadeIn">
+          Description is required (minimum 50 characters)
+        </div>
+      </div>
+
+      <!-- Target Audience -->
+      <div formArrayName="targetAudience" class="input-container">
+        <div class="flex justify-between items-center mb-2">
+          <label class="text-gray-300 text-sm">Target Audience</label>
+          <button type="button" 
+                  (click)="addTargetAudience()"
+                  class="text-blue-400 hover:text-blue-300 flex items-center">
+            <mat-icon class="text-sm">add</mat-icon>
+            Add Audience
+          </button>
+        </div>
+        <div *ngFor="let audience of targetAudience.controls; let i=index" 
+             class="input-wrapper mb-2 animate-fadeIn">
+          <input 
+            [formControlName]="i"
+            type="text"
+            placeholder="Who is this course for?"
+            class="input-field"
+          >
+          <mat-icon class="input-icon text-blue-400">group</mat-icon>
+          <button type="button"
+                  (click)="removeTargetAudience(i)" 
+                  class="clear-button">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="targetAudience.invalid && targetAudience.touched" 
+             class="text-red-500 text-sm mt-1 animate-fadeIn">
+          At least one target audience is required
+        </div>
+      </div>
+
+      <!-- Course Requirements -->
+      <div formArrayName="courseRequirements" class="input-container">
+        <div class="flex justify-between items-center mb-2">
+          <label class="text-gray-300 text-sm">Course Requirements</label>
+          <button type="button" 
+                  (click)="addCourseRequirement()"
+                  class="text-blue-400 hover:text-blue-300 flex items-center">
+            <mat-icon class="text-sm">add</mat-icon>
+            Add Requirement
+          </button>
+        </div>
+        <div *ngFor="let req of courseRequirements.controls; let i=index" 
+             class="input-wrapper mb-2 animate-fadeIn">
+          <input 
+            [formControlName]="i"
+            type="text"
+            placeholder="What should students know before starting?"
+            class="input-field"
+          >
+          <mat-icon class="input-icon text-blue-400">check_circle</mat-icon>
+          <button type="button"
+                  (click)="removeCourseRequirement(i)" 
+                  class="clear-button">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="courseRequirements.invalid && courseRequirements.touched" 
+             class="text-red-500 text-sm mt-1 animate-fadeIn">
+          At least one requirement is required
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

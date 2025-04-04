@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon'; 
 @Component({
   selector: 'app-course-basic-info',
   imports: [
@@ -13,7 +14,8 @@ import { MatSelectModule } from '@angular/material/select';
 MatFormFieldModule,
 MatInputModule,
 MatSelectModule,
-MatButtonModule
+MatButtonModule,
+MatIconModule 
 
   ],
   templateUrl: './course-basic-info.component.html',
@@ -87,6 +89,11 @@ export class CourseBasicInfoComponent implements OnInit,OnChanges{
           courseLevel: this.courseData.courseLevel || ''
         });
       }
+    }
+
+
+    clearField(fieldName: string) {
+      this.basicInfoForm.get(fieldName)?.setValue('');
     }
     
 }

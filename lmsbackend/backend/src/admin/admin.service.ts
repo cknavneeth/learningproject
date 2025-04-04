@@ -4,12 +4,14 @@ import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { user, userDocument } from 'src/users/users.schema';
 import { instructor, instructorDocument } from 'src/instructors/instructor.schema';
+import { AdminRepository } from './repositories/admin/admin.repository';
 
 @Injectable()
 export class AdminService {
     constructor(@InjectModel(admin.name) private adminmodel:Model<admindocument>,
     @InjectModel(user.name) private usermodel:Model<userDocument>,
-    @InjectModel(instructor.name) private instructorModel:Model<instructorDocument>
+    @InjectModel(instructor.name) private instructorModel:Model<instructorDocument>,
+    private readonly adminRepository:AdminRepository
  ){}
 
     async findbyEmail(email:string){
@@ -30,7 +32,7 @@ export class AdminService {
         if (!Types.ObjectId.isValid(studentId)) {
             throw new BadRequestException('Invalid student ID format');
         }
-        
+
         const student=await this.usermodel.findById(studentId)
         if(!student){
             throw new NotFoundException('student not found')
@@ -99,4 +101,16 @@ export class AdminService {
 
 
     }
+
+
+    async getAllCourses(){
+        return this.adminRepository.getAllCourses()
+    }
+
+    async updateCourseStatus(courseId:string,isApproved:boolean,feedback?:string){
+        return this.adminRepository.updateCourseStatus(courseId,isApproved,feedback)
+    }
+
+
+
 }

@@ -104,7 +104,7 @@ export class CoursesService {
 
 
     async publishCourse(courseId:string,instructorId:string){
-        return this.courseRepository.update(courseId,{status:CourseStatus.PUBLISHED},instructorId)
+        return this.courseRepository.update(courseId,{status:CourseStatus.PENDING_REVIEW},instructorId)
     }
 
     async uploadResource(file:Express.Multer.File){

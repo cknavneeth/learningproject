@@ -77,7 +77,7 @@ export class Course{
         }[];
     }[];
 
-    @Prop({type:Types.ObjectId,ref:'Instructor',required:true})
+    @Prop({type:Types.ObjectId,ref:'instructor',required:true})
     instructor:Types.ObjectId
 
     @Prop({type:String,enum:CourseStatus,default:CourseStatus.DRAFT})

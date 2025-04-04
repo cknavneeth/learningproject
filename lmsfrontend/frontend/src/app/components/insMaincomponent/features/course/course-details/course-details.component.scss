@@ -1,0 +1,44 @@
+.input-container {
+    width: 100%;
+  
+    .input-wrapper {
+      position: relative;
+    }
+  
+    .input-field {
+      @apply w-full bg-gray-700/50 text-white rounded-lg py-3 px-4 pr-12
+             border border-gray-600/50
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+             placeholder-gray-400;
+    }
+  
+    textarea.input-field {
+      min-height: 100px;
+      resize: vertical;
+    }
+  
+    .input-icon {
+      @apply absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none;
+    }
+  
+    .clear-button {
+      @apply absolute right-3 top-1/2 -translate-y-1/2
+             text-gray-400 hover:text-gray-200
+             focus:outline-none;
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

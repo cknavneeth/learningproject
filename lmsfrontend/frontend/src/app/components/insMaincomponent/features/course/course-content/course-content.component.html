@@ -1,88 +1,162 @@
-<form [formGroup]="contentForm" (ngSubmit)="onSubmit()" class="max-w-4xl mx-auto">
-    <div class="space-y-6">
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 sm:p-6 md:p-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-10 animate-fadeIn">
+      <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 mb-3">
+        Course Content
+      </h1>
+      <p class="text-gray-400 text-sm md:text-base">
+        Add sections and content to your course
+      </p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="contentForm" (ngSubmit)="onSubmit()" class="space-y-6 p-6">
       <div formArrayName="sections">
         <div *ngFor="let section of sections.controls; let i=index" [formGroupName]="i" 
-             class="border rounded-lg p-4 mb-4">
+             class="mb-8 p-6 bg-gray-800 bg-opacity-50 rounded-lg shadow-lg">
+          <!-- Section Header -->
           <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold">Section {{i + 1}}</h3>
-            <button type="button" mat-icon-button color="warn" (click)="removeSection(i)">
+            <h3 class="text-xl text-gray-200">Section {{i + 1}}</h3>
+            <button type="button" 
+                    (click)="removeSection(i)"
+                    class="text-red-400 hover:text-red-300">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
-  
-          <mat-form-field class="w-full">
-            <mat-label>Section Title</mat-label>
-            <input matInput formControlName="title" placeholder="Enter section title">
-          </mat-form-field>
-  
-          <mat-form-field class="w-full">
-            <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" rows="3"></textarea>
-          </mat-form-field>
-  
-          <div class="mb-4">
-            <input type="file" 
-                   (change)="onVideoSelected($event, i)" 
-                   accept="video/*" 
-                   class="hidden" 
-                   #videoInput>
-            <button type="button" mat-raised-button (click)="videoInput.click()" [disabled]="isUploading[i]">
-              {{ isUploading[i] ? 'Uploading...' : 'Upload Video' }}
-            </button>
 
-            <mat-spinner *ngIf="isUploading[i]" 
-            diameter="20" 
-            class="inline-block ml-2">
-</mat-spinner>
-
-
-            <span *ngIf="section.get('videoUrl')?.value" class="ml-2 text-green-600">
-              Video uploaded successfully
-            </span>
+          <!-- Section Title -->
+          <div class="input-container">
+            <label class="text-gray-300 text-sm mb-1 block">Section Title</label>
+            <div class="input-wrapper">
+              <input 
+                formControlName="title"
+                type="text"
+                placeholder="Enter section title"
+                class="input-field"
+              >
+              <mat-icon class="input-icon text-blue-400">title</mat-icon>
+            </div>
           </div>
-  
-          <mat-form-field class="w-full">
-            <mat-label>Duration (minutes)</mat-label>
-            <input matInput type="number" formControlName="duration">
-          </mat-form-field>
-  
-          <div [formArrayName]="'resources'" class="mt-4">
-            <h4 class="font-medium mb-2">Resources</h4>
-            <div *ngFor="let resource of getResources(i).controls; let j=index" 
-                 [formGroupName]="j" class="flex gap-2 mb-2">
-              <mat-form-field class="flex-1">
-                <mat-label>Resource Title</mat-label>
-                <input matInput formControlName="title">
-              </mat-form-field>
-              
-              <input type="file" 
-                     (change)="onResourceSelected($event, i, j)" 
-                     class="hidden" 
-                     #resourceInput>
-              <button type="button" mat-stroked-button (click)="resourceInput.click()">
-                Upload File
-              </button>
-              
-              <button type="button" mat-icon-button color="warn" (click)="removeResource(i, j)">
-                <mat-icon>delete</mat-icon>
+
+          <!-- Section Description -->
+          <div class="input-container mt-4">
+            <label class="text-gray-300 text-sm mb-1 block">Section Description</label>
+            <div class="input-wrapper">
+              <textarea 
+                formControlName="description"
+                rows="3"
+                placeholder="Describe this section"
+                class="input-field"
+              ></textarea>
+              <mat-icon class="input-icon text-blue-400">description</mat-icon>
+            </div>
+          </div>
+
+          <!-- Video Upload -->
+          <div class="input-container mt-4">
+            <label class="text-gray-300 text-sm mb-1 block">Section Video</label>
+            <div class="input-wrapper">
+              <input 
+                type="file"
+                (change)="onVideoSelected($event, i)"
+                accept="video/*"
+                class="input-field"
+                #videoInput
+              >
+              <mat-icon class="input-icon text-blue-400">videocam</mat-icon>
+            </div>
+            <div *ngIf="isUploading[i]" class="mt-2 text-blue-400 flex items-center">
+              <mat-spinner diameter="20"></mat-spinner>
+              <span class="ml-2">Uploading video...</span>
+            </div>
+          </div>
+
+          <!-- Duration -->
+          <div class="input-container mt-4">
+            <label class="text-gray-300 text-sm mb-1 block">Duration (minutes)</label>
+            <div class="input-wrapper">
+              <input 
+                formControlName="duration"
+                type="number"
+                placeholder="Enter duration in minutes"
+                class="input-field"
+              >
+              <mat-icon class="input-icon text-blue-400">schedule</mat-icon>
+            </div>
+          </div>
+
+          <!-- Resources -->
+          <div [formArrayName]="'resources'" class="mt-6">
+            <div class="flex justify-between items-center mb-4">
+              <label class="text-gray-300 text-sm">Resources</label>
+              <button type="button" 
+                      (click)="addResource(i)"
+                      class="text-blue-400 hover:text-blue-300 flex items-center">
+                <mat-icon class="text-sm">add</mat-icon>
+                Add Resource
               </button>
             </div>
-            <button type="button" mat-stroked-button (click)="addResource(i)" class="mt-2">
-              Add Resource
-            </button>
+
+            <div *ngFor="let resource of getResources(i).controls; let j=index" 
+                 [formGroupName]="j" 
+                 class="input-container mt-2">
+              <div class="flex gap-4">
+                <div class="flex-1">
+                  <div class="input-wrapper">
+                    <input 
+                      formControlName="title"
+                      type="text"
+                      placeholder="Resource title"
+                      class="input-field"
+                    >
+                    <mat-icon class="input-icon text-blue-400">description</mat-icon>
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="input-wrapper">
+                    <input 
+                      type="file"
+                      (change)="onResourceSelected($event, i, j)"
+                      class="input-field"
+                    >
+                    <mat-icon class="input-icon text-blue-400">attach_file</mat-icon>
+                  </div>
+                </div>
+                <button type="button"
+                        (click)="removeResource(i, j)" 
+                        class="text-red-400 hover:text-red-300">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-  
-      <button type="button" mat-stroked-button (click)="addSection()" class="w-full">
-        Add New Section
-      </button>
-  
-      <div class="flex justify-end gap-4 mt-6">
-        <button type="button" mat-button (click)="onPrevious()">Previous</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!contentForm.valid">
+
+      <!-- Add Section Button -->
+      <div class="flex justify-center">
+        <button type="button" 
+                (click)="addSection()"
+                class="flex items-center gap-2 text-blue-400 hover:text-blue-300">
+          <mat-icon>add_circle</mat-icon>
+          Add New Section
+        </button>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between mt-8">
+        <button type="button" 
+                (click)="onPrevious()"
+                class="px-6 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600">
+          Previous
+        </button>
+        <button type="submit"
+                [disabled]="!contentForm.valid"
+                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
           Next
         </button>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
+</div>

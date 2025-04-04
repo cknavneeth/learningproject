@@ -2,18 +2,41 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
 
-
-export interface TableColumn{
-  header:string;
-  field:string;
-  type:'text'|'image'|'status'|'action';
-  statusOptions?:{
-    trueValue:string;
-    falseValue:string;
-    trueClass:string;
-    falseClass:string;
-  }
+export interface StatusOption {
+  text: string;
+  class: string;
 }
+
+export interface BooleanStatusOptions {
+  trueValue: string;
+  falseValue: string;
+  trueClass: string;
+  falseClass: string;
+}
+
+export interface MultiStatusOptions {
+  [key: string]: StatusOption;
+}
+
+export interface TableColumn {
+  header: string;
+  field: string;
+  type: 'text' | 'image' | 'status' | 'action';
+  statusOptions?: BooleanStatusOptions | MultiStatusOptions;
+  actions?: { label: string; icon: string; action: string }[];
+}
+
+// export interface TableColumn{
+//   header:string;
+//   field:string;
+//   type:'text'|'image'|'status'|'action';
+//   statusOptions?:{
+//     trueValue:string;
+//     falseValue:string;
+//     trueClass:string;
+//     falseClass:string;
+//   }
+// }
 
 @Component({
   selector: 'app-tablecomponent',
@@ -101,22 +124,41 @@ export class TablecomponentComponent implements OnInit,OnChanges{
       (_, i) => startPage + i
     );
   }
+  ///for statuses
+  private isBooleanStatus(statusOptions: any): statusOptions is BooleanStatusOptions {
+    return 'trueValue' in statusOptions && 'falseValue' in statusOptions;
+  }
 
 
 
   getStatusClass(item:any,column:TableColumn):string{
-    if(!column.statusOptions)return ''
-
-    const value=item[column.field]
-    return value?column.statusOptions.trueValue:column.statusOptions.falseValue
+    if (!column.statusOptions) return '';
+    
+    const value = item[column.field];
+    
+    if (this.isBooleanStatus(column.statusOptions)) {
+      return value ? column.statusOptions.trueClass : column.statusOptions.falseClass;
+    }
+    
+    const multiStatus = column.statusOptions as MultiStatusOptions;
+    return multiStatus[value]?.class || '';
   }
 
 
   getStatusLabel(item:any,column:TableColumn):string{
-    if(!column.statusOptions)return ''
-    const value=item[column.field]
-    return value?column.statusOptions.trueValue:column.statusOptions.falseValue
+    if (!column.statusOptions) return '';
+    
+    const value = item[column.field];
+    
+    if (this.isBooleanStatus(column.statusOptions)) {
+      return value ? column.statusOptions.trueClass : column.statusOptions.falseClass;
+    }
+    
+    const multiStatus = column.statusOptions as MultiStatusOptions;
+    return multiStatus[value]?.class || '';
   }
+
+
 
   onAction(action:string,item:any){
     this.actionClick.emit({action,item})

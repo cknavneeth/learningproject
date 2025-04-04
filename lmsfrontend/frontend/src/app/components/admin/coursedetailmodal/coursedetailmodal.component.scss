@@ -1,0 +1,50 @@
+:host {
+    display: block;
+  }
+  
+  .modal-container {
+    display: flex;
+    flex-direction: column;
+    height: 90vh; // Set maximum height to 90% of viewport height
+    max-height: 800px; // Maximum height in pixels
+  }
+  
+  .modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: white;
+  }
+  
+  .modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    
+    // Custom scrollbar styling
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+  
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  }
+  
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background-color: white;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }

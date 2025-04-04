@@ -112,7 +112,7 @@ export class InstructorsService {
             throw new NotFoundException('You are Blocked')
         }
         if (instructor.rejectedAt) {
-            const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+            const twentyFourHoursAgo = new Date(Date.now() - 1 * 60 * 1000);
             if (instructor.rejectedAt > twentyFourHoursAgo) {
                 const hoursLeft = Math.ceil(
                     (instructor.rejectedAt.getTime() - twentyFourHoursAgo.getTime()) / (1000 * 60 * 60)

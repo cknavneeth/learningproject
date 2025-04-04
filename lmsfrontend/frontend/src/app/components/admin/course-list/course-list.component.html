@@ -1,0 +1,105 @@
+<div class="p-6">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-black">Course Management</h1>
+        <p class="text-gray-600 dark:text-gray-400">Review and manage all courses</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <div class="relative">
+            <input type="text" 
+                   placeholder="Search courses..." 
+                   class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   [(ngModel)]="searchTerm"
+                   (input)="onSearch()">
+            <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let course of filteredCourses" 
+             class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <!-- Course Image -->
+            <div class="relative h-48">
+                <img [src]="course.thumbnailUrl || 'assets/default-course.jpg'" 
+                     [alt]="course.title"
+                     class="w-full h-full object-cover">
+                <div class="absolute top-2 right-2">
+                    <span [ngClass]="getStatusClass(course.status)"
+                          class="px-3 py-1 rounded-full text-sm font-medium">
+                        {{getStatusText(course.status)}}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Course Info -->
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">{{course.title}}</h3>
+                
+                <!-- Instructor Info with Image -->
+                <div class="flex items-center mb-3">
+                    <div class="h-8 w-8 rounded-full overflow-hidden mr-2">
+                        <img src="profilephoto.jpg"
+                             [alt]="course.instructor?.name"
+                             class="h-full w-full object-cover">
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{course.instructor?.name}}</p>
+                        <p class="text-xs text-gray-500">Instructor</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Category: {{course.category}}</span>
+                    <span class="text-sm font-bold text-gray-800 dark:text-white">Rs{{course.price}}</span>
+                </div>
+
+                <!-- Instructor Status -->
+                <div class="flex items-center mb-4">
+                    <span class="text-sm mr-2">Instructor Status:</span>
+                    <span [ngClass]="{
+                        'px-2 py-1 text-xs font-medium rounded-full': true,
+                        'bg-green-100 text-green-800': course.instructor?.isVerified,
+                        'bg-yellow-100 text-yellow-800': !course.instructor?.isVerified
+                    }">
+                        {{course.instructor?.isVerified ? 'Verified' : 'Unverified'}}
+                    </span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center">
+                    <button (click)="viewCourseDetails(course._id)"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        Review
+                    </button>
+                    <button *ngIf="course.status === 'pending_review'"
+                            (click)="viewCourseDetails(course._id)"
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                        Verify
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" 
+         class="flex justify-center items-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" 
+         class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+        {{error}}
+    </div>
+
+    <!-- No Courses Message -->
+    <div *ngIf="!loading && courses.length === 0" 
+         class="text-center py-8">
+        <p class="text-gray-500 dark:text-gray-400">No courses available</p>
+    </div>
+</div>

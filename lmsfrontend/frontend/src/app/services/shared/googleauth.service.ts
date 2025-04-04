@@ -10,7 +10,7 @@ export class GoogleauthService {
 
   private apiurl='http://localhost:5000/auth'
 
-  verifyGoogleToken(credential:string,role:'student'|'instructor'){
+  verifyGoogleToken(credential:string,role?:'student'|'instructor'){
     console.log(`verifying google token for ${role}`)
     return this.http.post(`${this.apiurl}/${role}/google`,{credential},{withCredentials:true})
   }

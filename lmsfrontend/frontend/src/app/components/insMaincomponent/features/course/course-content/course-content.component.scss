@@ -1,0 +1,56 @@
+.input-container {
+    margin-bottom: 1rem;
+  
+    .input-wrapper {
+      position: relative;
+    }
+  
+    .input-field {
+      width: 100%;
+      background-color: rgba(31, 41, 55, 0.5);
+      color: white;
+      border: 1px solid rgba(75, 85, 99, 0.5);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      padding-right: 2.5rem;
+      transition: all 0.2s;
+  
+      &:focus {
+        outline: none;
+        border-color: rgba(96, 165, 250, 0.5);
+        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+      }
+  
+      &::placeholder {
+        color: rgba(156, 163, 175, 0.8);
+      }
+    }
+  
+    textarea.input-field {
+      min-height: 100px;
+      resize: vertical;
+    }
+  
+    .input-icon {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(96, 165, 250, 0.8);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

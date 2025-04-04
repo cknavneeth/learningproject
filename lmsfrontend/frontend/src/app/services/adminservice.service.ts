@@ -46,6 +46,19 @@ export class AdminserviceService {
         return this.http.patch<instructors>(`${this.apiurl}/verifyinstructor/${instructorId}`,{isApproved,feedback})
   }
 
+  getAllCourses():Observable<any[]>{
+    return this.http.get<any[]>(`${this.apiurl}/courses`)
+  }
+
+  approveCourse(courseId:string):Observable<any>{
+    return this.http.patch<any>(`${this.apiurl}/courses/${courseId}/approve`,{})
+
+  }
+
+  rejectCourse(courseId:string):Observable<any>{
+    return this.http.patch<any>(`${this.apiurl}/courses/${courseId}/reject}`,{})
+  }
+
   logoutAdmin(): Observable<any> {
     // Remove router navigation from service
     return this.http.post(`${this.apiurl}/logout`, {}).pipe(

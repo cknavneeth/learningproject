@@ -165,11 +165,11 @@ export class CoursecreationComponent {
 
           await this.courseService.publishCourse(this.courseData._id).toPromise()
 
-          this.snackBar.open('Course published successfully!','Close',{
-            duration:3000,
-            horizontalPosition:'right',
-            verticalPosition:'top'
-          })
+          this.snackBar.open('Course submitted for review! You will be notified once approved.', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
 
           this.router.navigate(['/instructor/dashboard'])
 

@@ -1,0 +1,125 @@
+<div class="modal-container bg-gray-900 text-gray-100">
+  <!-- Header -->
+  <div class="modal-header border-b border-gray-700 bg-gray-800">
+      <div class="flex items-center justify-between px-6 py-4">
+          <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Course Details
+          </h2>
+          <div class="flex items-center space-x-2">
+              <span [ngClass]="{
+                  'px-3 py-1 text-sm font-medium rounded-full': true,
+                  'bg-yellow-500/20 text-yellow-400': course.status === 'pending_review',
+                  'bg-green-500/20 text-green-400': course.status === 'approved',
+                  'bg-red-500/20 text-red-400': course.status === 'rejected'
+              }">
+                  {{ course.status | titlecase }}
+              </span>
+          </div>
+      </div>
+  </div>
+
+  <!-- Content -->
+  <div class="modal-content bg-gray-900">
+      <!-- Course Thumbnail -->
+      <div class="relative mb-8 rounded-xl overflow-hidden group">
+          <img [src]="course.thumbnailUrl" 
+               alt="Course Thumbnail" 
+               class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105">
+          <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="space-y-6">
+              <div class="bg-gray-800 rounded-xl p-6 transform transition-transform hover:scale-102">
+                  <h3 class="text-lg font-semibold text-blue-400 mb-2">Course Title</h3>
+                  <p class="text-xl font-medium text-gray-100">{{ course.title }}</p>
+              </div>
+              <div class="bg-gray-800 rounded-xl p-6 transform transition-transform hover:scale-102">
+                  <h3 class="text-lg font-semibold text-purple-400 mb-2">Category</h3>
+                  <p class="text-xl font-medium text-gray-100">{{ course.category }}</p>
+              </div>
+          </div>
+          <div class="space-y-6">
+              <div class="bg-gray-800 rounded-xl p-6 transform transition-transform hover:scale-102">
+                  <h3 class="text-lg font-semibold text-green-400 mb-2">Price</h3>
+                  <p class="text-xl font-medium text-gray-100">₹{{ course.price }}</p>
+              </div>
+              <div class="bg-gray-800 rounded-xl p-6 transform transition-transform hover:scale-102">
+                  <h3 class="text-lg font-semibold text-pink-400 mb-2">Instructor</h3>
+                  <p class="text-xl font-medium text-gray-100">{{ course.instructor?.name }}</p>
+              </div>
+          </div>
+      </div>
+
+      <!-- Course Description -->
+      <div class="bg-gray-800 rounded-xl p-6 mb-8">
+          <h3 class="text-lg font-semibold text-blue-400 mb-4">Description</h3>
+          <p class="text-gray-300 leading-relaxed">{{ course.description }}</p>
+      </div>
+
+      <!-- Course Sections -->
+      <div class="space-y-6">
+          <h3 class="text-2xl font-bold text-purple-400">Course Content</h3>
+          <div *ngFor="let section of course.sections; let i = index" 
+               class="bg-gray-800 rounded-xl p-6 transition-all duration-300 hover:bg-gray-750">
+              <div class="flex items-center space-x-3 mb-4">
+                  <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-semibold">
+                      {{ i + 1 }}
+                  </span>
+                  <h4 class="text-xl font-semibold text-gray-100">{{ section.title }}</h4>
+              </div>
+
+              <!-- Section Description -->
+              <p class="text-gray-400 mb-6 ml-11">{{ section.description }}</p>
+
+              <!-- Video -->
+              <div class="mb-6" *ngIf="section.videoUrl">
+                  <div class="relative rounded-xl overflow-hidden">
+                      <video [src]="section.videoUrl" 
+                             controls 
+                             class="w-full rounded-xl"
+                             poster="{{ section.thumbnailUrl }}">
+                      </video>
+                  </div>
+              </div>
+
+              <!-- Resources -->
+              <div *ngIf="section.resources?.length" class="ml-11">
+                  <h5 class="text-sm font-semibold text-blue-400 mb-3">Resources</h5>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div *ngFor="let resource of section.resources" 
+                           class="flex items-center space-x-3 p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors">
+                          <span class="material-icons text-blue-400">attachment</span>
+                          <a [href]="resource.fileUrl" 
+                             target="_blank" 
+                             class="text-blue-300 hover:text-blue-400 transition-colors">
+                              {{ resource.title }}
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-footer border-t border-gray-700 bg-gray-800">
+      <div class="flex justify-end space-x-4 px-6 py-4">
+          <button (click)="close()"
+                  class="px-6 py-2 text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
+              Close
+          </button>
+          <button *ngIf="course.status === 'pending_review'"
+                  (click)="rejectCourse()"
+                  class="px-6 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
+              Reject
+          </button>
+          <button *ngIf="course.status === 'pending_review'"
+                  (click)="approveCourse()"
+                  class="px-6 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+              Approve
+          </button>
+      </div>
+  </div>
+</div>
