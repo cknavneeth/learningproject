@@ -19,20 +19,19 @@ import { MatListModule } from '@angular/material/list';
   styleUrl: './course-publish.component.scss'
 })
 export class CoursePublishComponent {
-    @Input() courseData:any;
-    @Output() publishCourse=new EventEmitter<void>()
-    @Output() previousStep=new EventEmitter<void>()
+  @Input() courseData:any;
+  @Output() publishCourse=new EventEmitter<void>()
+  @Output() previousStep=new EventEmitter<void>()
 
-    ngOnInit() {
-      console.log('Course Data:', this.courseData); // Debug log
-    }
+  ngOnInit() {
+    console.log('Course Data:', this.courseData); // Debug log
+  }
 
-    onPublish(){
-      this.publishCourse.emit()
-    }
+  onPublish(){
+    this.publishCourse.emit()
+  }
 
-    onPrevious() {
-      this.previousStep.emit();
-    }
-    
+  onPrevious() {
+    this.previousStep.emit();
+  }
 }

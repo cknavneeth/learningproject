@@ -1,182 +1,63 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 sm:p-6 md:p-8">
-  <div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <div class="text-center mb-10 animate-fadeIn">
-      <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 mb-3">
-        Course Basic Information
-      </h1>
-      <p class="text-gray-400 text-sm md:text-base">
-        Let's start with the fundamental details of your course
-      </p>
-    </div>
+<form [formGroup]="basicInfoForm" (ngSubmit)="onSubmit()" class="max-w-2xl mx-auto">
+  <div class="space-y-6">
+      <mat-form-field class="w-full">
+        <mat-label>Course Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter course title">
+      </mat-form-field>
 
-    <!-- Form -->
-    <form [formGroup]="basicInfoForm" (ngSubmit)="onSubmit()" class="space-y-6 p-6">
-      <!-- Course Title -->
-      <div class="input-container">
-        <label class="text-gray-300 text-sm mb-1 block">Course Title</label>
-        <div class="input-wrapper">
-          <input 
-            type="text"
-            formControlName="title"
-            placeholder="Enter an engaging title"
-            class="input-field"
-          >
-          <mat-icon class="input-icon text-blue-400">title</mat-icon>
-          <button *ngIf="basicInfoForm.get('title')?.value" 
-                  type="button"
-                  (click)="clearField('title')" 
-                  class="clear-button">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-        <div *ngIf="basicInfoForm.get('title')?.invalid && basicInfoForm.get('title')?.touched" 
-             class="text-red-500 text-sm mt-1 animate-fadeIn">
-          <p *ngIf="basicInfoForm.get('title')?.errors?.['required']">Title is required</p>
-          <p *ngIf="basicInfoForm.get('title')?.errors?.['minlength']">Title must be at least 5 characters</p>
-        </div>
-      </div>
-    
-      <!-- Category -->
-      <div class="input-container">
-        <label class="text-gray-300 text-sm mb-1 block">Category</label>
-        <div class="input-wrapper">
-          <select 
-            formControlName="category"
-            class="input-field"
-          >
-            <option value="">Select a category</option>
-            <option *ngFor="let category of categories" [value]="category">
+      <mat-form-field class="w-full">
+          <mat-label>Course Category</mat-label>
+          <mat-select formControlName="category">
+            <mat-option *ngFor="let category of categories" [value]="category">
               {{category}}
-            </option>
-          </select>
-          <mat-icon class="input-icon text-blue-400">category</mat-icon>
-        </div>
-        <div *ngIf="basicInfoForm.get('category')?.invalid && basicInfoForm.get('category')?.touched" 
-             class="text-red-500 text-sm mt-1 animate-fadeIn">
-          Category is required
-        </div>
-      </div>
-    
-      <!-- Course Topic -->
-      <div class="input-container">
-        <label class="text-gray-300 text-sm mb-1 block">Course Topic</label>
-        <div class="input-wrapper">
-          <input 
-            type="text"
-            formControlName="courseTopic"
-            placeholder="Specific topic or subject"
-            class="input-field"
-          >
-          <mat-icon class="input-icon text-blue-400">topic</mat-icon>
-          <button *ngIf="basicInfoForm.get('courseTopic')?.value" 
-                  type="button"
-                  (click)="clearField('courseTopic')" 
-                  class="clear-button">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-        <div *ngIf="basicInfoForm.get('courseTopic')?.invalid && basicInfoForm.get('courseTopic')?.touched" 
-             class="text-red-500 text-sm mt-1 animate-fadeIn">
-          Course topic is required
-        </div>
-      </div>
-    
-      <!-- Price -->
-      <div class="input-container">
-        <label class="text-gray-300 text-sm mb-1 block">Price (USD)</label>
-        <div class="input-wrapper">
-          <input 
-            type="number"
-            formControlName="price"
-            placeholder="Enter course price"
-            class="input-field"
-            min="0"
-            step="0.01"
-          >
-          <mat-icon class="input-icon text-blue-400">attach_money</mat-icon>
-          <button *ngIf="basicInfoForm.get('price')?.value" 
-                  type="button"
-                  (click)="clearField('price')" 
-                  class="clear-button">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-        <div *ngIf="basicInfoForm.get('price')?.invalid && basicInfoForm.get('price')?.touched" 
-             class="text-red-500 text-sm mt-1 animate-fadeIn">
-          <p *ngIf="basicInfoForm.get('price')?.errors?.['required']">Price is required</p>
-          <p *ngIf="basicInfoForm.get('price')?.errors?.['min']">Price cannot be negative</p>
-        </div>
-      </div>
-    
-      <!-- Language -->
-      <div class="input-container">
-        <label class="text-gray-300 text-sm mb-1 block">Language</label>
-        <div class="input-wrapper">
-          <select 
-            formControlName="courseLanguage"
-            class="input-field"
-          >
-            <option value="">Select a language</option>
-            <option *ngFor="let language of languages" [value]="language">
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field class="w-full">
+          <mat-label>Course Topic</mat-label>
+          <input matInput formControlName="courseTopic" placeholder="Enter course topic">
+        </mat-form-field>
+
+
+        <mat-form-field class="w-full">
+          <mat-label>Price (USD)</mat-label>
+          <input matInput type="number" formControlName="price" placeholder="Enter course price">
+        </mat-form-field>
+
+
+        <mat-form-field class="w-full">
+          <mat-label>Language</mat-label>
+          <mat-select formControlName="courseLanguage">
+            <mat-option *ngFor="let language of languages" [value]="language">
               {{language}}
-            </option>
-          </select>
-          <mat-icon class="input-icon text-blue-400">language</mat-icon>
-        </div>
-        <div *ngIf="basicInfoForm.get('courseLanguage')?.invalid && basicInfoForm.get('courseLanguage')?.touched" 
-             class="text-red-500 text-sm mt-1 animate-fadeIn">
-          Language is required
-        </div>
-      </div>
-    
-      <!-- Duration -->
-      <div class="input-container">
-        <label class="text-gray-300 text-sm mb-1 block">Duration (hours)</label>
-        <div class="input-wrapper">
-          <input 
-            type="number"
-            formControlName="duration"
-            placeholder="Estimated course duration"
-            class="input-field"
-            min="0"
-            step="0.5"
-          >
-          <mat-icon class="input-icon text-blue-400">schedule</mat-icon>
-          <button *ngIf="basicInfoForm.get('duration')?.value" 
-                  type="button"
-                  (click)="clearField('duration')" 
-                  class="clear-button">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-        <div *ngIf="basicInfoForm.get('duration')?.invalid && basicInfoForm.get('duration')?.touched" 
-             class="text-red-500 text-sm mt-1 animate-fadeIn">
-          <p *ngIf="basicInfoForm.get('duration')?.errors?.['required']">Duration is required</p>
-          <p *ngIf="basicInfoForm.get('duration')?.errors?.['min']">Duration cannot be negative</p>
-        </div>
-      </div>
-    
-      <!-- Level -->
-      <div class="input-container">
-        <label class="text-gray-300 text-sm mb-1 block">Course Level</label>
-        <div class="input-wrapper">
-          <select 
-            formControlName="courseLevel"
-            class="input-field"
-          >
-            <option value="">Select course level</option>
-            <option *ngFor="let level of levels" [value]="level">
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field class="w-full">
+          <mat-label>Duration (hours)</mat-label>
+          <input matInput type="number" formControlName="duration" placeholder="Enter course duration">
+        </mat-form-field>
+
+
+        <mat-form-field class="w-full">
+          <mat-label>Level</mat-label>
+          <mat-select formControlName="courseLevel">
+            <mat-option *ngFor="let level of levels" [value]="level">
               {{level}}
-            </option>
-          </select>
-          <mat-icon class="input-icon text-blue-400">signal_cellular_alt</mat-icon>
-        </div>
-        <div *ngIf="basicInfoForm.get('courseLevel')?.invalid && basicInfoForm.get('courseLevel')?.touched" 
-             class="text-red-500 text-sm mt-1 animate-fadeIn">
-          Course level is required
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <div class="flex justify-end">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!basicInfoForm.valid">
+            Next
+          </button>
         </div>
       </div>
     </form>
-  </div>
-</div>
+        

@@ -27,160 +27,159 @@ import { firstValueFrom } from 'rxjs';
 export class CoursecreationComponent {
  
 
-      courseData:any={}
-      basicInfoComplete=false
-      detailsComplete=false
-      contentComplete=false
-      basicInfoForm: FormGroup = new FormGroup({});
+  courseData:any={}
+  basicInfoComplete=false
+  detailsComplete=false
+  contentComplete=false
+  basicInfoForm: FormGroup = new FormGroup({});
 
-      isEditMode=false
+  isEditMode=false
 
-      constructor(
-        private courseService: InstructorcourseService,
-        private router: Router,
-        private snackBar: MatSnackBar,
-        private route:ActivatedRoute
-      ) {
-        this.route.queryParams.subscribe(params=>{
-          if(params['id']){
-            this.loadCourse(params['id'])
-            this.isEditMode=true
-          }
+  constructor(
+    private courseService: InstructorcourseService,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private route:ActivatedRoute
+  ) {
+    this.route.queryParams.subscribe(params=>{
+      if(params['id']){
+        this.loadCourse(params['id'])
+        this.isEditMode=true
+      }
+    })
+  }
+
+  // ngAfterViewInit() {
+  //   if (this.courseBasicInfoComponent) {
+  //     this.basicInfoForm = this.courseBasicInfoComponent.basicInfoForm;
+  //   }
+  // }
+
+  async loadCourse(courseId:string){
+    try{
+        const course=await firstValueFrom(this.courseService.getCourseById(courseId))
+        if(course){
+          this.courseData={...course}
+
+          //setting completion flags for existing data
+          this.basicInfoComplete=this.isBasicInfoComplete()
+          this.detailsComplete=this.isDetailsComplete()
+          this.contentComplete=this.isContentComplete()
+
+          console.log('Loaded course data:', this.courseData);
+        }else{
+          throw new Error('Course not found')
+        }
+        
+    }catch(error){
+        console.error('eroor loading course',error )
+        this.snackBar.open('Failed to load course','Close',{
+          duration:3000,
+          horizontalPosition:'right',
+          verticalPosition:'top'
         })
+    }
+  }
+
+
+  private isBasicInfoComplete():boolean{
+    return !!(this.courseData.title&&this.courseData.category&&
+      this.courseData.price&&this.courseData.courseLanguage&&
+      this.courseData.duration&&this.courseData.courseLevel
+    )
+  }
+
+  private isDetailsComplete():boolean{
+    return !!(this.courseData.description&&this.courseData.targetAudience?.length&&
+      this.courseData.courseRequirements?.length
+    )
+  }
+
+  private isContentComplete():boolean{
+    return !!(this.courseData.sections?.length)
+  }
+
+
+
+  async saveDraft(){
+    try {
+      if(!this.courseData._id){
+        const createdCourse=await firstValueFrom(this.courseService.createCourse(this.courseData,true))
+        this.courseData._id=createdCourse._id
+      }else{
+        // await firstValueFrom(this.courseService.updateCourse(this.courseData._id,this.courseData))
+        const updatedCourse=await firstValueFrom(this.courseService.updateCourse(this.courseData._id,{
+          ...this.courseData,
+          status:'draft'
+        }))
+        console.log('Updated course response:', updatedCourse);
       }
 
-      // ngAfterViewInit() {
-      //   if (this.courseBasicInfoComponent) {
-      //     this.basicInfoForm = this.courseBasicInfoComponent.basicInfoForm;
-      //   }
-      // }
+      this.snackBar.open('Draft saved successfully!','Close',{
+        duration:3000,
+        horizontalPosition:'right',
+        verticalPosition:'top'
+      })
 
-      async loadCourse(courseId:string){
-        try{
-            const course=await firstValueFrom(this.courseService.getCourseById(courseId))
-            if(course){
-              this.courseData={...course}
+      this.router.navigate(['/instructor/dashboard'])
+    } catch (error) {
+       console.error('error saving draft:',error)
+       this.snackBar.open('Failed to save draft','Close',{
+        duration:3000,
+        horizontalPosition:'right',
+        verticalPosition:'top'
+       })
+    }
+  }
 
-              //setting completion flags for existing data
-              this.basicInfoComplete=this.isBasicInfoComplete()
-              this.detailsComplete=this.isDetailsComplete()
-              this.contentComplete=this.isContentComplete()
-  
-              console.log('Loaded course data:', this.courseData);
-            }else{
-              throw new Error('Course not found')
-            }
-            
-        }catch(error){
-            console.error('eroor loading course',error )
-            this.snackBar.open('Failed to load course','Close',{
-              duration:3000,
-              horizontalPosition:'right',
-              verticalPosition:'top'
-            })
-        }
+
+
+
+
+
+
+
+
+  onBasicInfoValidityChange(isValid: boolean) {
+    this.basicInfoComplete = isValid;
+  }
+
+  onDetailsValidityChange(isValid: boolean) {
+    this.detailsComplete = isValid;
+  }
+
+  onContentValidityChange(isValid: boolean) {
+    this.contentComplete = isValid;
+  }
+
+  async onPublishCourse(){
+    console.log('publishing course',this.courseData)
+    try {
+      if(!this.courseData._id){
+         const createdCourse=await this.courseService.createCourse(this.courseData,false).toPromise()
+         this.courseData._id=createdCourse._id
+      }else{
+        await this.courseService.updateCourse(this.courseData._id,this.courseData).toPromise()
       }
 
 
-      private isBasicInfoComplete():boolean{
-        return !!(this.courseData.title&&this.courseData.category&&
-          this.courseData.price&&this.courseData.courseLanguage&&
-          this.courseData.duration&&this.courseData.courseLevel
-        )
-      }
+      await this.courseService.publishCourse(this.courseData._id).toPromise()
 
-      private isDetailsComplete():boolean{
-        return !!(this.courseData.description&&this.courseData.targetAudience?.length&&
-          this.courseData.courseRequirements?.length
-        )
-      }
+      this.snackBar.open('Course published successfully!','Close',{
+        duration:3000,
+        horizontalPosition:'right',
+        verticalPosition:'top'
+      })
 
-      private isContentComplete():boolean{
-        return !!(this.courseData.sections?.length)
-      }
+      this.router.navigate(['/instructor/dashboard'])
 
-
-
-      async saveDraft(){
-        try {
-          if(!this.courseData._id){
-            const createdCourse=await firstValueFrom(this.courseService.createCourse(this.courseData,true))
-            this.courseData._id=createdCourse._id
-          }else{
-            // await firstValueFrom(this.courseService.updateCourse(this.courseData._id,this.courseData))
-            const updatedCourse=await firstValueFrom(this.courseService.updateCourse(this.courseData._id,{
-              ...this.courseData,
-              status:'draft'
-            }))
-            console.log('Updated course response:', updatedCourse);
-          }
-
-          this.snackBar.open('Draft saved successfully!','Close',{
-            duration:3000,
-            horizontalPosition:'right',
-            verticalPosition:'top'
-          })
-
-          this.router.navigate(['/instructor/dashboard'])
-        } catch (error) {
-           console.error('error saving draft:',error)
-           this.snackBar.open('Failed to save draft','Close',{
-            duration:3000,
-            horizontalPosition:'right',
-            verticalPosition:'top'
-           })
-        }
-      }
-
-
-
-
-
-
-
-
-
-      onBasicInfoValidityChange(isValid: boolean) {
-        this.basicInfoComplete = isValid;
-      }
-
-      onDetailsValidityChange(isValid: boolean) {
-        this.detailsComplete = isValid;
-      }
-
-      onContentValidityChange(isValid: boolean) {
-        this.contentComplete = isValid;
-      }
-
-      async onPublishCourse(){
-        console.log('publishing course',this.courseData)
-        try {
-          if(!this.courseData._id){
-             const createdCourse=await this.courseService.createCourse(this.courseData,false).toPromise()
-             this.courseData._id=createdCourse._id
-          }else{
-            await this.courseService.updateCourse(this.courseData._id,this.courseData).toPromise()
-          }
-
-
-          await this.courseService.publishCourse(this.courseData._id).toPromise()
-
-          this.snackBar.open('Course submitted for review! You will be notified once approved.', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top'
-          });
-
-          this.router.navigate(['/instructor/dashboard'])
-
-        } catch (error) {
-           console.error('Error publishing course',error)
-           this.snackBar.open('Failed to publish course','Close',{
-            duration:3000,
-            horizontalPosition:'right',
-            verticalPosition:'top'
-           })
-        }
-      }
-
+    } catch (error) {
+       console.error('Error publishing course',error)
+       this.snackBar.open('Failed to publish course','Close',{
+        duration:3000,
+        horizontalPosition:'right',
+        verticalPosition:'top'
+       })
+    }
+  }
 }

@@ -22,79 +22,74 @@ MatIconModule
   styleUrl: './course-basic-info.component.scss'
 })
 export class CourseBasicInfoComponent implements OnInit,OnChanges{
-    @Input() courseData:any;
-    @Output() courseDataChange=new EventEmitter<boolean>()
-    @Output() formValid=new EventEmitter<boolean>()
-    @Output() submitStep=new EventEmitter<void>()
+  @Input() courseData:any;
+  @Output() courseDataChange=new EventEmitter<boolean>()
+  @Output() formValid=new EventEmitter<boolean>()
+  @Output() submitStep=new EventEmitter<void>()
 
-    categories=['Programming','Design','Business','Marketing','Health','Fitness']
+  categories=['Programming','Design','Business','Marketing','Health','Fitness']
 
-    languages=['English','spanish','french','chinese']
+  languages=['English','spanish','french','chinese']
 
-    levels=['Beginner','Intermediate','Advanced']
+  levels=['Beginner','Intermediate','Advanced']
 
-    basicInfoForm:FormGroup
+  basicInfoForm:FormGroup
 
-    constructor(private fb:FormBuilder){
-      this.basicInfoForm=this.fb.group({
-        title:['',[Validators.required,Validators.minLength(5)]],
-        category:['',Validators.required],
-        courseTopic:['',Validators.required],
-        price:['',[Validators.required,Validators.min(0)]],
-        courseLanguage:['',Validators.required],
-        duration:['',[Validators.required,Validators.min(0)]],
-        courseLevel:['',Validators.required]
-      })
+  constructor(private fb:FormBuilder){
+    this.basicInfoForm=this.fb.group({
+      title:['',[Validators.required,Validators.minLength(5)]],
+      category:['',Validators.required],
+      courseTopic:['',Validators.required],
+      price:['',[Validators.required,Validators.min(0)]],
+      courseLanguage:['',Validators.required],
+      duration:['',[Validators.required,Validators.min(0)]],
+      courseLevel:['',Validators.required]
+    })
 
-      this.basicInfoForm.statusChanges.subscribe(status=>{
-        this.formValid.emit(status==='VALID')
-      })
+    this.basicInfoForm.statusChanges.subscribe(status=>{
+      this.formValid.emit(status==='VALID')
+    })
+  }
+
+  onSubmit(){
+    if(this.basicInfoForm.valid){
+      this.courseData={...this.courseData,...this.basicInfoForm.value}
+      this.courseDataChange.emit(this.courseData)
+      this.submitStep.emit()
     }
+  }
 
-    onSubmit(){
-      if(this.basicInfoForm.valid){
-        this.courseData={...this.courseData,...this.basicInfoForm.value}
-        this.courseDataChange.emit(this.courseData)
-        this.submitStep.emit()
-      }
+
+
+  ngOnInit() {
+    // Patch form with existing data if available
+    if (this.courseData) {
+      this.basicInfoForm.patchValue({
+        title: this.courseData.title || '',
+        category: this.courseData.category || '',
+        courseTopic: this.courseData.courseTopic || '',
+        price: this.courseData.price || '',
+        courseLanguage: this.courseData.courseLanguage || '',
+        duration: this.courseData.duration || '',
+        courseLevel: this.courseData.courseLevel || ''
+      });
     }
+  }
 
 
-
-    ngOnInit() {
-      // Patch form with existing data if available
-      if (this.courseData) {
-        this.basicInfoForm.patchValue({
-          title: this.courseData.title || '',
-          category: this.courseData.category || '',
-          courseTopic: this.courseData.courseTopic || '',
-          price: this.courseData.price || '',
-          courseLanguage: this.courseData.courseLanguage || '',
-          duration: this.courseData.duration || '',
-          courseLevel: this.courseData.courseLevel || ''
-        });
-      }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['courseData'] && this.courseData) {
+      this.basicInfoForm.patchValue({
+        title: this.courseData.title || '',
+        category: this.courseData.category || '',
+        courseTopic: this.courseData.courseTopic || '',
+        price: this.courseData.price || '',
+        courseLanguage: this.courseData.courseLanguage || '',
+        duration: this.courseData.duration || '',
+        courseLevel: this.courseData.courseLevel || ''
+      });
     }
-
-
-    ngOnChanges(changes: SimpleChanges) {
-      if (changes['courseData'] && this.courseData) {
-        this.basicInfoForm.patchValue({
-          title: this.courseData.title || '',
-          category: this.courseData.category || '',
-          courseTopic: this.courseData.courseTopic || '',
-          price: this.courseData.price || '',
-          courseLanguage: this.courseData.courseLanguage || '',
-          duration: this.courseData.duration || '',
-          courseLevel: this.courseData.courseLevel || ''
-        });
-      }
-    }
-
-
-    clearField(fieldName: string) {
-      this.basicInfoForm.get(fieldName)?.setValue('');
-    }
+  }
     
 }
 
