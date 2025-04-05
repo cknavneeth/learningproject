@@ -46,8 +46,18 @@ export class AdminserviceService {
         return this.http.patch<instructors>(`${this.apiurl}/verifyinstructor/${instructorId}`,{isApproved,feedback})
   }
 
-  getAllCourses():Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiurl}/courses`)
+  getAllCourses(page: number = 1, limit: number = 10) {
+    const url = `${this.apiurl}/admin/courses`;
+    console.log('Calling API:', url);
+    return this.http.get<{
+      courses: any[];
+      pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      }
+    }>(`${this.apiurl}/courses?page=${page}&limit=${limit}`);
   }
 
   approveCourse(courseId:string):Observable<any>{

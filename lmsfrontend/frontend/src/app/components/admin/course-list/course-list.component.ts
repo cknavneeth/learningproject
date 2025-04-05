@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TableColumn, TablecomponentComponent } from '../../../shared/tablecomponent/tablecomponent.component';
 import { AdminserviceService } from '../../../services/adminservice.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -31,8 +31,9 @@ interface StatusTexts {
   templateUrl: './course-list.component.html',
   styleUrl: './course-list.component.scss'
 })
-export class CourseListComponent {
+export class CourseListComponent implements OnInit{
 
+  Math = Math; 
   error:string=''
   loading:boolean=false
   filteredCourses:any[]=[]
@@ -41,6 +42,11 @@ export class CourseListComponent {
 
   courses:any[]=[]
 
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalItems: number = 0;
+  totalPages: number = 0;
 
 
 
@@ -52,16 +58,29 @@ export class CourseListComponent {
   }
 
   loadCourses(){
-    this.adminService.getAllCourses().subscribe(
+    this.loading=true
+    this.adminService.getAllCourses(this.currentPage,this.itemsPerPage).subscribe(
       response=>{
         console.log('coursinte response',response)
-        this.courses=response
+        this.courses=response.courses
+
         this.filteredCourses=[...this.courses]
+        this.totalItems = response.pagination.total;
+        this.totalPages = response.pagination.totalPages;
+        this.loading=false
       },
       error=>{
         console.error('Error loading courses',error)
       }
     )
+  }
+
+
+  onPageChange(page: number) {
+    if (page !== this.currentPage && page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadCourses();
+    }
   }
 
   // handleTableAction(event:{action:string,item:any}){
@@ -170,6 +189,31 @@ export class CourseListComponent {
       'rejected': 'Rejected'
     };
     return statusTexts[status] || status;
+  }
+
+
+
+  getPageNumbers(): number[] {
+    const maxPages = 5;
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+  
+    if (totalPages <= maxPages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+  
+    let startPage = Math.max(currentPage - Math.floor(maxPages / 2), 1);
+    let endPage = startPage + maxPages - 1;
+  
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(endPage - maxPages + 1, 1);
+    }
+  
+    return Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
   }
 
 }

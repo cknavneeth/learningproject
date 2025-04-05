@@ -9,8 +9,19 @@ export class AdminRepository implements IAdminRepository{
 
     constructor(@InjectModel(Course.name) private courseModel:Model<CourseDocument> ){}
 
-    async getAllCourses():Promise<CourseDocument[]> {
-        return this.courseModel.find().populate('instructor','name email').sort({createdAt:-1}).exec()
+    async getAllCourses(page:number=1,limit:number=10):Promise<{courses:CourseDocument[],total:number}> {
+        const skip=(page-1)*limit
+
+        const [courses,total]=await Promise.all([
+            this.courseModel.find()
+            .populate('instructor','name email')
+            .sort({createdAt:-1})
+            .skip(skip)
+            .limit(limit)
+            .exec(),
+            this.courseModel.countDocuments().exec()
+        ])
+        return { courses, total };
     }
 
     async updateCourseStatus(courseId:string,isApproved:boolean,feedback?:string):Promise<CourseDocument|null>{

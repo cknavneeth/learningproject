@@ -1,4 +1,6 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch,Query,
+    DefaultValuePipe,
+    ParseIntPipe } from '@nestjs/common';
 import { AdminService } from './admin.service';
 
 @Controller('auth/admin')
@@ -34,9 +36,12 @@ export class AdminController {
 
 
     @Get('courses')
-    async getAllCourses(){
+    async getAllCourses(
+        @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,
+        @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number)
+    {
         try {
-            const courses=await this.adminservice.getAllCourses()
+            const courses=await this.adminservice.getAllCourses(page,limit)
             return courses
         } catch (error) {
             console.error('Controller error',error)

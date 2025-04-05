@@ -105,8 +105,19 @@ export class AdminService {
     }
 
 
-    async getAllCourses(){
-        return this.adminRepository.getAllCourses()
+    async getAllCourses(page:number=1,limit:number=10){
+        // return this.adminRepository.getAllCourses()
+        const {courses,total}=await this.adminRepository.getAllCourses(page,limit)
+
+        return {
+            courses,
+            pagination:{
+                total,
+                page,
+                limit,
+                totalPages:Math.ceil(total/limit)
+            }
+        }
     }
 
     async updateCourseStatus(courseId:string,isApproved:boolean,feedback?:string){

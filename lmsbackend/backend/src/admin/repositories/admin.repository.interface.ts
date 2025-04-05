@@ -1,6 +1,6 @@
 import { CourseDocument } from "src/instructors/courses/course.schema";
 
 export interface IAdminRepository{
-    getAllCourses():Promise<CourseDocument[]>
+    getAllCourses():Promise<{courses:CourseDocument[],total:number}>
     updateCourseStatus(courseId:string,isApproved:boolean,feedback?:string):Promise<CourseDocument|null>
 }
