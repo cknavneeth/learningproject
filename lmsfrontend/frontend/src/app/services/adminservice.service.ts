@@ -55,8 +55,8 @@ export class AdminserviceService {
 
   }
 
-  rejectCourse(courseId:string):Observable<any>{
-    return this.http.patch<any>(`${this.apiurl}/courses/${courseId}/reject}`,{})
+  rejectCourse(courseId:string,feedback:string):Observable<any>{
+    return this.http.patch<any>(`${this.apiurl}/courses/${courseId}/reject`,{feedback})
   }
 
   logoutAdmin(): Observable<any> {

@@ -61,9 +61,16 @@ export class AdminController {
 
     @Patch('courses/:courseId/reject')
     async rejectCourse(@Param('courseId') courseId:string, @Body() body:{feedback:string}){
+        console.log('Rejection endpoint called with:', { courseId, feedback: body.feedback });
         try {
-            return await this.adminservice.updateCourseStatus(courseId,false,body.feedback)
+            
+        if (!body.feedback) {
+            throw new BadRequestException('Feedback is required when rejecting a course');
+        }
+            const result= await this.adminservice.updateCourseStatus(courseId,false,body.feedback)
+            return result
         } catch (error) {
+            console.log('error while rejecting')
             if(error instanceof NotFoundException){
                 throw error
             }

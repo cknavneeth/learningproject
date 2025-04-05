@@ -15,6 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { GuardGuard } from './authentication/guard/guard.guard';
 import { CloudinaryService } from './shared/cloudinary/cloudinary.service';
 import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
+import { EmailService } from './shared/email/email.service';
 
 console.log(process.env.MONGO_URI)
 @Module({
@@ -30,7 +31,7 @@ console.log(process.env.MONGO_URI)
     CloudinaryModule
   ],
   controllers: [AppController],
-  providers: [AppService,GuardGuard, CloudinaryService],
+  providers: [AppService,GuardGuard, CloudinaryService, EmailService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

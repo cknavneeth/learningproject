@@ -5,13 +5,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { user, userDocument } from 'src/users/users.schema';
 import { instructor, instructorDocument } from 'src/instructors/instructor.schema';
 import { AdminRepository } from './repositories/admin/admin.repository';
+import { EmailService } from 'src/shared/email/email.service';
 
 @Injectable()
 export class AdminService {
     constructor(@InjectModel(admin.name) private adminmodel:Model<admindocument>,
     @InjectModel(user.name) private usermodel:Model<userDocument>,
     @InjectModel(instructor.name) private instructorModel:Model<instructorDocument>,
-    private readonly adminRepository:AdminRepository
+    private readonly adminRepository:AdminRepository,
+    private readonly emailService:EmailService
  ){}
 
     async findbyEmail(email:string){
@@ -108,7 +110,25 @@ export class AdminService {
     }
 
     async updateCourseStatus(courseId:string,isApproved:boolean,feedback?:string){
-        return this.adminRepository.updateCourseStatus(courseId,isApproved,feedback)
+        console.log('ingot ethiyo')
+        const course=await this.adminRepository.updateCourseStatus(courseId,isApproved,feedback)
+
+        if(!course){
+            throw new NotFoundException('Failed to update course')
+        }
+
+        const instructorEmail=course.instructor['emailaddress']
+        const courseName = course.title;
+
+        console.log('Course details:', { instructorEmail, courseName, isApproved });
+        if (isApproved) {
+            await this.emailService.sendCourseApprovalEmail(instructorEmail, courseName);
+        } else {
+            console.log('hmmmr reject aay')
+            await this.emailService.sendCourseRejectionEmail(instructorEmail, courseName, feedback||'No feedback provided');
+        }
+
+        return course;
     }
 
 

@@ -34,8 +34,10 @@ export class CourseRepository implements ICourseRepository{
     }
 
 
-    async findByInstructorAndStatus(instructorId:string,status:CourseStatus):Promise<CourseDocument[]>{
-        return this.courseModel.find({instructor:new Types.ObjectId(instructorId),status:status}).sort({updatedAt:-1}).exec()
+    async findByInstructorAndStatus(instructorId:string,status:CourseStatus|CourseStatus[]):Promise<CourseDocument[]>{
+        return this.courseModel.find({instructor:new Types.ObjectId(instructorId),
+            status:Array.isArray(status)?{$in:status}:status
+        }).sort({updatedAt:-1}).exec()
     }
 
     async findById(courseId:string):Promise<CourseDocument|null>{

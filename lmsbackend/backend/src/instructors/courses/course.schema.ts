@@ -83,6 +83,12 @@ export class Course{
     @Prop({type:String,enum:CourseStatus,default:CourseStatus.DRAFT})
     status:CourseStatus
 
+    @Prop()
+    feedback?:string;
+
+    @Prop()
+    approvedAt?:Date
+
 }
 
 

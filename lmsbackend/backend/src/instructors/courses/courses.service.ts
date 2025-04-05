@@ -124,7 +124,7 @@ export class CoursesService {
     //for drafts instructor ok lets cod
     async getDrafts(instructorId:string){
        try {
-        const drafts=await this.courseRepository.findByInstructorAndStatus(instructorId,CourseStatus.DRAFT)
+        const drafts=await this.courseRepository.findByInstructorAndStatus(instructorId,[CourseStatus.DRAFT,CourseStatus.REJECTED])
         return drafts
        } catch (error) {
           throw new BadRequestException('Failed to fetch drafts')

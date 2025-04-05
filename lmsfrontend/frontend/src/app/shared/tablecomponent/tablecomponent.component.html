@@ -123,7 +123,7 @@
             Pending Verification
           </span>
           <!--count indicator-->
-          <div *ngIf="!item.canReapply" 
+          <div *ngIf="item.canReapply===false" 
            class="ml-2 flex items-center justify-center w-5 h-5 bg-amber-500 rounded-full">
            <span class="text-xs font-bold text-white">R</span>
       </div>

@@ -5,6 +5,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CoursedetailmodalComponent } from '../coursedetailmodal/coursedetailmodal.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -43,7 +44,7 @@ export class CourseListComponent {
 
 
 
-  constructor(private adminService:AdminserviceService,private dialogue:MatDialog){}
+  constructor(private adminService:AdminserviceService,private dialogue:MatDialog,private snackBar:MatSnackBar){}
 
   ngOnInit():void{
     console.log('courses are initialized')
@@ -63,22 +64,22 @@ export class CourseListComponent {
     )
   }
 
-  handleTableAction(event:{action:string,item:any}){
-    switch(event.action){
-      case 'approve':
-        this.approveCourse(event.item._id);
-        break;
-      case 'reject':
-        this.rejectCourse(event.item._id);
-        break;
-      case 'view':
-       this.viewCourseDetails(event.item._id);
-       break;
-       case 'verify':  // Add this case
-        this.viewCourseDetails(event.item._id);
-        break;
-    }
-  }
+  // handleTableAction(event:{action:string,item:any}){
+  //   switch(event.action){
+  //     case 'approve':
+  //       this.approveCourse(event.item._id);
+  //       break;
+  //     case 'reject':
+  //       this.rejectCourse(event.item._id);
+  //       break;
+  //     case 'view':
+  //      this.viewCourseDetails(event.item._id);
+  //      break;
+  //      case 'verify':  // Add this case
+  //       this.viewCourseDetails(event.item._id);
+  //       break;
+  //   }
+  // }
 
   approveCourse(courseId:string){
     this.adminService.approveCourse(courseId).subscribe(
@@ -91,9 +92,12 @@ export class CourseListComponent {
     )
   }
 
-  rejectCourse(courseId:string){
-    this.adminService.rejectCourse(courseId).subscribe(
+  rejectCourse(courseId:string,feedback:string){
+    this.adminService.rejectCourse(courseId,feedback).subscribe(
       response=>{
+        this.snackBar.open('Course rejected and feedback sent', 'Close', {
+          duration: 3000
+        });
         this.loadCourses()
       },
       error=>{
@@ -122,7 +126,7 @@ export class CourseListComponent {
             if(result.action==='approve'){
               this.approveCourse(courseId)
             }else if (result.action==='reject'){
-              this.rejectCourse(courseId)
+              this.rejectCourse(courseId,result.feedback)
             }
           }
         }

@@ -28,6 +28,7 @@ export class AdminRepository implements IAdminRepository{
 
         const updates:any={
             status:isApproved?CourseStatus.PUBLISHED:CourseStatus.REJECTED,
+            feedback:feedback,
             updatedAt:new Date()
         }
 
