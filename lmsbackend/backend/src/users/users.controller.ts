@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Put, Request, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Put, Request, UseGuards } from '@nestjs/common';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { UsersService } from './users.service';
 // import { Request } from 'express';
@@ -44,6 +44,12 @@ export class UsersController {
     } catch (error) {
         throw new BadRequestException('Failed to fetch courses')
     }
+   }
+
+   @Get('courses/:id')
+   @UseGuards(GuardGuard)
+   async getCourseById(@Param('id') courseId:string){
+    return this.usersService.getCourseById(courseId)
    }
 
 }

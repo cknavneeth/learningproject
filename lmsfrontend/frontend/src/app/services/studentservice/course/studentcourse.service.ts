@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +20,7 @@ export class StudentcourseService {
   }
 
 
-  enrollCourse(courseId:string):Observable<any>{
-    return this.http.post(`${this.apiUrl}/courses/${courseId}/enroll`,{})
+  getCourseById(courseId:string):Observable<any>{
+    return this.http.get(`${this.apiUrl}/courses/${courseId}`,{})
   }
 }

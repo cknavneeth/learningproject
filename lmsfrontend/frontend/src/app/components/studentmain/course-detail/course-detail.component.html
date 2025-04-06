@@ -1,0 +1,144 @@
+<div class="min-h-screen bg-gray-900 text-gray-100 pt-20">
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="flex justify-center items-center h-96">
+      <mat-spinner color="accent"></mat-spinner>
+    </div>
+  
+    <!-- Error Message -->
+    <div *ngIf="error" class="text-red-500 text-center p-8">
+      {{ error }}
+    </div>
+  
+    <!-- Course Content -->
+    <div *ngIf="courseDetails && !loading" class="container mx-auto px-4 pb-20">
+      <!-- Course Header Section -->
+      <div class="relative h-96 mb-8 rounded-xl overflow-hidden">
+        <img [src]="courseDetails.thumbnailUrl || 'https://placehold.co/600x400?text=Learn+Something'" 
+             class="w-full h-full object-cover" 
+             [alt]="courseDetails.title">
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 p-8">
+          <h1 class="text-4xl font-bold mb-4">{{ courseDetails.title }}</h1>
+          <div class="flex items-center space-x-4 mb-4">
+            <span class="px-3 py-1 bg-blue-600 rounded-full text-sm">{{ courseDetails.category }}</span>
+            <span class="flex items-center">
+              <mat-icon class="text-yellow-500 mr-1">star</mat-icon>
+              4.5 (1,234 ratings)
+            </span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center">
+              <img [src]="courseDetails.instructor?.profileImage || 'profilephoto.jpg'" 
+                   class="w-10 h-10 rounded-full mr-2"
+                   [alt]="courseDetails.instructor?.name">
+              <div>
+                <p class="font-medium">{{ courseDetails.instructor?.name }}</p>
+                <p class="text-sm text-gray-400">Expert Instructor</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column - Course Content -->
+        <div class="lg:col-span-2">
+          <!-- Preview Video Section -->
+          <div class="bg-gray-800 rounded-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4">Course Preview</h2>
+            <div class="relative rounded-lg overflow-hidden">
+              <video [src]="courseDetails.sections[0]?.videoUrl" 
+                     controls 
+                     class="w-full"
+                     poster="{{ courseDetails.sections[0]?.thumbnailUrl }}">
+              </video>
+            </div>
+          </div>
+  
+          <!-- Course Description -->
+          <div class="bg-gray-800 rounded-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4">About This Course</h2>
+            <p class="text-gray-300 leading-relaxed">{{ courseDetails.description }}</p>
+          </div>
+  
+          <!-- Course Sections -->
+          <div class="bg-gray-800 rounded-xl p-6">
+            <h2 class="text-2xl font-bold mb-6">Course Content</h2>
+            <div class="text-sm text-gray-400 mb-4">
+              {{ courseDetails.sections.length }} sections • {{ getTotalLectures() }} lectures • 
+              {{ getTotalDuration() }} total length
+            </div>
+            
+            <mat-accordion class="course-sections">
+              <mat-expansion-panel *ngFor="let section of courseDetails.sections; let i = index" 
+                                 class="bg-gray-700 mb-4">
+                <mat-expansion-panel-header class="bg-gray-700">
+                  <mat-panel-title class="flex items-center">
+                    <span class="text-blue-400 mr-4">Section {{ i + 1 }}</span>
+                    {{ section.title }}
+                  </mat-panel-title>
+                  <mat-panel-description class="text-gray-400">
+                    {{ section.duration }} mins
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                
+                <!-- Section Content (Disabled) -->
+                <div class="space-y-4 opacity-60">
+                  <!-- Video Title -->
+                  <div class="flex items-center p-3 bg-gray-800 rounded-lg cursor-not-allowed">
+                    <mat-icon class="mr-3 text-gray-500">play_circle</mat-icon>
+                    <span class="text-gray-400">{{ section.title }} (Preview not available)</span>
+                    <span class="ml-auto text-gray-500">{{ section.duration }} mins</span>
+                  </div>
+  
+                  <!-- Resources -->
+                  <div *ngFor="let resource of section.resources" 
+                       class="flex items-center p-3 bg-gray-800 rounded-lg cursor-not-allowed">
+                    <mat-icon class="mr-3 text-gray-500">attachment</mat-icon>
+                    <span class="text-gray-400">{{ resource.title }}</span>
+                    <mat-icon class="ml-auto text-gray-500">lock</mat-icon>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Fixed Purchase Card -->
+    <div class="fixed top-24 right-4 lg:right-8 w-full max-w-sm">
+      <div class="bg-gray-800 rounded-xl p-6 shadow-2xl">
+        <div class="text-center mb-6">
+          <span class="text-4xl font-bold">₹{{ courseDetails?.price }}</span>
+        </div>
+        <div class="space-y-4">
+          <button class="w-full py-4 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold
+                       transition duration-300 flex items-center justify-center">
+            <mat-icon class="mr-2">shopping_cart</mat-icon>
+            Add to Cart
+          </button>
+          <button class="w-full py-4 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold
+                       transition duration-300 flex items-center justify-center">
+            <mat-icon class="mr-2">favorite_border</mat-icon>
+            Add to Wishlist
+          </button>
+        </div>
+        <div class="mt-6 space-y-4 text-sm text-gray-300">
+          <div class="flex items-center">
+            <mat-icon class="mr-2 text-blue-400">verified</mat-icon>
+            30-Day Money-Back Guarantee
+          </div>
+          <div class="flex items-center">
+            <mat-icon class="mr-2 text-blue-400">all_inclusive</mat-icon>
+            Full Lifetime Access
+          </div>
+          <div class="flex items-center">
+            <mat-icon class="mr-2 text-blue-400">phone_iphone</mat-icon>
+            Access on Mobile and TV
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

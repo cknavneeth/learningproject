@@ -6,4 +6,5 @@ export interface IUserRepository{
     updateProfile(userId:string,profileData:Partial<user>):Promise<userDocument>
     // updatePassword(userId:string,hashedpassword:string):Promise<void>
     getAllPublishedCourses():Promise<CourseDocument[]>
+    findCourseById(courseId:string):Promise<CourseDocument>
 }

@@ -136,4 +136,16 @@ export class UsersService {
     return await this.userRepository.getAllPublishedCourses()
    }
    
+
+   async getCourseById(courseId:string){
+     try {
+        const course=await this.userRepository.findCourseById(courseId)
+        if(!course){
+            throw new BadRequestException('Course not found')
+        }
+        return course
+     } catch (error) {
+        throw new BadRequestException('Failed to fetch course')
+     }
+   }
 }

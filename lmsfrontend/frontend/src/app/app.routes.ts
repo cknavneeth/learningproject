@@ -31,6 +31,7 @@ import { CoursePublishComponent } from './components/insMaincomponent/features/c
 import { CourseDraftComponent } from './components/insMaincomponent/features/course/course-draft/course-draft.component';
 import { CourseListComponent } from './components/admin/course-list/course-list.component';
 import { StudentcourseComponent } from './components/studentmain/studentcourse/studentcourse.component';
+import { CourseDetailComponent } from './components/studentmain/course-detail/course-detail.component';
 
 export const routes: Routes = [
     {
@@ -94,6 +95,11 @@ export const routes: Routes = [
                     {
                         path:'',
                         component:StudentcourseComponent,
+                        canActivate:[authGuard]
+                    },
+                    {
+                        path:':id',
+                        component:CourseDetailComponent,
                         canActivate:[authGuard]
                     }
                 ]

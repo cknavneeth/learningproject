@@ -1,0 +1,76 @@
+:host {
+    display: block;
+    background-color: #111827;
+  }
+  
+  .course-sections {
+    .mat-expansion-panel {
+      background: #374151;
+      border: 1px solid #4B5563;
+      margin-bottom: 1rem;
+      
+      &:hover {
+        border-color: #60A5FA;
+      }
+    }
+  
+    .mat-expansion-panel-header {
+      height: 64px;
+      padding: 0 24px;
+  
+      &:hover {
+        background: #4B5563 !important;
+      }
+    }
+  
+    .mat-expansion-panel-header-title {
+      color: #F3F4F6;
+      font-weight: 500;
+    }
+  
+    .mat-expansion-panel-header-description {
+      color: #9CA3AF;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+  
+  // Video player styling
+  video {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    
+    &::-webkit-media-controls {
+      background-color: rgba(17, 24, 39, 0.7);
+    }
+  }
+  
+  // Animation for buttons
+  button {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+  }
+  
+  // Disabled content styling
+  .cursor-not-allowed {
+    position: relative;
+    
+    &:hover::after {
+      content: "Purchase required to access this content";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+  }

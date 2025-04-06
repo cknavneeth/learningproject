@@ -75,9 +75,10 @@
             <div class="p-6">
                 <!-- Course Title -->
                 <h2 class="text-xl font-bold text-gray-100 mb-3 line-clamp-2 
-                           group-hover:text-blue-400 transition-colors">
-                    {{course.title}}
-                </h2>
+           group-hover:text-blue-400 transition-colors cursor-pointer"
+    [routerLink]="['/student/courses', course._id]">
+    {{ course.title }}
+</h2>
 
                 <!-- Instructor Info -->
                 <div class="flex items-center mb-4 space-x-3">
@@ -121,16 +122,24 @@
                 </div>
 
                 <!-- Enroll Button -->
-                <button (click)="enrollCourse(course._id)"
-                        class="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 
-                               hover:from-blue-700 hover:to-purple-700
-                               text-white font-semibold rounded-xl
-                               transform hover:scale-[1.02] transition-all duration-300
-                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
-                               focus:ring-offset-gray-900">
-                    Enroll Now
-                </button>
+                <button [routerLink]="['/student/courses', course._id]"
+        class="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 
+               hover:from-blue-700 hover:to-purple-700
+               text-white font-semibold rounded-xl
+               transform hover:scale-[1.02] transition-all duration-300
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+               focus:ring-offset-gray-900">
+    View Course
+</button>
             </div>
         </div>
     </div>
+</div>
+
+
+<!-- No Courses Found Message -->
+<div *ngIf="!loading && !error && filteredCourses.length === 0"
+     class="text-center text-gray-400 text-xl py-12 animate-fadeIn">
+    <p class="mb-2">😕 No courses found for your search.</p>
+    <p>Try adjusting your search or exploring other categories.</p>
 </div>

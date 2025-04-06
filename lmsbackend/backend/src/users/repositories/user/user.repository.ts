@@ -33,5 +33,14 @@ export class UserRepository implements IUserRepository{
 
         return allCourses
     }
+
+
+    async findCourseById(courseId:string):Promise<CourseDocument>{
+        const course=await this.courseModel.findById(courseId).exec()
+        if(!course){
+            throw new Error('Course not found')
+        }
+        return course
+    }
      
 }
