@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put, Request, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Put, Request, UseGuards } from '@nestjs/common';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { UsersService } from './users.service';
 // import { Request } from 'express';
@@ -33,5 +33,17 @@ export class UsersController {
        return this.usersService.updateStudentPassword(userId,passwordData)
    }
 
+
+   @Get('courses')
+   async getAllCourses(){
+    try {
+        console.log('getting all courses')
+        const courses= await this.usersService.getAllPublishedCourses()
+        console.log('courses fetch aay',courses)
+        return courses
+    } catch (error) {
+        throw new BadRequestException('Failed to fetch courses')
+    }
+   }
 
 }

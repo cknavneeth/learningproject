@@ -128,5 +128,12 @@ export class UsersService {
         return {message:'password updated succesfully'}
    }
 
+
+
+
+   //getting all courses here
+   async getAllPublishedCourses(){
+    return await this.userRepository.getAllPublishedCourses()
+   }
    
 }

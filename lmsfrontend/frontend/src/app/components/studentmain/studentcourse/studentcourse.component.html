@@ -1,0 +1,136 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+    <!-- Header Section with Animation -->
+    <div class="pt-24 pb-12 text-center animate-fadeIn relative z-10">
+        <!-- Decorative background elements -->
+        <div class="absolute inset-0 -z-10">
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#6366f1 1px, transparent 1px); background-size: 40px 40px;"></div>
+        </div>
+
+        <!-- Main heading with enhanced gradient -->
+        <h1 class="text-5xl md:text-6xl font-bold mb-6 animate-gradient-x relative">
+            <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent 
+                       hover:from-pink-400 hover:via-purple-400 hover:to-blue-400 transition-all duration-500">
+                Discover Your Next Course
+            </span>
+        </h1>
+
+        <!-- Subtitle with enhanced styling -->
+        <p class="text-xl md:text-2xl font-light max-w-2xl mx-auto text-gray-300 animate-pulse-slow">
+            Expand your knowledge with our expertly crafted courses
+        </p>
+
+        <!-- Decorative underline -->
+        <div class="h-1 w-24 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-6 rounded-full"></div>
+    </div>
+
+    <!-- Search Bar with Animation -->
+    <div class="max-w-2xl mx-auto mb-12 animate-slideUp">
+        <div class="relative group">
+            <input type="text" 
+                   placeholder="Search courses..." 
+                   class="w-full pl-12 pr-4 py-4 rounded-xl 
+                          bg-gray-800/50 backdrop-blur-sm border-2 border-gray-700
+                          text-gray-200 placeholder-gray-400
+                          focus:outline-none focus:border-blue-500 focus:bg-gray-800/80
+                          transition-all duration-300 shadow-lg hover:shadow-blue-500/10"
+                   [(ngModel)]="searchTerm"
+                   (input)="onSearch()">
+            <svg class="absolute left-4 top-4 h-6 w-6 text-gray-400 transition-colors duration-200 group-hover:text-blue-400" 
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Loading Animation -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" 
+         class="max-w-2xl mx-auto p-4 bg-red-900/20 border border-red-800 
+                rounded-lg text-red-400 animate-fadeIn backdrop-blur-sm">
+        {{ error }}
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div *ngFor="let course of filteredCourses; let i = index" 
+             class="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl 
+                    border border-gray-700/50 shadow-lg hover:shadow-xl hover:shadow-blue-500/10
+                    transition-all duration-300 animate-fadeIn overflow-hidden"
+             [style.animation-delay]="i * 100 + 'ms'">
+            
+            <!-- Course Image -->
+            <div class="relative overflow-hidden rounded-t-2xl">
+                <img [src]="course.thumbnailUrl || 'https://placehold.co/600x400?text=Learn+Something'" 
+                     [alt]="course.title"
+                     class="h-56 w-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6">
+                <!-- Course Title -->
+                <h2 class="text-xl font-bold text-gray-100 mb-3 line-clamp-2 
+                           group-hover:text-blue-400 transition-colors">
+                    {{course.title}}
+                </h2>
+
+                <!-- Instructor Info -->
+                <div class="flex items-center mb-4 space-x-3">
+                    <img [src]="course.instructor?.profileImage || 'profilephoto.jpg'"
+                         class="w-10 h-10 rounded-full border-2 border-gray-700 shadow-sm"
+                         [alt]="course.instructor?.name">
+                    <div>
+                        <p class="text-sm font-medium text-gray-200">{{course.instructor?.name}}</p>
+                        <p class="text-xs text-gray-400">Expert Instructor</p>
+                    </div>
+                </div>
+
+                <!-- Course Details -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="flex items-center text-sm text-gray-300">
+                        <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{course.duration}} hours
+                    </div>
+                    <div class="flex items-center text-sm text-gray-300">
+                        <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        {{course.level}}
+                    </div>
+                </div>
+
+                <!-- Course Description -->
+                <p class="text-gray-400 text-sm mb-4 line-clamp-2">
+                    {{course.description}}
+                </p>
+
+                <!-- Price and Category -->
+                <div class="flex justify-between items-center mb-4">
+                    <span class="px-3 py-1 bg-blue-900/30 text-blue-300 rounded-full text-sm font-medium 
+                                border border-blue-800/50 backdrop-blur-sm">
+                        {{course.category}}
+                    </span>
+                    <span class="text-2xl font-bold text-gray-100">₹{{course.price}}</span>
+                </div>
+
+                <!-- Enroll Button -->
+                <button (click)="enrollCourse(course._id)"
+                        class="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 
+                               hover:from-blue-700 hover:to-purple-700
+                               text-white font-semibold rounded-xl
+                               transform hover:scale-[1.02] transition-all duration-300
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+                               focus:ring-offset-gray-900">
+                    Enroll Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

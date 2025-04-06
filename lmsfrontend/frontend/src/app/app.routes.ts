@@ -30,6 +30,7 @@ import { CourseContentComponent } from './components/insMaincomponent/features/c
 import { CoursePublishComponent } from './components/insMaincomponent/features/course/course-publish/course-publish.component';
 import { CourseDraftComponent } from './components/insMaincomponent/features/course/course-draft/course-draft.component';
 import { CourseListComponent } from './components/admin/course-list/course-list.component';
+import { StudentcourseComponent } from './components/studentmain/studentcourse/studentcourse.component';
 
 export const routes: Routes = [
     {
@@ -86,10 +87,23 @@ export const routes: Routes = [
                 path:'profile',
                 component:StudentprofileComponent,
                 canActivate:[authGuard]
+            },
+            {
+                path:'courses',
+                children:[
+                    {
+                        path:'',
+                        component:StudentcourseComponent,
+                        canActivate:[authGuard]
+                    }
+                ]
             }
            
         ]
     },
+
+
+
 
 
 
