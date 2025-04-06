@@ -1,0 +1,84 @@
+import { Component, OnInit } from '@angular/core';
+import { CartService } from '../../../services/studentservice/cart/cart.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { ConfirmationcomponentComponent } from '../../common/confirmationcomponent/confirmationcomponent.component';
+import { MatDialog } from '@angular/material/dialog';
+
+@Component({
+  selector: 'app-cart',
+  imports: [
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    CommonModule
+  ],
+  templateUrl: './cart.component.html',
+  styleUrl: './cart.component.scss'
+})
+export class CartComponent implements OnInit{
+   cartItems:any[]=[]
+   loading:boolean=true
+   error:string=''
+   totalAmount:number=0
+
+
+   constructor(private cartService:CartService,private snackBar:MatSnackBar,private dialog: MatDialog){}
+
+   ngOnInit(){
+    this.loadCart()
+   }
+
+
+   loadCart(){
+    this.loading=true
+    this.cartService.getCart().subscribe(
+      response=>{
+        this.loading=false
+        this.cartItems=response.items||[]
+        this.totalAmount=response.totalAmount||0
+      },
+      error=>{
+        this.error='Failed to load cart'
+        this.snackBar.open(this.error, 'Close', { duration: 3000 });
+      }
+    )
+   }
+
+   clearCart(){
+
+   }
+
+   proceedToCheckout(){
+
+   }
+
+   removeItem(courseId:string,courseName:string){
+    const dialogRef=this.dialog.open(ConfirmationcomponentComponent,{
+      data:{
+          title: 'Confirm Removal',
+         message: `Are you sure you want to remove "${courseName}" from your cart?`
+      }
+    })
+    dialogRef.afterClosed().subscribe(result=>{
+      if(result){
+        this.cartService.removeFromCart(courseId).subscribe({
+          next: (response) => {
+            this.loadCart(); // Reload cart after removal
+            this.snackBar.open('Item removed from cart', 'Close', { duration: 3000 });
+          },
+          error: (error) => {
+            this.snackBar.open('Failed to remove item from cart', 'Close', { duration: 3000 });
+          }
+        });
+      }
+    })
+    
+   }
+
+
+}

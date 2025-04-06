@@ -32,6 +32,7 @@ import { CourseDraftComponent } from './components/insMaincomponent/features/cou
 import { CourseListComponent } from './components/admin/course-list/course-list.component';
 import { StudentcourseComponent } from './components/studentmain/studentcourse/studentcourse.component';
 import { CourseDetailComponent } from './components/studentmain/course-detail/course-detail.component';
+import { CartComponent } from './components/studentmain/cart/cart.component';
 
 export const routes: Routes = [
     {
@@ -103,6 +104,11 @@ export const routes: Routes = [
                         canActivate:[authGuard]
                     }
                 ]
+            },
+            {
+                path:'cart',
+                component:CartComponent,
+                canActivate:[authGuard]
             }
            
         ]

@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CartService } from '../../../services/studentservice/cart/cart.service';
 
 @Component({
   selector: 'app-course-detail',
@@ -22,8 +24,9 @@ export class CourseDetailComponent {
   courseDetails:any
   loading:boolean=false
   error:string=''
+  addingToCart:boolean=false
 
-  constructor(private route:ActivatedRoute,private studentCourseService:StudentcourseService){}
+  constructor(private route:ActivatedRoute,private studentCourseService:StudentcourseService,private snackBar:MatSnackBar,private cartService:CartService){}
 
   ngOnInit():void{
     this.loading=true
@@ -57,4 +60,31 @@ export class CourseDetailComponent {
     const minutes = totalMinutes % 60;
     return `${hours}h ${minutes}m`;
   }
+
+
+  addToCart(){
+    if(this.addingToCart||!this.courseDetails?._id)
+      return 
+
+    this.addingToCart=true
+    this.cartService.addToCart(this.courseDetails._id).subscribe(
+      response=>{
+        this.snackBar.open('Course added to Cart successfully!','Close',{
+          duration:3000,
+          horizontalPosition:'right',
+          verticalPosition:'top'
+        })
+      },
+        error=>{
+          console.log('error entha cartil',error.error.message,error)
+          this.snackBar.open('Failed to add course to cart','Close',{
+            duration:3000,
+            horizontalPosition:'right',
+            verticalPosition:'top'
+          })
+        }
+    )
+  }
+   
+
 }

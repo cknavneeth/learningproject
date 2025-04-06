@@ -16,6 +16,8 @@ import { GuardGuard } from './authentication/guard/guard.guard';
 import { CloudinaryService } from './shared/cloudinary/cloudinary.service';
 import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
 import { EmailService } from './shared/email/email.service';
+import { CartController } from './cart/cart.controller';
+import { CartModule } from './cart/cart.module';
 
 console.log(process.env.MONGO_URI)
 @Module({
@@ -28,9 +30,10 @@ console.log(process.env.MONGO_URI)
         signOptions: { expiresIn: '15m' },
       }),
     }),
-    CloudinaryModule
+    CloudinaryModule,
+    CartModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, CartController],
   providers: [AppService,GuardGuard, CloudinaryService, EmailService],
 })
 export class AppModule implements NestModule{
