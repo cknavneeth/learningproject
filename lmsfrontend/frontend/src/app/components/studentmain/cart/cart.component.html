@@ -1,66 +1,107 @@
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">Shopping Cart</h1>
-
+<div class="min-h-screen bg-gray-900 pt-24 pb-8">
     <!-- Loading State -->
-    <div *ngIf="loading" class="flex justify-center items-center py-12">
-        <mat-spinner diameter="40"></mat-spinner>
+    <div *ngIf="loading" class="flex justify-center items-center py-8">
+        <mat-spinner diameter="40" class="opacity-80"></mat-spinner>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="error" class="text-red-500 text-center py-8">
+    <div *ngIf="error" 
+         class="container mx-auto px-4 text-red-500 text-center py-6 bg-red-500/10 rounded-xl backdrop-blur-sm">
         {{ error }}
     </div>
 
     <!-- Empty Cart -->
     <div *ngIf="!loading && !error && cartItems.length === 0" 
-         class="text-center py-12 bg-gray-800 rounded-xl">
-        <mat-icon class="text-6xl mb-4 text-gray-600">shopping_cart</mat-icon>
-        <p class="text-xl mb-4">Your cart is empty</p>
-        <button mat-raised-button color="primary" routerLink="/student/courses">
+         class="container mx-auto px-4 text-center py-12 bg-gray-800/50 rounded-xl backdrop-blur-sm border border-gray-700/50 shadow-xl">
+        <mat-icon class="text-6xl mb-4 text-gray-600 animate-bounce">shopping_cart</mat-icon>
+        <p class="text-xl mb-6 text-gray-300">Your cart is empty</p>
+        <button mat-raised-button color="primary" routerLink="/student/courses"
+                class="hover:scale-105 transition-transform duration-300 bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3">
             Browse Courses
         </button>
     </div>
 
-    <!-- Cart Items -->
-    <div *ngIf="!loading && !error && cartItems.length > 0" class="grid gap-6">
-        <!-- Cart Items List -->
-        <div class="bg-gray-800 rounded-xl p-6">
-            <div *ngFor="let item of cartItems" class="flex items-center justify-between py-4 border-b border-gray-700 last:border-0">
-                <div class="flex items-center space-x-4">
-                    <img [src]="item.courseId.thumbnailUrl" 
-                         class="w-24 h-16 object-cover rounded" 
-                         [alt]="item.courseId.title">
-                    <div>
-                        <h3 class="text-lg font-semibold">{{ item.courseId.title }}</h3>
-                        <p class="text-gray-400">by {{ item.courseId.instructor.name }}</p>
+    <!-- Cart Content -->
+    <div *ngIf="!loading && !error && cartItems.length > 0" 
+         class="container mx-auto px-4 flex flex-col lg:flex-row gap-8">
+        
+        <!-- Left Side - Course List -->
+        <div class="lg:w-2/3">
+            <h1 class="text-2xl font-bold mb-6 text-white">Shopping Cart ({{cartItems.length}} courses)</h1>
+            
+            <div class="space-y-4">
+                <div *ngFor="let item of cartItems; let i = index" 
+                     class="bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300">
+                    <div class="flex gap-4">
+                        <!-- Course Image -->
+                        <img [src]="item.courseId.thumbnailUrl" 
+                             class="w-40 h-24 object-cover rounded-lg" 
+                             [alt]="item.courseId.title">
+                        
+                        <!-- Course Details -->
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-white mb-1">{{ item.courseId.title }}</h3>
+                            <p class="text-sm text-gray-400 mb-2">by {{ item.courseId.instructor.name }}</p>
+                            
+                            <!-- Price and Remove -->
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-2xl font-bold text-white">₹{{ item.courseId.price }}</span>
+                                    <span class="text-sm text-gray-400 line-through ml-2">₹{{ item.courseId.price * 2 }}</span>
+                                    <span class="text-sm text-green-500 ml-2">50% off</span>
+                                </div>
+                                <button mat-icon-button color="warn" 
+                                        (click)="removeItem(item.courseId._id,item.courseId.title)"
+                                        class="hover:scale-110 transition-transform duration-300">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-xl font-bold">₹{{ item.courseId.price }}</span>
-                    <button mat-icon-button color="warn" (click)="removeItem(item.courseId._id,item.courseId.title)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Cart Summary -->
-        <div class="bg-gray-800 rounded-xl p-6">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-xl">Total:</span>
-                <span class="text-2xl font-bold">₹{{ totalAmount }}</span>
-            </div>
-            <div class="space-y-4">
-                <button mat-raised-button color="primary" 
-                        class="w-full" 
-                        (click)="proceedToCheckout()">
-                    Proceed to Checkout
-                </button>
-                <button mat-stroked-button color="warn" 
-                        class="w-full"
-                        (click)="clearCart()">
-                    Clear Cart
-                </button>
+        <!-- Right Side - Cart Summary -->
+        <div class="lg:w-1/3 lg:sticky lg:top-24 h-fit">
+            <div class="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-gray-700/50 shadow-xl">
+                <h2 class="text-xl font-bold text-white mb-4">Total:</h2>
+                
+                <!-- Price Breakdown -->
+                <div class="space-y-2 mb-6">
+                    <div class="flex justify-between text-gray-400">
+                        <span>Original Price:</span>
+                        <span>₹{{ totalAmount * 2 }}</span>
+                    </div>
+                    <div class="flex justify-between text-green-500">
+                        <span>Discount:</span>
+                        <span>-₹{{ totalAmount }}</span>
+                    </div>
+                    <div class="flex justify-between text-xl font-bold text-white pt-2 border-t border-gray-700">
+                        <span>Total:</span>
+                        <span>₹{{ totalAmount }}</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3">
+                    <button mat-raised-button color="primary" 
+                            (click)="proceedToCheckout()"
+                            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 py-3 text-lg font-semibold">
+                        Checkout Now
+                    </button>
+                    <button mat-stroked-button color="warn" 
+                            (click)="clearCart()"
+                            class="w-full border-red-500/50 hover:bg-red-500/10 py-3">
+                        Clear Cart
+                    </button>
+                </div>
+
+                <!-- Secure Payment Notice -->
+                <div class="mt-6 text-center text-sm text-gray-400">
+                    <mat-icon class="align-middle mr-1">lock</mat-icon>
+                    Secure checkout with SSL encryption
+                </div>
             </div>
         </div>
     </div>

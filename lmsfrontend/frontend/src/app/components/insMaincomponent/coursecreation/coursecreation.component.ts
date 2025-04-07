@@ -163,7 +163,8 @@ export class CoursecreationComponent {
       }
 
 
-      await this.courseService.publishCourse(this.courseData._id).toPromise()
+      // await this.courseService.publishCourse(this.courseData._id).toPromise()
+      await firstValueFrom(this.courseService.publishCourse(this.courseData._id))
 
       this.snackBar.open('Course published successfully!','Close',{
         duration:3000,
@@ -171,7 +172,7 @@ export class CoursecreationComponent {
         verticalPosition:'top'
       })
 
-      this.router.navigate(['/instructor/dashboard'])
+      this.router.navigate(['/instructor/home'])
 
     } catch (error) {
        console.error('Error publishing course',error)
