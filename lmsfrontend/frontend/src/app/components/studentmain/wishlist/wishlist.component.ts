@@ -92,7 +92,9 @@ export class WishlistComponent {
           horizontalPosition: 'right',
           verticalPosition: 'top'
         });
-        this.removeFromWishlist(courseId,response.name);
+
+
+        this.removeFromWishlistSilently(courseId);
         this.addingToCart = false;
       },
       error => {
@@ -111,6 +113,21 @@ export class WishlistComponent {
 
   navigateToCourse(courseId: string) {
     this.router.navigate(['/student/courses', courseId]);
+  }
+
+  private removeFromWishlistSilently(courseId: string) {
+    this.wishlistService.removeFromWishlist(courseId).subscribe(
+      response => {
+        this.wishlistItems = this.wishlistItems.filter(item => item._id !== courseId);
+      },
+      error => {
+        this.snackBar.open('Failed to update wishlist', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      }
+    );
   }
 
 

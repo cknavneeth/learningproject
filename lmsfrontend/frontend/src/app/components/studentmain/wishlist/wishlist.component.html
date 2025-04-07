@@ -1,60 +1,104 @@
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">My Wishlist</h1>
+<div class="min-h-screen bg-gray-900 pt-24 pb-8">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-white">
+                My Wishlist
+                <span *ngIf="!loading && !error && wishlistItems.length > 0" 
+                      class="text-lg text-gray-400 ml-2">
+                    ({{wishlistItems.length}} courses)
+                </span>
+            </h1>
+            <button *ngIf="!loading && !error && wishlistItems.length > 0"
+                    mat-raised-button color="primary" 
+                    routerLink="/student/courses"
+                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                Browse More Courses
+            </button>
+        </div>
 
-    <!-- Loading State -->
-    <div *ngIf="loading" class="flex justify-center items-center py-12">
-        <mat-spinner diameter="40"></mat-spinner>
-    </div>
+        <!-- Loading State -->
+        <div *ngIf="loading" 
+             class="flex justify-center items-center min-h-[400px]">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
 
-    <!-- Error State -->
-    <div *ngIf="error" class="text-red-500 text-center py-8">
-        {{ error }}
-    </div>
+        <!-- Error State -->
+        <div *ngIf="error" 
+             class="text-red-500 text-center py-8 bg-red-500/10 rounded-xl backdrop-blur-sm">
+            {{ error }}
+        </div>
 
-    <!-- Empty Wishlist -->
-    <div *ngIf="!loading && !error && wishlistItems.length === 0" 
-         class="text-center py-12 bg-gray-800 rounded-xl">
-        <mat-icon class="text-6xl mb-4 text-gray-600">favorite_border</mat-icon>
-        <p class="text-xl mb-4">Your wishlist is empty</p>
-        <button mat-raised-button color="primary" routerLink="/student/courses">
-            Browse Courses
-        </button>
-    </div>
+        <!-- Empty Wishlist -->
+        <div *ngIf="!loading && !error && wishlistItems.length === 0" 
+             class="flex flex-col items-center justify-center min-h-[400px] bg-gray-800/50 rounded-xl backdrop-blur-sm border border-gray-700/50">
+            <mat-icon class="text-6xl mb-4 text-gray-600">favorite_border</mat-icon>
+            <p class="text-xl mb-6 text-gray-300">Your wishlist is empty</p>
+            <button mat-raised-button color="primary" 
+                    routerLink="/student/courses"
+                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-6 py-2">
+                Browse Courses
+            </button>
+        </div>
 
-    <!-- Wishlist Items -->
-    <div *ngIf="!loading && !error && wishlistItems.length > 0" 
-         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let course of wishlistItems" 
-             class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
-            <!-- Course Image -->
-            <div class="relative cursor-pointer" (click)="navigateToCourse(course._id)">
-                <img [src]="course.thumbnailUrl || 'assets/default-course.jpg'"
-                     [alt]="course.title"
-                     class="w-full h-48 object-cover">
-            </div>
-
-            <!-- Course Details -->
-            <div class="p-6">
-                <h3 class="text-xl font-semibold mb-2 cursor-pointer" 
-                    (click)="navigateToCourse(course._id)">
-                    {{ course.title }}
-                </h3>
-                <p class="text-gray-400 mb-4">by {{ course.instructor.name }}</p>
+        <!-- Wishlist Grid -->
+        <div *ngIf="!loading && !error && wishlistItems.length > 0" 
+             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            
+            <!-- Course Card -->
+            <div *ngFor="let course of wishlistItems" 
+                 class="bg-gray-800/50 rounded-xl overflow-hidden border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 backdrop-blur-sm group">
                 
-                <div class="flex justify-between items-center">
-                    <span class="text-2xl font-bold">₹{{ course.price }}</span>
-                    <div class="flex space-x-2">
-                        <button mat-icon-button color="warn" 
-                                (click)="removeFromWishlist(course._id,course.title)"
-                                matTooltip="Remove from wishlist">
-                            <mat-icon>favorite</mat-icon>
-                        </button>
-                        <button mat-raised-button color="primary"
-                                [disabled]="addingToCart"
-                                (click)="addToCart(course._id)">
-                            <mat-icon class="mr-2">shopping_cart</mat-icon>
-                            Add to Cart
-                        </button>
+                <!-- Course Image -->
+                <div class="relative aspect-video cursor-pointer overflow-hidden"
+                     (click)="navigateToCourse(course._id)">
+                    <img [src]="course.thumbnailUrl || 'assets/default-course.jpg'"
+                         [alt]="course.title"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+
+                <!-- Course Details -->
+                <div class="p-5">
+                    <!-- Title -->
+                    <h3 class="text-lg font-semibold text-white mb-2 line-clamp-2 hover:text-blue-400 cursor-pointer transition-colors duration-300" 
+                        (click)="navigateToCourse(course._id)">
+                        {{ course.title }}
+                    </h3>
+                    
+                    <!-- Instructor -->
+                    <p class="text-sm text-gray-400 mb-4">
+                        by {{ course.instructor.name }}
+                    </p>
+
+                    <!-- Price and Actions -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-2xl font-bold text-white">₹{{ course.price }}</span>
+                            <span class="text-sm text-green-500">50% off</span>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <!-- Remove from Wishlist -->
+                            <button mat-icon-button color="warn" 
+                                    (click)="removeFromWishlist(course._id, course.title)"
+                                    matTooltip="Remove from wishlist"
+                                    class="hover:scale-110 transition-transform duration-300">
+                                <mat-icon>favorite</mat-icon>
+                            </button>
+                            
+                            <!-- Add to Cart -->
+                            <button mat-raised-button color="primary"
+                                    [disabled]="addingToCart"
+                                    (click)="addToCart(course._id)"
+                                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                                <mat-icon class="mr-2">shopping_cart</mat-icon>
+                                {{ addingToCart ? 'Adding...' : 'Add to Cart' }}
+                            </button>
+                        </div>
+
+
+                        
                     </div>
                 </div>
             </div>
