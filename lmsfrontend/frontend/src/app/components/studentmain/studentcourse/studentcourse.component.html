@@ -43,6 +43,83 @@
         </div>
     </div>
 
+    <!-- Filters Section - Added after search bar and before courses grid -->
+    <div class="max-w-6xl mx-auto mb-8 animate-slideUp">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Price Range -->
+            <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
+                <h3 class="text-gray-200 font-medium mb-2">Price Range</h3>
+                <div class="flex gap-2">
+                    <input type="number" 
+                           placeholder="Min" 
+                           [(ngModel)]="filters.minPrice"
+                           class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-2 text-gray-200 text-sm"
+                           (change)="applyFilters()">
+                    <input type="number" 
+                           placeholder="Max" 
+                           [(ngModel)]="filters.maxPrice"
+                           class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-2 text-gray-200 text-sm"
+                           (change)="applyFilters()">
+                </div>
+            </div>
+
+            <!-- Language Filter -->
+            <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
+                <h3 class="text-gray-200 font-medium mb-2">Language</h3>
+                <div class="relative">
+                    <select [(ngModel)]="selectedLanguage" 
+                            (change)="onLanguageChange($event)"
+                            class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-2 text-gray-200 text-sm
+                                   appearance-none cursor-pointer
+                                   focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <option value="" disabled selected>Select Language</option>
+                        <option value="English">English</option>
+                        <option value="spanish">Spanish</option>
+                        <option value="french">French</option>
+                        <option value="german">German</option>
+                        <option value="chinese">Chinese</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level Filter -->
+            <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
+                <h3 class="text-gray-200 font-medium mb-2">Level</h3>
+                <div class="relative">
+                    <select [(ngModel)]="selectedLevel"
+                            (change)="onLevelChange($event)"
+                            class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-2 text-gray-200 text-sm
+                                   appearance-none cursor-pointer
+                                   focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <option value="" disabled selected>Select Level</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clear Filters -->
+            <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50 flex items-end">
+                <button (click)="clearFilters()"
+                        class="w-full py-2 px-4 bg-red-500/20 hover:bg-red-500/30 text-red-300 
+                               rounded-lg transition-all duration-300 border border-red-500/30">
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Loading Animation -->
     <div *ngIf="loading" class="flex justify-center items-center py-12">
         <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -131,6 +208,43 @@
                focus:ring-offset-gray-900">
     View Course
 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Pagination after the courses grid, before the "No Courses Found" message -->
+    <div class="mt-8 flex justify-center items-center space-x-2 animate-fadeIn">
+        <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
+            <div class="flex items-center justify-between space-x-4">
+                <button (click)="onPageChange(currentPage - 1)"
+                        [disabled]="currentPage === 1"
+                        class="px-4 py-2 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-600/30
+                               hover:bg-blue-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Previous
+                </button>
+                
+                <div class="flex items-center space-x-2">
+                    <ng-container *ngFor="let page of getPageNumbers()">
+                        <button (click)="onPageChange(page)"
+                                [class.bg-blue-600]="currentPage === page"
+                                [class.text-white]="currentPage === page"
+                                [class.bg-gray-70050]="currentPage !== page"
+                                class="w-10 h-10 rounded-lg border border-gray-600 transition-all duration-300">
+                            {{page}}
+                        </button>
+                    </ng-container>
+                </div>
+
+                <button (click)="onPageChange(currentPage + 1)"
+                        [disabled]="currentPage === totalPages"
+                        class="px-4 py-2 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-600/30
+                               hover:bg-blue-600/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next
+                </button>
+            </div>
+            
+            <div class="text-center mt-2 text-sm text-gray-400">
+                Showing {{(currentPage - 1) * itemsPerPage + 1}} to {{Math.min(currentPage * itemsPerPage, totalItems)}} of {{totalItems}} results
             </div>
         </div>
     </div>

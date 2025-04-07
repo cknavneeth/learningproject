@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { CourseResponse } from '../../../interfaces/course.interface';
+
 
 
 
@@ -14,9 +16,36 @@ export class StudentcourseService {
 
   constructor(private http:HttpClient) { }
 
-  getAllCourses():Observable<any>{
+  getAllCourses(filters:{
+    search?: string,
+        minPrice?: number,
+        maxPrice?: number,
+        languages?: string[],
+        levels?: string[],
+        page?: number,
+        limit?: number
+  }):Observable<CourseResponse>{
+    let params = new HttpParams();
+    if (filters.minPrice !== undefined) {
+      params = params.set('minPrice', filters.minPrice.toString());
+  }
+  if (filters.maxPrice !== undefined) {
+      params = params.set('maxPrice', filters.maxPrice.toString());
+  }
+  if (filters.languages?.length) {
+      params = params.set('languages', filters.languages.join(','));
+  }
+  if (filters.levels?.length) {
+      params = params.set('levels', filters.levels.join(','));
+  }
+  if (filters.page) {
+      params = params.set('page', filters.page.toString());
+  }
+  if (filters.limit) {
+      params = params.set('limit', filters.limit.toString());
+  }
     console.log('Making API request to:', `${this.apiUrl}/courses`);
-    return this.http.get(`${this.apiUrl}/courses`)
+    return this.http.get<CourseResponse>(`${this.apiUrl}/courses`,{params})
   }
 
 

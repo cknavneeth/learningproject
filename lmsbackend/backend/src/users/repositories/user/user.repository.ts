@@ -5,6 +5,14 @@ import { Model } from 'mongoose';
 import { user, userDocument } from 'src/users/users.schema';
 import { Course, CourseDocument, CourseStatus } from 'src/instructors/courses/course.schema';
 
+export interface CourseResponse {
+    courses: CourseDocument[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+}
+
 @Injectable()
 export class UserRepository implements IUserRepository{
      constructor(@InjectModel(user.name) private usermodel:Model<userDocument>,@InjectModel(Course.name) private courseModel: Model<CourseDocument>,){}
@@ -23,15 +31,74 @@ export class UserRepository implements IUserRepository{
     }
 
 
-    async getAllPublishedCourses():Promise<CourseDocument[]>{
-        const allCourses=await this.courseModel.find({
-            status:CourseStatus.PUBLISHED
-        })
-        .populate('instructor', 'name profileImage')
-        .select('title description thumbnailUrl price duration level category instructor')
-        .exec();
+    async getAllPublishedCourses(filters:{
+        minPrice?: number,
+        maxPrice?: number,
+        languages?: string[],
+        levels?: string[],
+        page?: number,
+        limit?: number
+    }):Promise<CourseResponse>{
+ 
 
-        return allCourses
+        const query:any={
+            status:CourseStatus.PUBLISHED
+        }
+
+        
+        if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
+            query.price = {};
+            if (filters.minPrice !== undefined) {
+                query.price.$gte = filters.minPrice;
+            }
+            if (filters.maxPrice !== undefined) {
+                query.price.$lte = filters.maxPrice;
+            }
+        }
+
+
+
+        if (filters.languages && filters.languages.length > 0) {
+            query.courseLanguage = { $in: filters.languages };
+        }
+
+
+        if (filters.levels && filters.levels.length > 0) {
+            query.level = { $in: filters.levels };
+        }
+
+
+        const page = filters.page || 1;
+        const limit = filters.limit || 10;
+        const skip = (page - 1) * limit;
+
+        // const allCourses=await this.courseModel.find({
+        //     status:CourseStatus.PUBLISHED
+        // })
+        // .populate('instructor', 'name profileImage')
+        // .select('title description thumbnailUrl price duration level category instructor')
+        // .exec();
+
+        // return allCourses
+        const [courses, total] = await Promise.all([
+            this.courseModel.find(query)
+                .populate('instructor', 'name profileImage')
+                .select('title description thumbnailUrl price duration level category instructor courseLanguage')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec(),
+            this.courseModel.countDocuments(query)
+        ]);
+
+        
+        return {
+            courses,
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit)
+        };
     }
 
 

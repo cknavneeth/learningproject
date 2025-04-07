@@ -25,3 +25,11 @@ export interface Resource {
     fileUrl: string;
     fileType: string;
   }
+
+  export interface CourseResponse {
+    courses: Course[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+}

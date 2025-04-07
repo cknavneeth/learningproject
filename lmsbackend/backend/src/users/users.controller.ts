@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Put, Request, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { UsersService } from './users.service';
 // import { Request } from 'express';
@@ -35,10 +35,29 @@ export class UsersController {
 
 
    @Get('courses')
-   async getAllCourses(){
+   async getAllCourses(
+    @Query('minPrice',new DefaultValuePipe(0),ParseIntPipe) minPrice?:number,
+    @Query('maxPrice', new DefaultValuePipe(1000000), ParseIntPipe) maxPrice?: number,
+        @Query('languages') languages?: string,
+        @Query('levels') levels?: string,
+        @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
+        @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number
+   ){
     try {
+        console.log('Received filter params:', {
+            minPrice, maxPrice, languages, levels, page, limit
+          });
+    
+          const filters = {
+            minPrice,
+            maxPrice,
+            languages: languages ? languages.split(',') : undefined,
+            levels: levels ? levels.split(',') : undefined,
+            page,
+            limit
+          };
         console.log('getting all courses')
-        const courses= await this.usersService.getAllPublishedCourses()
+        const courses= await this.usersService.getAllPublishedCourses(filters)
         console.log('courses fetch aay',courses)
         return courses
     } catch (error) {

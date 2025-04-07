@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { user, userDocument } from './users.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs'
-import { UserRepository } from './repositories/user/user.repository';
+import { CourseResponse, UserRepository } from './repositories/user/user.repository';
 
 @Injectable()
 export class UsersService {
@@ -132,8 +132,15 @@ export class UsersService {
 
 
    //getting all courses here
-   async getAllPublishedCourses(){
-    return await this.userRepository.getAllPublishedCourses()
+   async getAllPublishedCourses(filters:{
+    minPrice?: number,
+    maxPrice?: number,
+    languages?: string[],
+    levels?: string[],
+    page?: number,
+    limit?: number
+   }):Promise<CourseResponse>{
+    return await this.userRepository.getAllPublishedCourses(filters)
    }
    
 
