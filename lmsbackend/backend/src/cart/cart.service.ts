@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CartRepository } from './repositories/cart/cart.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from 'src/instructors/courses/course.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class CartService {
@@ -32,7 +32,34 @@ export class CartService {
             console.log('Creating new cart for user:', userId);
             cart=await this.cartRepository.create(userId)
         }
-        const courseExists=cart.items.find(item=>item.courseId.toString()===courseId)
+        if (cart.items.length > 0) {
+            const firstItemId = cart.items[0].courseId;
+            console.log('Debug Info:', {
+                firstItemIdType: typeof firstItemId,
+                firstItemIdValue: firstItemId,
+                firstItemIdString: firstItemId.toString(),
+                courseIdToAdd: courseId,
+                courseIdToAddType: typeof courseId,
+                isEqual: firstItemId.toString() === courseId
+            });
+        }
+
+        const rawCart=await this.cartRepository.cartModel.findOne({user:userId})
+        if(!rawCart){
+            throw new Error('Cart not found')
+        }
+
+        
+        const courseExists = rawCart.items.some(item => {
+            const itemId = item.courseId.toString();
+            const isMatch = itemId === courseId;
+            console.log('Comparing:', {
+                itemId,
+                courseId,
+                isMatch
+            });
+            return isMatch;
+        });
         if(courseExists){
             console.log('Course already in cart:', courseId);
             throw new BadRequestException('Course already in cart')

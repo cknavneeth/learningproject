@@ -18,6 +18,9 @@ import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
 import { EmailService } from './shared/email/email.service';
 import { CartController } from './cart/cart.controller';
 import { CartModule } from './cart/cart.module';
+import { WishlistController } from './wishlist/wishlist.controller';
+import { WishlistService } from './wishlist/wishlist.service';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 console.log(process.env.MONGO_URI)
 @Module({
@@ -31,10 +34,11 @@ console.log(process.env.MONGO_URI)
       }),
     }),
     CloudinaryModule,
-    CartModule
+    CartModule,
+    WishlistModule
   ],
   controllers: [AppController, CartController],
-  providers: [AppService,GuardGuard, CloudinaryService, EmailService],
+  providers: [AppService,GuardGuard, CloudinaryService, EmailService, ],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

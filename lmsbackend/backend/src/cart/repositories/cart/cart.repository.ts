@@ -7,7 +7,7 @@ import { ICartRepository } from '../cart.repository.interface';
 @Injectable()
 export class CartRepository implements ICartRepository{
     constructor(
-        @InjectModel(Cart.name) private cartModel: Model<CartDocument>
+        @InjectModel(Cart.name) public cartModel: Model<CartDocument>
     ){ }
 
     async findByUser(userId:string):Promise<CartDocument|null>{

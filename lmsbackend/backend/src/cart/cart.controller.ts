@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards ,Request, Body, Post, Delete, NotFoundException} from '@nestjs/common';
+import { Controller, Get, UseGuards ,Request, Body, Post, Delete, NotFoundException, BadRequestException} from '@nestjs/common';
 import { CartService } from './cart.service';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 
@@ -35,6 +35,9 @@ export class CartController {
             return cart
         } catch (error) {
             console.log('failed to add in cart')
+            if (error.message === 'Course already in cart') {
+                throw new BadRequestException('Course already in cart');
+            }
             throw new NotFoundException('Failed to add to cart')
         }
     }

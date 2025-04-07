@@ -77,7 +77,10 @@ export class CourseDetailComponent {
       },
         error=>{
           console.log('error entha cartil',error.error.message,error)
-          this.snackBar.open('Failed to add course to cart','Close',{
+          const errorMessage = error.error?.message === 'Course already in cart' 
+          ? 'This course is already in your cart' 
+          : 'Failed to add course to cart';
+          this.snackBar.open(errorMessage,'Close',{
             duration:3000,
             horizontalPosition:'right',
             verticalPosition:'top'
