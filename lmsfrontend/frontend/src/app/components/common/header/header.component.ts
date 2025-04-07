@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../services/studentservice/cart/cart.service';
 import { Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
+import { WishlistService } from '../../../services/studentservice/wishlist/wishlist.service';
 
 @Component({
   selector: 'app-header',
@@ -17,15 +18,18 @@ export class HeaderComponent implements OnInit {
   isAuthenticated = false;
   menuOpen: boolean = false;
   cartItemCount$:Observable<number>
+  wishlistItemCount$:Observable<number>
 
   constructor(
     private service: AuthserviceService,
     private router: Router,
     private ngZone: NgZone,
-    private cartService:CartService
+    private cartService:CartService,
+    private wishlistService:WishlistService
   ) {
 
     this.cartItemCount$=this.cartService.cartItems$
+    this.wishlistItemCount$=this.wishlistService.wishlistItems$
     
     window.addEventListener('storage', (event) => {
       if (event.key === 'studentaccesstoken') {

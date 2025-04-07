@@ -33,6 +33,7 @@ import { CourseListComponent } from './components/admin/course-list/course-list.
 import { StudentcourseComponent } from './components/studentmain/studentcourse/studentcourse.component';
 import { CourseDetailComponent } from './components/studentmain/course-detail/course-detail.component';
 import { CartComponent } from './components/studentmain/cart/cart.component';
+import { WishlistComponent } from './components/studentmain/wishlist/wishlist.component';
 
 export const routes: Routes = [
     {
@@ -108,6 +109,11 @@ export const routes: Routes = [
             {
                 path:'cart',
                 component:CartComponent,
+                canActivate:[authGuard]
+            },
+            {
+                path:'wishlist',
+                component:WishlistComponent,
                 canActivate:[authGuard]
             }
            

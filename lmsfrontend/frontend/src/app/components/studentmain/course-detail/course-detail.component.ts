@@ -7,6 +7,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartService } from '../../../services/studentservice/cart/cart.service';
+import { WishlistService } from '../../../services/studentservice/wishlist/wishlist.service';
 
 @Component({
   selector: 'app-course-detail',
@@ -25,8 +26,10 @@ export class CourseDetailComponent {
   loading:boolean=false
   error:string=''
   addingToCart:boolean=false
+  addingToWishlist:boolean=false
+  isInWishlist:boolean=false
 
-  constructor(private route:ActivatedRoute,private studentCourseService:StudentcourseService,private snackBar:MatSnackBar,private cartService:CartService){}
+  constructor(private route:ActivatedRoute,private studentCourseService:StudentcourseService,private snackBar:MatSnackBar,private cartService:CartService,private wishlistService:WishlistService){}
 
   ngOnInit():void{
     this.loading=true
@@ -44,6 +47,8 @@ export class CourseDetailComponent {
         }
       )
     }
+
+    this.checkWishlistStatus()
   }
 
 
@@ -88,6 +93,55 @@ export class CourseDetailComponent {
         }
     )
   }
+
+
+
    
+
+  private checkWishlistStatus(){
+    this.wishlistService.getWishlist().subscribe(
+      response=>{
+        this.isInWishlist=response.courses.some((course:any)=>course._id===this.courseDetails._id)
+      },
+      error=>{
+        console.log('error checking wishlist status',error)
+      }
+    )
+  }
+
+
+  toggleWishlist(){
+    if(this.addingToWishlist||!this.courseDetails?._id)return
+
+    this.addingToWishlist=true
+
+    const operation=this.isInWishlist?this.wishlistService.removeFromWishlist(this.courseDetails._id)
+      :this.wishlistService.addToWishlist(this.courseDetails._id)
+
+      operation.subscribe(
+        response=>{
+          this.isInWishlist=!this.isInWishlist
+          const message=this.isInWishlist
+          ?'Course added to wishlist successfully!'
+          :'Course removed from wishlist successfully!'
+          this.snackBar.open(message,'Close',{
+            duration:3000,
+            horizontalPosition:'right',
+            verticalPosition:'top'
+          })
+        },
+        error=>{
+          const errorMessage = error.error?.message || 'Failed to update wishlist';
+        this.snackBar.open(errorMessage, 'Close', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+        this.addingToWishlist = false;
+        }
+      )
+    
+  }
+
 
 }

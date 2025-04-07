@@ -14,6 +14,8 @@ export enum CourseStatus{
 @Schema({timestamps:true})
 export class Course{
 
+     _id: Types.ObjectId; 
+
     @Prop({required:true})
     title:string
 

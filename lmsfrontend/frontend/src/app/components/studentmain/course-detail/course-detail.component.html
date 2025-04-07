@@ -122,11 +122,22 @@
         <mat-icon class="mr-2">shopping_cart</mat-icon>
         {{ addingToCart ? 'Adding...' : 'Add to Cart' }}
     </button>
-          <button class="w-full py-4 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold
-                       transition duration-300 flex items-center justify-center">
-            <mat-icon class="mr-2">favorite_border</mat-icon>
-            Add to Wishlist
-          </button>
+
+
+    <button (click)="toggleWishlist()" 
+    [disabled]="addingToWishlist"
+    class="w-full py-4 bg-gray-700 hover:bg-gray-600 rounded-xl font-semibold
+           transition duration-300 flex items-center justify-center
+           disabled:bg-gray-500 disabled:cursor-not-allowed">
+<mat-icon class="mr-2">{{ isInWishlist ? 'favorite' : 'favorite_border' }}</mat-icon>
+{{ addingToWishlist 
+    ? 'Updating...' 
+    : (isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist') 
+}}
+</button>
+
+
+
         </div>
         <div class="mt-6 space-y-4 text-sm text-gray-300">
           <div class="flex items-center">
