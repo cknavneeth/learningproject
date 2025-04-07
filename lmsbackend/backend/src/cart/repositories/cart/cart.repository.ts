@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Cart, CartDocument } from 'src/cart/cart.schema';
 import { ICartRepository } from '../cart.repository.interface';
+import { MESSAGES } from 'src/common/constants/messages.constants';
 
 @Injectable()
 export class CartRepository implements ICartRepository{
@@ -53,7 +54,7 @@ export class CartRepository implements ICartRepository{
         const cart=await this.cartModel.findOne({user:userId})
         if(!cart){
             console.log('No cart found, throwing error');
-            throw new NotFoundException('Cart not found')
+            throw new NotFoundException(MESSAGES.CART.NOT_FOUND)
         }
 
         console.log('repositoriyulum vannu')
@@ -79,7 +80,7 @@ export class CartRepository implements ICartRepository{
         async removeItem(userId:string,courseId:string):Promise<CartDocument|null>{
             const cart=await this.cartModel.findOne({user:userId})
             if(!cart){
-                throw new NotFoundException('Cart not found')
+                throw new NotFoundException(MESSAGES.CART.NOT_FOUND)
             }
 
             cart.items=cart.items.filter(item=>item.courseId.toString()!==courseId)
@@ -103,7 +104,7 @@ export class CartRepository implements ICartRepository{
         async clearCart(userId:string):Promise<CartDocument>{
             const cart=await this.cartModel.findOne({user:userId})
             if(!cart){
-                throw new NotFoundException('cart not found')
+                throw new NotFoundException(MESSAGES.CART.NOT_FOUND)
             }
             cart.items=[]
             await cart.save()
@@ -124,8 +125,6 @@ export class CartRepository implements ICartRepository{
             }
 
             return clearedCart
-
-
         }
     
 }

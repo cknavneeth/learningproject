@@ -30,7 +30,8 @@ console.log(process.env.MONGO_URI)
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET_KEY'),
-        signOptions: { expiresIn: '15m' },
+        // signOptions: { expiresIn: '15m' },
+        signOptions: { expiresIn: `${configService.get('JWT_MAX_AGE')}` },
       }),
     }),
     CloudinaryModule,

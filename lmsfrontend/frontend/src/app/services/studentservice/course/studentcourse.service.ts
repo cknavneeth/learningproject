@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CourseResponse } from '../../../interfaces/course.interface';
+import { Course, CourseResponse } from '../../../interfaces/course.interface';
 
 
 
@@ -49,7 +49,7 @@ export class StudentcourseService {
   }
 
 
-  getCourseById(courseId:string):Observable<any>{
-    return this.http.get(`${this.apiUrl}/courses/${courseId}`,{})
+  getCourseById(courseId:string):Observable<Course>{
+    return this.http.get<Course>(`${this.apiUrl}/courses/${courseId}`,{})
   }
 }

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
 import { InstructorauthserviceService } from '../services/instructorauthservice.service';
 import { catchError, throwError } from 'rxjs';
+import { HttpStatusCode } from '../shared/enums/status-code.enums';
 
 export const blockedinterceptorInterceptor: HttpInterceptorFn = (req, next) => {
 
@@ -22,7 +23,7 @@ export const blockedinterceptorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError(error=>{
       console.log('blocked user interceptor error',error)
 
-      if(error.status===401&&error.error?.isBlocked===true){
+      if(error.status===HttpStatusCode.UNAUTHORIZED&&error.error?.isBlocked===true){
         console.log('user blocked detected')
 
         if(req.url.includes('/student')){
@@ -34,6 +35,7 @@ export const blockedinterceptorInterceptor: HttpInterceptorFn = (req, next) => {
        else if(req.url.includes('/instructor')){
         console.log('handling blocked instructor')
         tokenservice.removeInstructorToken()
+        instructorauthservice.logoutinstructor().subscribe()
         router.navigate(['/instructor/instructorlogin'])
       }
     }

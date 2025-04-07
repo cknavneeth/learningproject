@@ -33,3 +33,14 @@ export interface Resource {
     limit: number;
     totalPages: number;
 }
+
+
+export interface CourseFilters {
+  search?: string;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  languages?: string[];
+  levels?: string[];
+  page?: number;
+  limit?: number;
+}

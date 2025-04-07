@@ -3,6 +3,7 @@ import { CartRepository } from './repositories/cart/cart.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from 'src/instructors/courses/course.schema';
 import { Model, Types } from 'mongoose';
+import { MESSAGES } from 'src/common/constants/messages.constants';
 
 @Injectable()
 export class CartService {
@@ -25,7 +26,7 @@ export class CartService {
         const course=await this.courseModel.findById(courseId)
         if(!course){
             console.log('Course not found:', courseId)
-            throw new Error('Course not found')
+            throw new Error(MESSAGES.COURSE.NOT_FOUND)
         }
         let cart=await this.cartRepository.findByUser(userId)
         if(!cart){
@@ -46,7 +47,7 @@ export class CartService {
 
         const rawCart=await this.cartRepository.cartModel.findOne({user:userId})
         if(!rawCart){
-            throw new Error('Cart not found')
+            throw new Error(MESSAGES.CART.NOT_FOUND)
         }
 
         
@@ -62,7 +63,7 @@ export class CartService {
         });
         if(courseExists){
             console.log('Course already in cart:', courseId);
-            throw new BadRequestException('Course already in cart')
+            throw new BadRequestException(MESSAGES.CART.ALREADY_IN_CART)
         }
         console.log('Adding item to cart via repository');
         const updatedCart=await this.cartRepository.addItem(userId,courseId)

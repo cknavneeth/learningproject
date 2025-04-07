@@ -2,6 +2,7 @@ import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/commo
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction, Request, Response } from 'express';
 import { InstructorsService } from 'src/instructors/instructors.service';
+import { HttpStatusCode } from 'src/shared/status-code.enum';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -28,7 +29,7 @@ export class BlockeduserMiddleware implements NestMiddleware {
           if(req.url.includes('/student')){
             const user=await this.userService.findByEmail(decoded.email)
             if(user?.isBlocked){
-              return res.status(401).json({
+              return res.status(HttpStatusCode.UNAUTHORIZED).json({
                 message:'Your account has been blocked',
                 isBlocked:true,
                 statusCode:401
@@ -37,7 +38,7 @@ export class BlockeduserMiddleware implements NestMiddleware {
           }else if(req.url.includes('/instructor')){
             const instructor=await this.instructorService.findByEmail(decoded.emailaddress)
             if(instructor?.isBlocked){
-              return res.status(401).json({
+              return res.status(HttpStatusCode.UNAUTHORIZED).json({
                 message:'Your account has been blocked',
                 isBlocked:true,
                 statusCode:401
@@ -51,7 +52,7 @@ export class BlockeduserMiddleware implements NestMiddleware {
           throw new UnauthorizedException({
             message: 'Your account has been blocked',
             isBlocked: true,
-            statusCode: 401
+            statusCode: HttpStatusCode.UNAUTHORIZED
           })
         }
     }
