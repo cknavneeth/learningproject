@@ -18,6 +18,7 @@
     <mat-form-field class="w-full">
       <mat-label>Course Description</mat-label>
       <textarea matInput formControlName="description" rows="4"></textarea>
+      <mat-error *ngIf="detailsForm.get('description')?.errors?.['required']">Description is required</mat-error>
     </mat-form-field>
 
 
@@ -26,6 +27,7 @@
       <div *ngFor="let audience of targetAudience.controls; let i=index" class="flex gap-2">
         <mat-form-field class="flex-1">
           <input matInput [formControlName]="i" placeholder="Enter target audience">
+          <mat-error *ngIf="targetAudience.controls[i].errors?.['required']">This field is required</mat-error>
         </mat-form-field>
         <button type="button" mat-icon-button color="warn" (click)="removeTargetAudience(i)">
           <mat-icon>delete</mat-icon>
@@ -44,6 +46,7 @@
       <div *ngFor="let req of courseRequirements.controls; let i=index" class="flex gap-2">
         <mat-form-field class="flex-1">
           <input matInput [formControlName]="i" placeholder="Enter requirement">
+          <mat-error *ngIf="courseRequirements.controls[i].errors?.['required']">This field is required</mat-error>
         </mat-form-field>
         <button type="button" mat-icon-button color="warn" (click)="removeCourseRequirement(i)">
           <mat-icon>delete</mat-icon>

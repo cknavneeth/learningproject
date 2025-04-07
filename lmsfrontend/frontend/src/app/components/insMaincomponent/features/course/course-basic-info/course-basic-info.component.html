@@ -3,6 +3,8 @@
       <mat-form-field class="w-full">
         <mat-label>Course Title</mat-label>
         <input matInput formControlName="title" placeholder="Enter course title">
+        <mat-error *ngIf="basicInfoForm.get('title')?.errors?.['required']">Title is required</mat-error>
+        <mat-error *ngIf="basicInfoForm.get('title')?.errors?.['minlength']">Title must be at least 5 characters</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
@@ -12,45 +14,48 @@
               {{category}}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+          <mat-error *ngIf="basicInfoForm.get('category')?.errors?.['required']">Category is required</mat-error>
+      </mat-form-field>
 
-
-        <mat-form-field class="w-full">
+      <mat-form-field class="w-full">
           <mat-label>Course Topic</mat-label>
           <input matInput formControlName="courseTopic" placeholder="Enter course topic">
-        </mat-form-field>
+          <mat-error *ngIf="basicInfoForm.get('courseTopic')?.errors?.['required']">Course topic is required</mat-error>
+      </mat-form-field>
 
-
-        <mat-form-field class="w-full">
+      <mat-form-field class="w-full">
           <mat-label>Price (USD)</mat-label>
           <input matInput type="number" formControlName="price" placeholder="Enter course price">
-        </mat-form-field>
+          <mat-error *ngIf="basicInfoForm.get('price')?.errors?.['required']">Price is required</mat-error>
+          <mat-error *ngIf="basicInfoForm.get('price')?.errors?.['min']">Price cannot be negative</mat-error>
+      </mat-form-field>
 
-
-        <mat-form-field class="w-full">
+      <mat-form-field class="w-full">
           <mat-label>Language</mat-label>
           <mat-select formControlName="courseLanguage">
             <mat-option *ngFor="let language of languages" [value]="language">
               {{language}}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+          <mat-error *ngIf="basicInfoForm.get('courseLanguage')?.errors?.['required']">Language is required</mat-error>
+      </mat-form-field>
 
-
-        <mat-form-field class="w-full">
+      <mat-form-field class="w-full">
           <mat-label>Duration (hours)</mat-label>
           <input matInput type="number" formControlName="duration" placeholder="Enter course duration">
-        </mat-form-field>
+          <mat-error *ngIf="basicInfoForm.get('duration')?.errors?.['required']">Duration is required</mat-error>
+          <mat-error *ngIf="basicInfoForm.get('duration')?.errors?.['min']">Duration cannot be negative</mat-error>
+      </mat-form-field>
 
-
-        <mat-form-field class="w-full">
+      <mat-form-field class="w-full">
           <mat-label>Level</mat-label>
           <mat-select formControlName="courseLevel">
             <mat-option *ngFor="let level of levels" [value]="level">
               {{level}}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+          <mat-error *ngIf="basicInfoForm.get('courseLevel')?.errors?.['required']">Course level is required</mat-error>
+      </mat-form-field>
 
 
         <div class="flex justify-end">

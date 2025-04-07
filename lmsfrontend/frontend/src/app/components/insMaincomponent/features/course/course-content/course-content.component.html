@@ -13,11 +13,13 @@
         <mat-form-field class="w-full">
           <mat-label>Section Title</mat-label>
           <input matInput formControlName="title" placeholder="Enter section title">
+          <mat-error *ngIf="sections.controls[i].get('title')?.errors?.['required']">Title is required</mat-error>
         </mat-form-field>
 
         <mat-form-field class="w-full">
           <mat-label>Description</mat-label>
           <textarea matInput formControlName="description" rows="3"></textarea>
+          <mat-error *ngIf="sections.controls[i].get('description')?.errors?.['required']">Description is required</mat-error>
         </mat-form-field>
 
         <div class="mb-4">
@@ -39,11 +41,17 @@
           <span *ngIf="section.get('videoUrl')?.value" class="ml-2 text-green-600">
             Video uploaded successfully
           </span>
+
+          <div *ngIf="sections.controls[i].get('videoUrl')?.errors?.['required']" class="text-red-500 mt-1">
+            Video is required
+          </div>
         </div>
 
         <mat-form-field class="w-full">
           <mat-label>Duration (minutes)</mat-label>
           <input matInput type="number" formControlName="duration">
+          <mat-error *ngIf="sections.controls[i].get('duration')?.errors?.['required']">Duration is required</mat-error>
+          <mat-error *ngIf="sections.controls[i].get('duration')?.errors?.['min']">Duration must be greater than 0</mat-error>
         </mat-form-field>
 
         <div [formArrayName]="'resources'" class="mt-4">
@@ -53,6 +61,7 @@
             <mat-form-field class="flex-1">
               <mat-label>Resource Title</mat-label>
               <input matInput formControlName="title">
+              <mat-error *ngIf="getResources(i).controls[j].get('title')?.errors?.['required']">Title is required</mat-error>
             </mat-form-field>
             
             <input type="file" 

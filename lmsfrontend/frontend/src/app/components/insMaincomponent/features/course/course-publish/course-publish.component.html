@@ -1,99 +1,131 @@
-<div class="max-w-4xl mx-auto p-6">
-  <h2 class="text-2xl font-bold mb-6">Review Your Course</h2>
+<div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
+        Final Review Before Publishing
+      </h2>
+      <p class="mt-2 text-gray-400">Review all details of your course before making it live</p>
+    </div>
 
-  <div *ngIf="courseData">
-    <mat-card class="mb-6">
-      <mat-card-header>
-        <mat-card-title>Basic Information</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="p-4">
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <p class="font-semibold">Title:</p>
-            <p>{{ courseData.title }}</p>
+    <div *ngIf="courseData" class="space-y-8">
+      <!-- Basic Information Card -->
+      <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+        <div class="px-6 py-4 bg-gradient-to-r from-purple-800 to-indigo-800">
+          <h3 class="text-xl font-bold text-white">Basic Information</h3>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <p class="text-gray-400 text-sm">Course Title</p>
+            <p class="text-white font-medium">{{ courseData.title }}</p>
           </div>
-          <div>
-            <p class="font-semibold">Category:</p>
-            <p>{{ courseData.category }}</p>
+          <div class="space-y-2">
+            <p class="text-gray-400 text-sm">Category</p>
+            <p class="text-white font-medium">{{ courseData.category }}</p>
           </div>
-          <div>
-            <p class="font-semibold">Price:</p>
-            <p>{{ courseData.price | currency }}</p>
+          <div class="space-y-2">
+            <p class="text-gray-400 text-sm">Price</p>
+            <p class="text-white font-medium">{{ courseData.price | currency }}</p>
           </div>
-          <div>
-            <p class="font-semibold">Language:</p>
-            <p>{{ courseData.courseLanguage }}</p>
+          <div class="space-y-2">
+            <p class="text-gray-400 text-sm">Language</p>
+            <p class="text-white font-medium">{{ courseData.courseLanguage }}</p>
           </div>
-          <div>
-            <p class="font-semibold">Level:</p>
-            <p>{{ courseData.courseLevel }}</p>
+          <div class="space-y-2">
+            <p class="text-gray-400 text-sm">Level</p>
+            <p class="text-white font-medium">{{ courseData.courseLevel }}</p>
           </div>
-          <div>
-            <p class="font-semibold">Total Duration:</p>
-            <p>{{ courseData.duration }} minutes</p>
+          <div class="space-y-2">
+            <p class="text-gray-400 text-sm">Duration</p>
+            <p class="text-white font-medium">{{ courseData.duration }} minutes</p>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
 
-    <mat-card class="mb-6">
-      <mat-card-header>
-        <mat-card-title>Course Details</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="p-4">
-        <div class="mb-4">
-          <p class="font-semibold">Description:</p>
-          <p>{{ courseData.description }}</p>
+      <!-- Course Details Card -->
+      <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+        <div class="px-6 py-4 bg-gradient-to-r from-pink-800 to-rose-800">
+          <h3 class="text-xl font-bold text-white">Course Details</h3>
         </div>
+        <div class="p-6 space-y-6">
+          <div>
+            <p class="text-gray-400 text-sm mb-2">Description</p>
+            <p class="text-white">{{ courseData.description }}</p>
+          </div>
 
-        <div class="mb-4">
-          <p class="font-semibold">Target Audience:</p>
-          <ul class="list-disc ml-6">
-            <li *ngFor="let audience of courseData.targetAudience">{{ audience }}</li>
-          </ul>
-        </div>
+          <div>
+            <p class="text-gray-400 text-sm mb-3">Target Audience</p>
+            <ul class="space-y-2">
+              <li *ngFor="let audience of courseData.targetAudience" 
+                  class="flex items-center text-white">
+                <span class="h-2 w-2 rounded-full bg-purple-500 mr-3"></span>
+                {{ audience }}
+              </li>
+            </ul>
+          </div>
 
-        <div>
-          <p class="font-semibold">Requirements:</p>
-          <ul class="list-disc ml-6">
-            <li *ngFor="let requirement of courseData.courseRequirements">{{ requirement }}</li>
-          </ul>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card class="mb-6">
-      <mat-card-header>
-        <mat-card-title>Course Content</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="p-4">
-        <div *ngFor="let section of courseData.sections" class="mb-4">
-          <h3 class="text-lg font-semibold">Section {{ section.order }}: {{ section.title }}</h3>
-          <p class="text-gray-600">{{ section.description }}</p>
-          <p class="text-sm">Duration: {{ section.duration }} minutes</p>
-          
-          <div *ngIf="section.resources?.length" class="mt-2">
-            <p class="font-semibold">Resources:</p>
-            <ul class="list-disc ml-6">
-              <li *ngFor="let resource of section.resources">{{ resource.title }}</li>
+          <div>
+            <p class="text-gray-400 text-sm mb-3">Requirements</p>
+            <ul class="space-y-2">
+              <li *ngFor="let requirement of courseData.courseRequirements" 
+                  class="flex items-center text-white">
+                <span class="h-2 w-2 rounded-full bg-pink-500 mr-3"></span>
+                {{ requirement }}
+              </li>
             </ul>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
 
-    <div class="flex justify-between mt-6">
-      <button mat-button color="primary" (click)="onPrevious()">
-        Back
-      </button>
-      <button mat-raised-button color="primary" (click)="onPublish()">
-        Publish Course
-      </button>
+      <!-- Course Content Card -->
+      <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+        <div class="px-6 py-4 bg-gradient-to-r from-indigo-800 to-blue-800">
+          <h3 class="text-xl font-bold text-white">Course Content</h3>
+        </div>
+        <div class="p-6">
+          <div class="space-y-6">
+            <div *ngFor="let section of courseData.sections" 
+                 class="border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition-colors">
+              <h4 class="text-lg font-medium text-white mb-2">
+                Section {{ section.order }}: {{ section.title }}
+              </h4>
+              <p class="text-gray-400 mb-2">{{ section.description }}</p>
+              <p class="text-sm text-gray-500">Duration: {{ section.duration }} minutes</p>
+              
+              <div *ngIf="section.resources?.length" class="mt-4">
+                <p class="text-gray-400 text-sm mb-2">Resources</p>
+                <ul class="space-y-1">
+                  <li *ngFor="let resource of section.resources" 
+                      class="flex items-center text-gray-300">
+                    <span class="h-1.5 w-1.5 rounded-full bg-blue-500 mr-2"></span>
+                    {{ resource.title }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-between pt-6">
+        <button mat-button 
+                class="px-6 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition-colors"
+                (click)="onPrevious()">
+          Back to Edit
+        </button>
+        <button mat-raised-button 
+                class="px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all transform hover:-translate-y-0.5"
+                (click)="onPublish()">
+          Publish Course
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Show message if no course data -->
-  <div *ngIf="!courseData" class="text-center py-8">
-    <p>No course data available for review.</p>
+    <!-- No Data Message -->
+    <div *ngIf="!courseData" 
+         class="text-center py-12 bg-gray-800 rounded-xl">
+      <p class="text-gray-400">No course data available for review.</p>
+    </div>
   </div>
 </div>

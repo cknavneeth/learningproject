@@ -30,10 +30,9 @@ export class WishlistService {
         console.log('course kitti')
         try {
             const wishlist = await this.wishlistRepository.findByUser(userId)
-            console.log('Wishlist query result:', wishlist); // Add debug log
+            console.log('Wishlist query result:', wishlist); 
     
             if (!wishlist) {
-                // If wishlist doesn't exist, create one
                 console.log('Creating new wishlist for user:', userId);
                 const newWishlist = await this.wishlistRepository.create(userId);
                 return this.wishlistRepository.addToWishlist(userId, courseId);
