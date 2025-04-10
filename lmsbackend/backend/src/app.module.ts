@@ -21,6 +21,10 @@ import { CartModule } from './cart/cart.module';
 import { WishlistController } from './wishlist/wishlist.controller';
 import { WishlistService } from './wishlist/wishlist.service';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { CategoryController } from './category/controller/category.controller';
+import { CategoryService } from './category/service/category.service';
+import { CategoryRepository } from './category/repository/category.repository';
+import { CategoryModule } from './category/category.module';
 
 console.log(process.env.MONGO_URI)
 @Module({
@@ -36,9 +40,10 @@ console.log(process.env.MONGO_URI)
     }),
     CloudinaryModule,
     CartModule,
-    WishlistModule
+    WishlistModule,
+    CategoryModule
   ],
-  controllers: [AppController, CartController],
+  controllers: [AppController, CartController, ],
   providers: [AppService,GuardGuard, CloudinaryService, EmailService, ],
 })
 export class AppModule implements NestModule{
