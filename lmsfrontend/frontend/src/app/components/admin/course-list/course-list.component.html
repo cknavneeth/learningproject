@@ -65,7 +65,7 @@
                         'bg-green-100 text-green-800': course.instructor?.isVerified,
                         'bg-yellow-100 text-yellow-800': !course.instructor?.isVerified
                     }">
-                        {{course.instructor?.isVerified ? 'Verified' : 'Unverified'}}
+                    {{course.instructor?.isApproved ? 'Approved' : 'Not Approved'}}
                     </span>
                 </div>
 
@@ -75,11 +75,11 @@
                             class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         Review
                     </button>
-                    <button *ngIf="course.status === 'pending_review'"
+                    <!-- <button *ngIf="course.status === 'pending_review'"
                             (click)="viewCourseDetails(course._id)"
                             class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
                         Verify
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>

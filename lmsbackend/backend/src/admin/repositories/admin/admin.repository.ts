@@ -14,7 +14,7 @@ export class AdminRepository implements IAdminRepository{
 
         const [courses,total]=await Promise.all([
             this.courseModel.find()
-            .populate('instructor','name email')
+            .populate('instructor','name email isApproved')
             .sort({createdAt:-1})
             .skip(skip)
             .limit(limit)

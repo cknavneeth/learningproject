@@ -63,6 +63,7 @@ export class CourseListComponent implements OnInit{
       response=>{
         console.log('coursinte response',response)
         this.courses=response.courses
+        console.log('Course with instructor:', this.courses[0]);
 
         this.filteredCourses=[...this.courses]
         this.totalItems = response.pagination.total;

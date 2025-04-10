@@ -7,7 +7,7 @@ import { user, userSchema } from 'src/users/users.schema';
 import { UsersModule } from 'src/users/users.module';
 import { instructor, instructorSchema } from 'src/instructors/instructor.schema';
 import { InstructorsModule } from 'src/instructors/instructors.module';
-import { CategoryModule } from './category/category.module';
+import { CategoryModule } from '../category/category.module';
 import { AdminRepository } from './repositories/admin/admin.repository';
 import { Course, CourseSchema } from 'src/instructors/courses/course.schema';
 import { EmailModule } from 'src/shared/email/email.module';
