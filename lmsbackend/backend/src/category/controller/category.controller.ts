@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { ICategoryService } from '../service/interfaces/category.service.interface';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { CATEGORY_SERVICE } from '../constants/constant';
 import { updateCategoryDto } from '../dto/update-category.dto';
 
-@Controller('category')
+@Controller('admin/category')
 export class CategoryController {
     constructor(@Inject(CATEGORY_SERVICE) private readonly categoryService:ICategoryService){}
 
@@ -15,8 +15,11 @@ export class CategoryController {
 
    
     @Get()
-    async getAllCategories(){
-        return this.categoryService.getAllCategories()
+    async getAllCategories(
+        @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,
+        @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number
+    ){
+        return this.categoryService.getAllCategories(page,limit)
     }
 
 

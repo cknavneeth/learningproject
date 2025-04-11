@@ -12,8 +12,7 @@ export class Category{
     @Prop({required:true})
     description:string
 
-    @Prop({required:true})
-    imageUrl:string
+   
 }
 
 export const CategorySchema=SchemaFactory.createForClass(Category)

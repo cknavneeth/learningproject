@@ -14,8 +14,31 @@ export class CategoryRepository implements ICategoryRepository{
         return category.save()
     }
 
-    async findAll():Promise<CategoryDocument[]>{
-        return this.categoryModel.find().exec()
+    async findAll(page:number=1,limit:number=10):Promise<{
+       categories: CategoryDocument[],
+       total:number,
+       page:number,
+       limit:number,
+       totalPages:number
+
+    }>{
+        const skip=(page-1)*limit
+
+        const [categories,total]=await Promise.all([
+            this.categoryModel.find()
+            .sort({createdAt:-1})
+            .skip(skip)
+            .limit(limit)
+            .exec(),
+            this.categoryModel.countDocuments().exec()
+        ])
+        return {
+            categories,
+            total,
+            page,
+            limit,
+            totalPages:Math.ceil(total/limit)
+        }
     }
 
     async findById(id:string):Promise<CategoryDocument>{
@@ -26,11 +49,8 @@ export class CategoryRepository implements ICategoryRepository{
         return category
     }
 
-    async findByName(name:string):Promise<CategoryDocument>{
+    async findByName(name:string):Promise<CategoryDocument|null>{
           const category=await this.categoryModel.findOne({name}).exec()
-          if(!category){
-            throw new Error('Category not found')
-          }
           return category
     }
 

@@ -19,8 +19,25 @@ export class CategoryService implements ICategoryService{
          return this.categoryRepository.create(createCategoryDto)
     }
 
-    async getAllCategories():Promise<Category[]>{
-        return this.categoryRepository.findAll()
+    async getAllCategories(page:number=1,limit:number=10):Promise<{
+        categories:Category[],
+        pagination:{
+            total:number,
+            page:number,
+            limit:number,
+            totalPages:number
+        }
+    }>{
+        const result=await this.categoryRepository.findAll(page,limit)
+        return {
+            categories:result.categories,
+            pagination:{
+                total:result.total,
+                page:result.page,
+                limit:result.limit,
+                totalPages:result.totalPages
+            }
+        }
     }
 
     async getCategoryById(id:string):Promise<Category>{

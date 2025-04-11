@@ -34,6 +34,7 @@ import { StudentcourseComponent } from './components/studentmain/studentcourse/s
 import { CourseDetailComponent } from './components/studentmain/course-detail/course-detail.component';
 import { CartComponent } from './components/studentmain/cart/cart.component';
 import { WishlistComponent } from './components/studentmain/wishlist/wishlist.component';
+import { CategoryManagementComponent } from './components/admin/category-management/category-management.component';
 
 export const routes: Routes = [
     {
@@ -217,6 +218,10 @@ export const routes: Routes = [
             {
                 path:'courses',
                 component:CourseListComponent
+            },
+            {
+                path:'category',
+                component:CategoryManagementComponent
             }
         ]
     }
