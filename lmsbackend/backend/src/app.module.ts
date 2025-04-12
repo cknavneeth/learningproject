@@ -25,6 +25,11 @@ import { CategoryController } from './category/controller/category.controller';
 import { CategoryService } from './category/service/category.service';
 import { CategoryRepository } from './category/repository/category.repository';
 import { CategoryModule } from './category/category.module';
+import { CouponController } from './coupon/controller/coupon.controller';
+import { CouponRepository } from './coupon/repository/coupon.repository';
+import { CouponService } from './coupon/service/coupon.service';
+import { CouponModule } from './coupon/coupon.module';
+
 
 console.log(process.env.MONGO_URI)
 @Module({
@@ -41,10 +46,11 @@ console.log(process.env.MONGO_URI)
     CloudinaryModule,
     CartModule,
     WishlistModule,
-    CategoryModule
+    CategoryModule,
+    CouponModule
   ],
-  controllers: [AppController, CartController, ],
-  providers: [AppService,GuardGuard, CloudinaryService, EmailService, ],
+  controllers: [AppController, CartController, CouponController, ],
+  providers: [AppService,GuardGuard, CloudinaryService, EmailService, CouponService, ],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
