@@ -32,6 +32,8 @@ export class CourseContentComponent implements OnInit{
 
   isUploading:{ [key:number]:boolean}={}
 
+  uploadProgress:number[]=[]
+
 
   contentForm:FormGroup;
 
@@ -108,8 +110,16 @@ export class CourseContentComponent implements OnInit{
      const file=event.target.files[0]
      if(file){
       this.isUploading[sectionIndex]=true
+      this.uploadProgress[sectionIndex]=0
+
+      const interval = setInterval(() => {
+        if (this.uploadProgress[sectionIndex] < 95) {
+          this.uploadProgress[sectionIndex] += 5;
+        }
+      }, 200);
         try {
           const response=await this.courseService.uploadVideo(file).toPromise()
+          this.uploadProgress[sectionIndex] = 100;
           if(response?.videoUrl){
             this.sections.at(sectionIndex).patchValue({videoUrl:response.videoUrl})
           }

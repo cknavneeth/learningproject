@@ -32,10 +32,19 @@
             {{ isUploading[i] ? 'Uploading...' : 'Upload Video' }}
           </button>
 
-          <mat-spinner *ngIf="isUploading[i]" 
-          diameter="20" 
-          class="inline-block ml-2">
-</mat-spinner>
+          <!--replace spinner with progress bar-->
+          <div *ngIf="isUploading[i]" class="mt-2">
+            <div class="flex items-center gap-2">
+              <div class="flex-grow h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-600 transition-all duration-300"
+                     [ngStyle]="{width: uploadProgress[i] + '%'}">
+                </div>
+              </div>
+              <span class="text-sm text-gray-600 min-w-[48px]">
+                {{ uploadProgress[i] }}%
+              </span>
+            </div>
+          </div>
 
 
           <span *ngIf="section.get('videoUrl')?.value" class="ml-2 text-green-600">

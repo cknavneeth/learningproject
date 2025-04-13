@@ -23,14 +23,21 @@ export class CoursesController {
     @Post('upload-video')
     @UseInterceptors(FileInterceptor('video',{
         storage: memoryStorage(),
+        limits: {
+            fileSize: 104857600 // 100MB
+        },
         fileFilter: (req, file, cb) => {
             if (!file.mimetype.includes('video')) {
                 return cb(new BadRequestException('Only video files are allowed!'), false);
             }
+            
+            // Additional video format validation if needed
+            const allowedMimeTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+            if (!allowedMimeTypes.includes(file.mimetype)) {
+                return cb(new BadRequestException('Invalid video format. Supported formats: MP4, WebM, OGG'), false);
+            }
+            
             cb(null, true);
-        },
-        limits: {
-            fileSize: 1024 * 1024 * 100 // 100 MB
         }
     }))
     async uploadVideo(@UploadedFile() file:Express.Multer.File){
