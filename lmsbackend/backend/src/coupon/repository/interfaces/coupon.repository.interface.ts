@@ -20,4 +20,6 @@ export interface ICouponRepository{
     delete(id:string):Promise<CouponDocument>
 
     findByCode(code:string):Promise<CouponDocument|null>
+
+    findByCodeExcludingId(code: string, excludeId: string): Promise<CouponDocument | null>;
 }

@@ -85,4 +85,11 @@ export class CouponRepository implements ICouponRepository{
     }
 
 
+    async findByCodeExcludingId(code: string, excludeId: string): Promise<CouponDocument | null> {
+        return this.couponModel.findOne({
+            code,
+            _id: { $ne: new Types.ObjectId(excludeId) }
+        });
+    }
+
 }

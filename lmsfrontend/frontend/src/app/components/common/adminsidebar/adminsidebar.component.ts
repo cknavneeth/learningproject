@@ -4,11 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { SidebarService } from '../../../services/sidebar.service';
 import { AdminserviceService } from '../../../services/adminservice.service';
 import { TokenserviceService } from '../../../services/tokenservice.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-adminsidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,MatIconModule],
   templateUrl: './adminsidebar.component.html',
   styleUrl: './adminsidebar.component.scss'
 })

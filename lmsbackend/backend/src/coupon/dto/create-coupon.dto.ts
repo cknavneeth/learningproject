@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
+import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateIf } from "class-validator";
 import { CouponType } from "../schema/coupon.schema";
 import { Type } from 'class-transformer';
 
@@ -40,6 +40,9 @@ export class CreateCouponDto{
     @IsOptional()
     @IsNumber()
     @Min(0)
+    @ValidateIf((o) => o.minPurchaseAmount > o.maxDiscountAmount, {
+        message: 'Maximum discount amount must be less than minimum purchase amount'
+    })
     maxDiscountAmount?: number;
 
     @IsOptional()

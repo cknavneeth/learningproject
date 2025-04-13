@@ -1,6 +1,6 @@
 import { CreateCouponDto } from "src/coupon/dto/create-coupon.dto";
 import { UpdateCouponDto } from "src/coupon/dto/update-coupon.dto";
-import { Coupon } from "src/coupon/schema/coupon.schema";
+import { Coupon, CouponDocument } from "src/coupon/schema/coupon.schema";
 
 export interface ICouponService{
     createCoupon(createCouponDto:CreateCouponDto):Promise<Coupon>
@@ -17,4 +17,5 @@ export interface ICouponService{
     getCouponById(id:string):Promise<Coupon>
     updateCoupon(id:string,updateCouponDto:UpdateCouponDto):Promise<Coupon>
     deleteCoupon(id:string):Promise<Coupon>
+    
 }

@@ -36,4 +36,10 @@ export class CouponController {
     ){
         return this.couponService.deleteCoupon(id)
     }
+
+
+    @Get(':id')
+    async getCouponById(@Param('id') id:string){
+        return this.couponService.getCouponById(id)
+    }
 }

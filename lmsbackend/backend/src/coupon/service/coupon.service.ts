@@ -42,7 +42,7 @@ export class CouponService implements ICouponService {
 
     async updateCoupon(id:string,updateCouponDto:UpdateCouponDto):Promise<Coupon>{
         if(updateCouponDto.code){
-            const existingCoupon=await this.couponRepository.findByCode(updateCouponDto.code)
+            const existingCoupon=await this.couponRepository.findByCodeExcludingId(updateCouponDto.code,id)
             if(existingCoupon &&existingCoupon._id.toString() !==id){
                 throw new ConflictException('Coupon code already exists')
             }

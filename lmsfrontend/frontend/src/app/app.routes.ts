@@ -35,6 +35,8 @@ import { CourseDetailComponent } from './components/studentmain/course-detail/co
 import { CartComponent } from './components/studentmain/cart/cart.component';
 import { WishlistComponent } from './components/studentmain/wishlist/wishlist.component';
 import { CategoryManagementComponent } from './components/admin/category-management/category-management.component';
+import { AddcouponComponent } from './components/admin/addcoupon/addcoupon.component';
+import { ListcouponComponent } from './components/admin/listcoupon/listcoupon.component';
 
 export const routes: Routes = [
     {
@@ -222,6 +224,14 @@ export const routes: Routes = [
             {
                 path:'category',
                 component:CategoryManagementComponent
+            },
+            {
+                path:'coupons/add',
+                component:AddcouponComponent
+            },
+            {
+                path:'coupons',
+                component:ListcouponComponent
             }
         ]
     }
