@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddCourseOfferComponent } from '../add-course-offer/add-course-offer.component';
+import { ConfirmationcomponentComponent } from '../../common/confirmationcomponent/confirmationcomponent.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -28,7 +31,7 @@ interface StatusTexts {
 
 @Component({
   selector: 'app-course-list',
-  imports: [CommonModule,MatDialogModule,FormsModule,AddCourseOfferComponent],
+  imports: [CommonModule,MatDialogModule,FormsModule,AddCourseOfferComponent,MatIconModule , MatTooltipModule ],
   templateUrl: './course-list.component.html',
   styleUrl: './course-list.component.scss'
 })
@@ -220,26 +223,59 @@ export class CourseListComponent implements OnInit{
 
 
 
-  addOffer(course: any) {
-    const dialogRef = this.dialogue.open(AddCourseOfferComponent, {
-      width: '500px',
-      data: {
-        courseId: course._id,
-        courseTitle: course.title,
-        price: course.price
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loadCourses(); // Refresh the course list to show updated prices
-        this.snackBar.open('Offer added successfully', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top'
+  manageOffer(course: any) {
+    if (course.offer) {
+        // If offer exists, show confirmation dialog for removal
+        const dialogRef = this.dialogue.open(ConfirmationcomponentComponent, {
+            data: {
+                title: 'Remove Offer',
+                message: `Are you sure you want to remove the ${course.offer.percentage}% offer from "${course.title}"?`
+            }
         });
-      }
-    });
-  }
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.adminService.removeCourseOffer(course._id).subscribe({
+                    next: () => {
+                        this.loadCourses();
+                        this.snackBar.open('Offer removed successfully', 'Close', {
+                            duration: 3000,
+                            horizontalPosition: 'right',
+                            verticalPosition: 'top'
+                        });
+                    },
+                    error: (error) => {
+                        this.snackBar.open(error.error.message || 'Failed to remove offer', 'Close', {
+                            duration: 3000,
+                            horizontalPosition: 'right',
+                            verticalPosition: 'top'
+                        });
+                    }
+                });
+            }
+        });
+    } else {
+        // If no offer exists, open dialog to add offer
+        const dialogRef = this.dialogue.open(AddCourseOfferComponent, {
+            width: '500px',
+            data: {
+                courseId: course._id,
+                courseTitle: course.title,
+                price: course.price
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadCourses();
+                this.snackBar.open('Offer added successfully', 'Close', {
+                    duration: 3000,
+                    horizontalPosition: 'right',
+                    verticalPosition: 'top'
+                });
+            }
+        });
+    }
+}
 
 }

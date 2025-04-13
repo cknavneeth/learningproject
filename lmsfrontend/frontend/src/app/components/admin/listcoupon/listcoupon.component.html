@@ -19,7 +19,7 @@
         <ng-container matColumnDef="value">
           <th mat-header-cell *matHeaderCellDef>Value</th>
           <td mat-cell *matCellDef="let coupon">
-            {{coupon.type === 'percentage' ? coupon.value + '%' : '$' + coupon.value}}
+            {{coupon.type === 'percentage' ? coupon.value + '%' : coupon.value +' '+ 'Rs'}}
           </td>
         </ng-container>
   

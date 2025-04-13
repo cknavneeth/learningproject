@@ -96,4 +96,21 @@ export class AdminRepository implements IAdminRepository{
     }
 
 
+
+    async removeCourseOffer(courseId:string):Promise<CourseDocument|null>{
+        if(!Types.ObjectId.isValid(courseId)){
+            throw new BadRequestException('invalid course id')
+        }
+
+        return this.courseModel.findByIdAndUpdate(
+            courseId,
+            {
+                $unset:{offer:''}
+            },
+            {new :true}
+        )
+        .populate('instructor')
+        .exec()
+    }
+
 }

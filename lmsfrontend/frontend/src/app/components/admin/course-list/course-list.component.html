@@ -85,10 +85,11 @@
                             class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         Review
                     </button>
-                    <button (click)="addOffer(course)"
-                    class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
-                Add Offer
-            </button>
+                    <button mat-icon-button
+                            [matTooltip]="course.offer ? 'Remove Offer' : 'Add Offer'"
+                            (click)="manageOffer(course)">
+                        <mat-icon>{{ course.offer ? 'local_offer_off' : 'local_offer' }}</mat-icon>
+                    </button>
                 </div>
             </div>
         </div>

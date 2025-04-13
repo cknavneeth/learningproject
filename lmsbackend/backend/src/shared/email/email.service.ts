@@ -121,6 +121,26 @@ export class EmailService {
         });
     }
 
+
+    async sendCourseRemovalNotification(email: string, courseName: string): Promise<void> {
+        await this.sendMail({
+            to: email,
+            subject: 'Course Offer Removed',
+            text: `The offer on your course "${courseName}" has been removed.`,
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">
+                    <h2 style="color: #333;">Course Offer Update</h2>
+                    <p style="color: #666;">The offer on your course</p>
+                    <p style="font-weight: bold; color: #4CAF50;">"${courseName}"</p>
+                    <p style="color: #666;">has been removed.</p>
+                    <div style="margin-top: 20px; padding: 15px; background-color: #fff; border-radius: 5px;">
+                        <p style="color: #666;">Your course has returned to its original price.</p>
+                    </div>
+                </div>
+            `
+        });
+    }
+
     private async sendMail(options: {
         to: string;
         subject: string;

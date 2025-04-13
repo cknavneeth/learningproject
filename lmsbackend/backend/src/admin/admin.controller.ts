@@ -1,7 +1,8 @@
 import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch,Query,
     DefaultValuePipe,
     ParseIntPipe, 
-    Post} from '@nestjs/common';
+    Post,
+    Delete} from '@nestjs/common';
 import { AdminService } from './admin.service';
 
 @Controller('auth/admin')
@@ -101,5 +102,17 @@ export class AdminController {
             throw new BadRequestException(error.message)
         }
 
+    }
+
+    @Delete('courses/:courseId/offer')
+    async removeCourseOffer(@Param('courseId') courseId:string){
+         try {
+            return await this.adminservice.removeCourseOffer(courseId)
+         } catch (error) {
+            if(error instanceof NotFoundException){
+                    throw error
+            }
+            throw new BadRequestException(error.message)
+         }
     }
 }

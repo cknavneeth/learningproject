@@ -83,4 +83,8 @@ export class AdminserviceService {
     return this.http.post<any>(`${this.apiurl}/courses/${courseId}/offer`, offerData);
   }
 
+  removeCourseOffer(courseId: string): Observable<any> {
+    return this.http.delete(`${this.apiurl}/courses/${courseId}/offer`);
+}
+
 }

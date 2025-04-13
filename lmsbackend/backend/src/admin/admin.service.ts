@@ -161,7 +161,7 @@ export class AdminService {
         const expectedDiscountPrice=Math.round((course.price-(course.price*(offerData.percentage/100)))*100)/100
 
         if(Math.abs(expectedDiscountPrice-offerData.discountPrice)>0.01){
-            throw new BadRequestException('invalid discounted price calsulation')
+            throw new BadRequestException('invalid discounted price calculation')
         }
 
         const updatedCourse=await this.adminRepository.addCourseOffer(courseId,offerData)
@@ -188,6 +188,39 @@ export class AdminService {
         // Continue with the operation even if email fails
     }
 
+        return updatedCourse
+    }
+
+
+
+
+
+    async removeCourseOffer(courseId:string){
+        const course=await this.adminRepository.getCourseById(courseId)
+
+        if(!course){
+            throw new NotFoundException('Course Not found')
+        }
+
+        if(!course.offer){
+            throw new BadRequestException('No offer exists for this course')
+        }
+
+        const updatedCourse=await this.adminRepository.removeCourseOffer(courseId)
+
+        if(!updatedCourse){
+            throw new BadRequestException('Failed to remove offer')
+        }
+
+        const instructor=updatedCourse.instructor as any
+
+        if(instructor?.emailaddress){
+            try {
+                await this.emailService.sendCourseRemovalNotification(instructor.emailaddress,updatedCourse.title)
+            } catch (error) {
+                console.error('error sending email notification',error)
+            }
+        }
         return updatedCourse
     }
 
