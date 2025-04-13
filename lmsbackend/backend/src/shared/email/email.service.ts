@@ -100,6 +100,27 @@ export class EmailService {
         });
     }
 
+
+
+    async sendCourseOfferNotification(email: string, courseName: string, discountPercentage: number): Promise<void> {
+        await this.sendMail({
+            to: email,
+            subject: 'New Offer Added to Your Course! 🎉',
+            text: `A ${discountPercentage}% discount has been added to your course "${courseName}".`,
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">
+                    <h2 style="color: #333;">New Offer Added! 🎉</h2>
+                    <p style="color: #666;">A discount has been added to your course</p>
+                    <p style="font-weight: bold; color: #4CAF50;">"${courseName}"</p>
+                    <div style="margin-top: 20px; padding: 15px; background-color: #fff; border-radius: 5px;">
+                        <p style="font-size: 24px; color: #ff6b6b; font-weight: bold;">${discountPercentage}% OFF</p>
+                        <p style="color: #666;">Your course is now available at a discounted price!</p>
+                    </div>
+                </div>
+            `
+        });
+    }
+
     private async sendMail(options: {
         to: string;
         subject: string;

@@ -1,6 +1,7 @@
 import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch,Query,
     DefaultValuePipe,
-    ParseIntPipe } from '@nestjs/common';
+    ParseIntPipe, 
+    Post} from '@nestjs/common';
 import { AdminService } from './admin.service';
 
 @Controller('auth/admin')
@@ -81,5 +82,24 @@ export class AdminController {
             }
             throw new BadRequestException('Failed to reject course')
         }
+    }
+
+
+
+    @Post('courses/:courseId/offer')
+    async addCourseOffer(
+        @Param('courseId') courseId:string,
+        @Body() offerData:{percentage:number; discountPrice:number}
+    ){
+
+        try {
+            return await this.adminservice.addCourseOffer(courseId,offerData)
+        } catch (error) {
+            if(error instanceof NotFoundException){
+                throw error
+            }
+            throw new BadRequestException(error.message)
+        }
+
     }
 }

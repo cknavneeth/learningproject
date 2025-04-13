@@ -55,6 +55,16 @@
                 <div class="flex flex-wrap gap-2 mb-3">
                     <span class="text-sm text-gray-600 dark:text-gray-400">Category: {{course.category}}</span>
                     <span class="text-sm font-bold text-gray-800 dark:text-white">Rs{{course.price}}</span>
+
+                    <ng-container *ngIf="course.offer">
+                        <span class="text-sm text-green-600">
+                            {{course.offer.percentage}}% OFF
+                        </span>
+                        <span class="text-sm text-gray-500 line-through">
+                            ₹{{course.originalPrice}}
+                        </span>
+                    </ng-container>
+                    
                 </div>
 
                 <!-- Instructor Status -->
@@ -75,11 +85,10 @@
                             class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         Review
                     </button>
-                    <!-- <button *ngIf="course.status === 'pending_review'"
-                            (click)="viewCourseDetails(course._id)"
-                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
-                        Verify
-                    </button> -->
+                    <button (click)="addOffer(course)"
+                    class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                Add Offer
+            </button>
                 </div>
             </div>
         </div>

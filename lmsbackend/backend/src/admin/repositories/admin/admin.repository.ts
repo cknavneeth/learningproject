@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Course, CourseDocument, CourseStatus } from 'src/instructors/courses/course.schema';
@@ -55,4 +55,45 @@ export class AdminRepository implements IAdminRepository{
         }
         return updateCourse
     }
+
+
+
+    //adding offer
+    async addCourseOffer(courseId:string,offerData:{percentage:number;discountPrice:number}):Promise<CourseDocument|null>{
+          if(!Types.ObjectId.isValid(courseId)){
+            throw new BadRequestException('Invalid course id')
+          }
+
+          return this.courseModel.findByIdAndUpdate(
+            courseId,
+            {
+                $set:{
+                    offer:{
+                        ...offerData,
+                        createdAt:new Date()
+                    }
+                }
+            },
+            {new :true}
+          )
+          .populate('instructor')
+          .exec()
+    }
+
+
+    async getCourseById(courseId: string): Promise<CourseDocument | null> {
+        if(!Types.ObjectId.isValid(courseId)){
+            throw new BadRequestException('invalid course id')
+        }
+
+        const course=await this.courseModel.findById(courseId)
+
+        if(!course){
+            throw new NotFoundException('Course not found')
+        }
+
+        return course
+    }
+
+
 }

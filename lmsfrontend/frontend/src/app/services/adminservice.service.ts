@@ -78,4 +78,9 @@ export class AdminserviceService {
     );
   }
 
+
+  addCourseOffer(courseId: string, offerData: { percentage: number; discountPrice: number }): Observable<any> {
+    return this.http.post<any>(`${this.apiurl}/courses/${courseId}/offer`, offerData);
+  }
+
 }

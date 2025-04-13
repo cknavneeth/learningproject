@@ -6,6 +6,7 @@ import { CoursedetailmodalComponent } from '../coursedetailmodal/coursedetailmod
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddCourseOfferComponent } from '../add-course-offer/add-course-offer.component';
 
 
 
@@ -27,7 +28,7 @@ interface StatusTexts {
 
 @Component({
   selector: 'app-course-list',
-  imports: [CommonModule,MatDialogModule,FormsModule],
+  imports: [CommonModule,MatDialogModule,FormsModule,AddCourseOfferComponent],
   templateUrl: './course-list.component.html',
   styleUrl: './course-list.component.scss'
 })
@@ -215,6 +216,30 @@ export class CourseListComponent implements OnInit{
       { length: endPage - startPage + 1 },
       (_, i) => startPage + i
     );
+  }
+
+
+
+  addOffer(course: any) {
+    const dialogRef = this.dialogue.open(AddCourseOfferComponent, {
+      width: '500px',
+      data: {
+        courseId: course._id,
+        courseTitle: course.title,
+        price: course.price
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadCourses(); // Refresh the course list to show updated prices
+        this.snackBar.open('Offer added successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      }
+    });
   }
 
 }

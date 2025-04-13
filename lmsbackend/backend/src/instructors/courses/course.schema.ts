@@ -11,8 +11,20 @@ export enum CourseStatus{
     REJECTED='rejected'
 }
 
+@Schema()
+export class Offer{
+    @Prop({required:true})
+    percentage:number
+
+    @Prop({required:true})
+    discountPrice:number
+
+    @Prop({default:Date.now})
+    createdAt:Date
+}
+
 @Schema({timestamps:true})
-export class Course{
+export class Course {
 
      _id: Types.ObjectId; 
 
@@ -90,6 +102,11 @@ export class Course{
 
     @Prop()
     approvedAt?:Date
+
+
+    @Prop({type:Offer})
+    offer:Offer
+
 
 }
 

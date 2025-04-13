@@ -143,5 +143,53 @@ export class AdminService {
     }
 
 
+    async addCourseOffer(courseId:string,offerData:{percentage:number;discountPrice:number}){
+        const course=await this.adminRepository.getCourseById(courseId)
+
+        if(!course){
+            throw new NotFoundException('Course not found')
+        }
+
+        if(course.offer){
+            throw new BadRequestException('course already has an offer')
+        }
+
+        if(offerData.percentage<1||offerData.percentage>99){
+            throw new BadRequestException('Discount percentage must be in between 1 and 99')
+        }
+
+        const expectedDiscountPrice=Math.round((course.price-(course.price*(offerData.percentage/100)))*100)/100
+
+        if(Math.abs(expectedDiscountPrice-offerData.discountPrice)>0.01){
+            throw new BadRequestException('invalid discounted price calsulation')
+        }
+
+        const updatedCourse=await this.adminRepository.addCourseOffer(courseId,offerData)
+        console.log(updatedCourse)
+        if(!updatedCourse){
+            throw new BadRequestException('failded to add course')
+        }
+
+        const instructorEmail = updatedCourse.instructor['emailaddress'] || updatedCourse.instructor['email'];
+    
+        if (!instructorEmail) {
+            console.error('Instructor details:', instructor);
+            throw new BadRequestException('Instructor email not found');
+        }
+
+    try {
+        await this.emailService.sendCourseOfferNotification(
+            instructorEmail,
+            updatedCourse.title,
+            offerData.percentage
+        );
+    } catch (error) {
+        console.error('Error sending email notification:', error);
+        // Continue with the operation even if email fails
+    }
+
+        return updatedCourse
+    }
+
 
 }
