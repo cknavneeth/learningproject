@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthserviceService } from '../../../services/authservice.service';
 import { InstructorauthserviceService } from '../../../services/instructorauthservice.service';
+import { passwordMatchValidator } from '../../../validators/password-match.validator';
 
 @Component({
   selector: 'app-resetpassword',
@@ -17,11 +18,15 @@ export class ResetpasswordComponent {
    errormessage:string=''
    token:string=''
    showPassword: boolean = false;
+   showConfirmPassword:boolean=false
    userType:'student'|'instructor'='student'
 
    constructor(private fb:FormBuilder,private route:ActivatedRoute,private readonly authservice:AuthserviceService,private router:Router,private instructorservice:InstructorauthserviceService){
     this.resetpasswordform=this.fb.group({
       password:['',[Validators.required,Validators.minLength(6),Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/)]],
+      confirmpassword:['',[Validators.required]]
+    },{
+      validator:passwordMatchValidator
     })
 
    }
@@ -124,4 +129,22 @@ export class ResetpasswordComponent {
     return '';
   }
 
+
+
+
+  get confirmPasswordErrors() {
+    const confirmPasswordControl = this.resetpasswordform.get('confirmpassword');
+    if (confirmPasswordControl?.hasError('required')) {
+      return 'Confirm password is required';
+    }
+    if (this.resetpasswordform.hasError('passwordMismatch')) {  // Check form-level error
+      return 'Passwords do not match';
+    }
+    return '';
+}
+
+
+   toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
+   }
 }

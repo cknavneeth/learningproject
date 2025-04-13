@@ -231,7 +231,15 @@ export class AuthService {
             from:process.env.EMAIL_USER,
             to:email,
             subject:'Password Reset',
-            text:`click on the link to reset your password ${resetlink} ONLY valid for 15 minutes remember`
+            text:`click on the link to reset your password ${resetlink} ONLY valid for 15 minutes remember`,
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>Password Reset Request</h2>
+                    <p>Click the button below to reset your password:</p>
+                    <a href="${resetlink}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+                    <p style="color: red; margin-top: 20px;">Link is ONLY valid for 15 minutes</p>
+                </div>
+            `
         })
 
         return {message:'reset link sented successfully'}
