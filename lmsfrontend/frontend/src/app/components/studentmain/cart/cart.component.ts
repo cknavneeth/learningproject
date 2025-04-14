@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { ConfirmationcomponentComponent } from '../../common/confirmationcomponent/confirmationcomponent.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -27,7 +28,7 @@ export class CartComponent implements OnInit{
    totalAmount:number=0
 
 
-   constructor(private cartService:CartService,private snackBar:MatSnackBar,private dialog: MatDialog){}
+   constructor(private cartService:CartService,private snackBar:MatSnackBar,private dialog: MatDialog,private router:Router){}
 
    ngOnInit(){
     this.loadCart()
@@ -54,7 +55,14 @@ export class CartComponent implements OnInit{
    }
 
    proceedToCheckout(){
-
+    if (this.cartItems.length === 0) {
+      this.snackBar.open('Your cart is empty', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+    
+    this.router.navigate(['/student/checkout']);
    }
 
    removeItem(courseId:string,courseName:string){

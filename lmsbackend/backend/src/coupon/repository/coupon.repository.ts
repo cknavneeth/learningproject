@@ -92,4 +92,14 @@ export class CouponRepository implements ICouponRepository{
         });
     }
 
+
+    async findAvailableCoupons(minAmount: number, currentDate: Date): Promise<Coupon[]> {
+        return this.couponModel.find({
+            isActive:true,
+            expiryDate:{$gt:currentDate},
+            minPurchaseAmount:{$lte:minAmount},
+            $expr:{$lt:["$currentUses","$maxUses"]}
+        }).exec()
+    }
+
 }

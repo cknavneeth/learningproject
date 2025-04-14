@@ -44,6 +44,9 @@ export class Coupon{
     @Prop()
     maxDiscountAmount?: number;
 
+    @Prop({type :[{type:String}],default:[]})
+    usedBy:string[]
+
 }
 
 export const CouponSchema=SchemaFactory.createForClass(Coupon)

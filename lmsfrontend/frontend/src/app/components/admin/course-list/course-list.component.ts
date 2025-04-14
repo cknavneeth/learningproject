@@ -31,7 +31,7 @@ interface StatusTexts {
 
 @Component({
   selector: 'app-course-list',
-  imports: [CommonModule,MatDialogModule,FormsModule,AddCourseOfferComponent,MatIconModule , MatTooltipModule ],
+  imports: [CommonModule,MatDialogModule,FormsModule,MatIconModule , MatTooltipModule ],
   templateUrl: './course-list.component.html',
   styleUrl: './course-list.component.scss'
 })

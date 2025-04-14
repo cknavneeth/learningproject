@@ -1,6 +1,6 @@
 import { CreateCouponDto } from "src/coupon/dto/create-coupon.dto";
 import { UpdateCouponDto } from "src/coupon/dto/update-coupon.dto";
-import { CouponDocument } from "src/coupon/schema/coupon.schema";
+import { Coupon, CouponDocument } from "src/coupon/schema/coupon.schema";
 
 export interface ICouponRepository{
     create(createCouponDto:CreateCouponDto):Promise<CouponDocument>
@@ -22,4 +22,9 @@ export interface ICouponRepository{
     findByCode(code:string):Promise<CouponDocument|null>
 
     findByCodeExcludingId(code: string, excludeId: string): Promise<CouponDocument | null>;
+
+    findAvailableCoupons(
+        minAmount: number,
+        currentDate: Date
+    ): Promise<Coupon[]>;
 }

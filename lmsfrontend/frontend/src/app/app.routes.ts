@@ -37,6 +37,7 @@ import { WishlistComponent } from './components/studentmain/wishlist/wishlist.co
 import { CategoryManagementComponent } from './components/admin/category-management/category-management.component';
 import { AddcouponComponent } from './components/admin/addcoupon/addcoupon.component';
 import { ListcouponComponent } from './components/admin/listcoupon/listcoupon.component';
+import { CheckoutComponent } from './components/studentmain/checkout/checkout.component';
 
 export const routes: Routes = [
     {
@@ -118,6 +119,10 @@ export const routes: Routes = [
                 path:'wishlist',
                 component:WishlistComponent,
                 canActivate:[authGuard]
+            },
+            {
+                path:'checkout',
+                component:CheckoutComponent,
             }
            
         ]
@@ -232,7 +237,8 @@ export const routes: Routes = [
             {
                 path:'coupons',
                 component:ListcouponComponent
-            }
+            },
+           
         ]
     }
 ];
