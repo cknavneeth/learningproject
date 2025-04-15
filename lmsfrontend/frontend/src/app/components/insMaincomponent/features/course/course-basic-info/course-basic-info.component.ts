@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon'; 
+import { CategoryService } from '../../../../../services/instructorservice/category/category.service';
 @Component({
   selector: 'app-course-basic-info',
   imports: [
@@ -27,7 +28,8 @@ export class CourseBasicInfoComponent implements OnInit,OnChanges{
   @Output() formValid=new EventEmitter<boolean>()
   @Output() submitStep=new EventEmitter<void>()
 
-  categories=['Programming','Design','Business','Marketing','Health','Fitness']
+  // categories=['Programming','Design','Business','Marketing','Health','Fitness']
+  categories:any[]=[]
 
   languages=['English','spanish','french','chinese']
 
@@ -35,7 +37,7 @@ export class CourseBasicInfoComponent implements OnInit,OnChanges{
 
   basicInfoForm:FormGroup
 
-  constructor(private fb:FormBuilder){
+  constructor(private fb:FormBuilder,private categoryService:CategoryService){
     this.basicInfoForm=this.fb.group({
       title:['',[Validators.required,Validators.minLength(5)]],
       category:['',Validators.required],
@@ -73,6 +75,7 @@ export class CourseBasicInfoComponent implements OnInit,OnChanges{
         duration: this.courseData.duration || '',
         courseLevel: this.courseData.courseLevel || ''
       });
+      this.loadCategories()
     }
   }
 
@@ -89,6 +92,21 @@ export class CourseBasicInfoComponent implements OnInit,OnChanges{
         courseLevel: this.courseData.courseLevel || ''
       });
     }
+  }
+
+
+  private loadCategories() {
+    this.categoryService.getAllCategories().subscribe({
+      next: (response) => {
+        if (response && response.categories) {
+          this.categories = response.categories;
+          console.log('category fetch aytind',this.categories)
+        }
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+      }
+    });
   }
     
 }
