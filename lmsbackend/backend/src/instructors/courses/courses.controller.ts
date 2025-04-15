@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post,Put,Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, NotFoundException, Param, ParseIntPipe, Post,Put,Query,Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { Course } from './course.schema';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
@@ -56,12 +56,12 @@ export class CoursesController {
         return {thumbnailUrl}
     }
 
-    @Get()
-    @UseGuards(GuardGuard)
-    async getInstructorCourses(@Request() req){
-        const instructorId=req.user.InstructorId
-        return this.coursesService.getCoursesByInstructor(instructorId)
-    }
+    // @Get()
+    // @UseGuards(GuardGuard)
+    // async getInstructorCourses(@Request() req){
+    //     const instructorId=req.user.InstructorId
+    //     return this.coursesService.getCoursesByInstructor(instructorId)
+    // }
 
     @Put(':courseId')
     @UseGuards(GuardGuard)
@@ -146,6 +146,21 @@ export class CoursesController {
          return this.coursesService.getCourseById(id,instructorId)
     }
 
+
+    @Get()
+    @UseGuards(GuardGuard)
+    async getMyCourses(@Request() req,
+    @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,
+    @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number
+    ){
+        try {
+            const instructorId=req.user.InstructorId
+            const result=await this.coursesService.getCoursesForInstructor(instructorId,page,limit)
+            return result
+        } catch (error) {
+            throw new BadRequestException('Failed to fetch courses')
+        }
+    }
 
 
     //for offerss

@@ -51,7 +51,12 @@ export class CartComponent implements OnInit{
    }
 
    clearCart(){
-
+       this.cartService.clearCart().subscribe(
+        response=>{
+          this.snackBar.open('Cart cleared successfully', 'Close', { duration: 3000 });
+          this.loadCart()
+        }
+       )
    }
 
    proceedToCheckout(){

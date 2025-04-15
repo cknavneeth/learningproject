@@ -49,4 +49,20 @@ export class CourseRepository implements ICourseRepository{
         return this.courseModel.findByIdAndDelete(courseId)
     }
 
+    async findByInstructorWithPagination(instructorId:string,page:number=1,limit:number=10):Promise<{courses:CourseDocument[],total:number}>{
+        const skip=(page-1)*limit
+
+        const [courses,total]=await Promise.all([
+            this.courseModel.find({instructor:new Types.ObjectId(instructorId)})
+            .populate('instructor','name emailAddress isApproved')
+            .sort({createdAt:-1})
+            .skip(skip)
+            .limit(limit)
+            .exec(),
+            this.courseModel.countDocuments({instructor:new Types.ObjectId(instructorId)}).exec()
+        ])
+
+        return {courses,total}
+    }
+
 }

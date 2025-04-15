@@ -33,7 +33,7 @@ export class PaymentService implements IPaymentService{
     async createOrder(createOrderDto: CreateOrderDto) {
         console.log('Received order request:', createOrderDto);
         try {
-            // 1. Create Razorpay order
+            
             const order = await this.razorpay.orders.create({
                 amount: createOrderDto.amount,
                 currency: createOrderDto.currency,
@@ -41,7 +41,7 @@ export class PaymentService implements IPaymentService{
             });
             console.log('Razorpay order created:', order);
 
-            // 2. Create payment record
+            
             try {
                 const amountInRupees = createOrderDto.amount / 100;
                 const courseIds = createOrderDto.items

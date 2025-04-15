@@ -168,4 +168,27 @@ export class CoursesService {
         return course
     }
 
+
+
+    async getCoursesForInstructor(instructorId:string,page:number,limit:number){
+        try {
+            const {courses,total}=await this.courseRepository.findByInstructorWithPagination(instructorId,page,limit)
+           console.log('courses veno monu',courses)
+            return {
+                status: 'success',
+                data: {
+                    courses: courses || [],
+                    pagination: {
+                        total: total || 0,
+                        page: page,
+                        limit: limit,
+                        totalPages: Math.ceil((total || 0) / limit)
+                    }
+                }
+            };
+        } catch (error) {
+            throw new BadRequestException('Failed to fetch courses');
+        }
+    }
+
 }

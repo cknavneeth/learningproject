@@ -4,7 +4,7 @@ export interface Course {
     description: string;
     price: number;
     thumbnail?: string;
-    status: 'draft' | 'published';
+    status: 'draft' | 'published'|'rejected'|'pending_review';
     sections: CourseSection[];
     createdAt?: Date;
     updatedAt?: Date;
@@ -44,3 +44,14 @@ export interface CourseFilters {
   page?: number;
   limit?: number;
 }
+
+export type CourseStatus='pending_review' | 'published' | 'rejected' |'draft'
+
+export interface StatusClasses{
+  [key:string]:string,
+  pending_review:string,
+  published:string,  
+  rejected:string
+}
+
+

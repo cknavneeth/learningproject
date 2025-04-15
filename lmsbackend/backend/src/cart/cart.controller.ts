@@ -62,11 +62,17 @@ export class CartController {
         try {
             const userId=req.user.userId
             const cart=await this.cartService.clearCart(userId)
+            if(!cart){
+                throw new NotFoundException('Cart not found')
+            }
             return cart
         } catch (error) {
             console.log('failed to clear cart')
         }
     }
+
+
+   
 
 
 

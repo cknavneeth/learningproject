@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -53,6 +53,10 @@ export class InstructorcourseService {
 
   deleteDraft(draftId:string):Observable<any>{
     return this.http.delete(`${this.apiUrl}/draft/${draftId}`)
+  }
+
+  getCourses(page:number=1,limit:number=10):Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}`,{params:new HttpParams().set('page',page.toString()).set('limit',limit.toString())})
   }
 
 }

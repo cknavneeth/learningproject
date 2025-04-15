@@ -38,6 +38,7 @@ import { CategoryManagementComponent } from './components/admin/category-managem
 import { AddcouponComponent } from './components/admin/addcoupon/addcoupon.component';
 import { ListcouponComponent } from './components/admin/listcoupon/listcoupon.component';
 import { CheckoutComponent } from './components/studentmain/checkout/checkout.component';
+import { MyCoursesComponent } from './components/insMaincomponent/my-courses/my-courses.component';
 
 export const routes: Routes = [
     {
@@ -191,6 +192,10 @@ export const routes: Routes = [
             {
                 path:'drafts',
                 component:CourseDraftComponent
+            },
+            {
+                path:'my-courses',
+                component:MyCoursesComponent
             }
 
         ]

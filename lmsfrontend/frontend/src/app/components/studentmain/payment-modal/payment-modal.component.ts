@@ -54,7 +54,7 @@ export class PaymentModalComponent {
     coupon: this.data.coupon || null
   };
 
-  console.log('Initiating payment with data:', orderData); // Debug log
+  console.log('Initiating payment with data:', orderData); 
 
 
       this.paymentService.createOrder({
@@ -63,7 +63,7 @@ export class PaymentModalComponent {
         coupon:this.data.coupon
       }).subscribe({
         next:(orderData)=>{
-          console.log('Order created:', orderData); // Debug log
+          console.log('Order created:', orderData); 
           const options={
             key:this.razorpayKeyId,
             amount: orderData.amount,
@@ -76,7 +76,7 @@ export class PaymentModalComponent {
             // this.verifyPayment(response, orderData.orderId);
             this.verifyPayment({
               razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: orderData.id, // Using the order ID from orderData
+              razorpay_order_id: orderData.id, 
               razorpay_signature: response.razorpay_signature
             },orderData.id)
           },
@@ -123,7 +123,7 @@ export class PaymentModalComponent {
           });
         }
       });
-     }
-
-     
+     }  
 }
+
+

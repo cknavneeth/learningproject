@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +49,14 @@ export class CartService {
 
 
   clearCart():Observable<any>{
-     return this.http.delete(`${this.apiUrl}/clearcart`)
+     return this.http.delete(`${this.apiUrl}/clear`).pipe(
+      tap(cart=>this.updateCartCount(cart)),
+      catchError(error=>{
+        console.error('Error clearing cart:',error)
+        throw error
+      })
+     )
   }
+
+  
 }

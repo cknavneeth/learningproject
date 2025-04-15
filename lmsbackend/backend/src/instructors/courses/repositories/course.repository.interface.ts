@@ -7,4 +7,5 @@ export interface ICourseRepository{
     findByInstructorAndStatus(courseId:string,status:CourseStatus):Promise<CourseDocument[]>
     findById(courseId:string):Promise<CourseDocument|null>
     findByIdAndDelete(courseId:string):Promise<CourseDocument|null>
+    findByInstructorWithPagination(instructorId:string,page:number,limit:number):Promise<{courses:CourseDocument[],total:number}>
 }

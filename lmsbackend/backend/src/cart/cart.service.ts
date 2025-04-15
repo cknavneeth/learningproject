@@ -84,8 +84,12 @@ export class CartService {
 
 
     async clearCart(userId:string){
+        console.log('hh call ingot ethitinda')
         try {
             const cart=await this.cartRepository.clearCart(userId)
+            if(!cart){
+                throw new BadRequestException('Cart not found')
+            }
             return cart
         } catch (error) {
             console.log('failed to clear cart')

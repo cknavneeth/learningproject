@@ -1,0 +1,83 @@
+// Custom status badge classes
+.status-badge {
+    @apply px-3 py-1 rounded-full text-sm font-medium shadow-md;
+    
+    &.pending {
+      @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+    }
+    
+    &.published {
+      @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+    }
+    
+    &.rejected {
+      @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+    }
+  }
+  
+  // Custom scrollbar for dark mode
+  .dark {
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+  
+    ::-webkit-scrollbar-track {
+      @apply bg-gray-800;
+    }
+  
+    ::-webkit-scrollbar-thumb {
+      @apply bg-gray-600 rounded-full border-2 border-gray-800;
+      
+      &:hover {
+        @apply bg-gray-500;
+      }
+    }
+  }
+  
+  // Material Paginator Dark Theme Override
+  ::ng-deep .dark {
+    .mat-mdc-paginator {
+      @apply bg-gray-800 text-gray-200;
+    }
+  
+    .mat-mdc-paginator-page-size-label,
+    .mat-mdc-paginator-range-label {
+      @apply text-gray-300;
+    }
+  
+    .mat-mdc-paginator-navigation-previous,
+    .mat-mdc-paginator-navigation-next {
+      @apply text-gray-300;
+    }
+  
+    .mat-mdc-paginator-navigation-previous:disabled,
+    .mat-mdc-paginator-navigation-next:disabled {
+      @apply text-gray-600;
+    }
+  }
+  
+  // Hover effects
+  .course-card {
+    @apply transition-all duration-300;
+    
+    &:hover {
+      @apply transform -translate-y-1;
+      
+      .course-image img {
+        @apply transform scale-110;
+      }
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 640px) {
+    .course-grid {
+      @apply grid-cols-1;
+    }
+  }
+  
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .course-grid {
+      @apply grid-cols-2;
+    }
+  }
