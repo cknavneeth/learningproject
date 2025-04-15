@@ -1,0 +1,20 @@
+<div class="payment-modal">
+    <div class="modal-header">
+      <h2 class="text-2xl font-bold mb-4">Complete Your Purchase</h2>
+      <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="amount-section">
+      <p class="text-lg">Total Amount:</p>
+      <p class="text-3xl font-bold">₹{{ data.amount }}</p>
+    </div>
+
+    <div class="payment-options">
+      <button (click)="initiateRazorpayPayment()" class="razorpay-btn">
+        <img src="assets/razorpay-logo.png" alt="Razorpay" class="h-6">
+        Pay with Razorpay
+      </button>
+    </div>
+  </div>

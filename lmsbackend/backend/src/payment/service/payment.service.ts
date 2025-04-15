@@ -1,0 +1,161 @@
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { IPaymentService } from './interfaces/payment.service.interface';
+import Razorpay from 'razorpay'; 
+import * as crypto from 'crypto';
+import { PAYMENT_REPOSITORY } from '../constants/payment-constant';
+import { IPaymentRepository } from '../repository/interfaces/payment.repository.interface';
+import { ConfigService } from '@nestjs/config';
+import { CreateOrderDto } from '../dto/create-order.dto';
+import { VerifyPaymentDto } from '../dto/verify-payment.dto';
+import { Payment } from '../schema/payment.schema';
+import { Types } from 'mongoose';
+
+@Injectable()
+export class PaymentService implements IPaymentService{
+    private razorpay:Razorpay
+
+    constructor(@Inject(PAYMENT_REPOSITORY) private readonly paymentRepository:IPaymentRepository,private configService:ConfigService){
+        const key_id = this.configService.get<string>('RAZORPAY_KEY_ID');
+        const key_secret = this.configService.get<string>('RAZORPAY_KEY_SECRET');
+
+        if (!key_id || !key_secret) {
+            throw new Error('RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be provided');
+        }
+
+        this.razorpay = new Razorpay({
+            key_id,
+            key_secret
+        });
+    }
+
+
+
+    async createOrder(createOrderDto: CreateOrderDto) {
+        console.log('Received order request:', createOrderDto);
+        try {
+            // 1. Create Razorpay order
+            const order = await this.razorpay.orders.create({
+                amount: createOrderDto.amount,
+                currency: createOrderDto.currency,
+                receipt: `order_${Date.now()}`
+            });
+            console.log('Razorpay order created:', order);
+
+            // 2. Create payment record
+            try {
+                const amountInRupees = createOrderDto.amount / 100;
+                const courseIds = createOrderDto.items
+                .filter(id => Types.ObjectId.isValid(id))
+                .map(id => new Types.ObjectId(id));
+
+                const userId = createOrderDto.userId;
+                if (!userId) {
+                    throw new BadRequestException('User ID is required');
+                }
+
+
+
+                const payment = await this.paymentRepository.create({
+                    orderId: order.id,
+                    amount: amountInRupees,
+                    currency: order.currency,
+                    status: 'pending',
+                    courses: courseIds,  // Add items to track what's being purchased
+                    userId:new Types.ObjectId(userId) // Add userId if available in DTO
+                });
+                console.log('Payment record created:', payment);
+            } catch (dbError) {
+                console.error('Failed to create payment record:', dbError);
+                // Continue even if payment record creation fails
+                // We can handle this in the verification step
+            }
+
+            // 3. Return order details
+            return {
+                id: order.id,
+                amount: order.amount,
+                currency: order.currency,
+                status: 'created'
+            };
+
+        } catch (error) {
+            console.error('Order creation error:', {
+                message: error.message,
+                stack: error.stack,
+                details: error.response?.data
+            });
+            throw new BadRequestException(`Failed to create order: ${error.message}`);
+        }
+    }
+
+
+
+    async verifyPayment(verifyPaymentDto: VerifyPaymentDto): Promise<Payment | null> {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = verifyPaymentDto;
+
+        console.log('Verifying payment with data:', {
+            orderId: razorpay_order_id,
+            paymentId: razorpay_payment_id,
+            signature: razorpay_signature
+        });
+
+        const key_secret = this.configService.get<string>('RAZORPAY_KEY_SECRET');
+        if (!key_secret) {
+            throw new Error('RAZORPAY_KEY_SECRET must be provided');
+        }
+
+        // 1. Verify signature
+        const sign = razorpay_order_id + "|" + razorpay_payment_id;
+        const expectedSign = crypto
+            .createHmac("sha256", key_secret)
+            .update(sign.toString())
+            .digest("hex");
+
+            console.log('Signature verification:', {
+                generated: expectedSign,
+                received: razorpay_signature
+            });
+
+        if (expectedSign !== razorpay_signature) {
+            throw new BadRequestException('Invalid payment signature');
+        }
+
+        try {
+            // Find the original payment record first
+            const originalPayment = await this.paymentRepository.findByOrderId(razorpay_order_id);
+            if (!originalPayment) {
+                throw new BadRequestException('No payment record found for this order');
+            }
+
+            // 2. Update payment status
+            const payment = await this.paymentRepository.updatePaymentStatus(
+                razorpay_order_id,
+                'completed'
+            );
+
+            if (!payment) {
+                // If update failed, create new payment record with userId from original payment
+                const paymentDetails = await this.razorpay.payments.fetch(razorpay_payment_id);
+                const newPayment = await this.paymentRepository.create({
+                    orderId: razorpay_order_id,
+                    paymentId: razorpay_payment_id,
+                    amount: paymentDetails.amount / 100,
+                    currency: paymentDetails.currency,
+                    status: 'completed',
+                    userId: originalPayment.userId,
+                    courses: originalPayment.courses // Also include courses if they exist
+                });
+                return newPayment;
+            }
+
+            return payment;
+        } catch (error) {
+            console.error('Payment verification error:', error);
+            throw new BadRequestException('Failed to verify payment');
+        }
+    }
+
+    async getPaymentHistory(userId: string) {
+        return this.paymentRepository.findByUserId(userId)
+    }
+}

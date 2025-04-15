@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
+import { PaymentModalComponent } from '../payment-modal/payment-modal.component';
 
 @Component({
   selector: 'app-checkout',
@@ -37,7 +39,8 @@ export class CheckoutComponent implements OnInit{
       private cartService:CartService,
       private couponService:StudentcouponService,
       private snackBar:MatSnackBar,
-      private router:Router
+      private router:Router,
+      private dialogue:MatDialog
     ){}
 
     ngOnInit(){
@@ -136,13 +139,29 @@ export class CheckoutComponent implements OnInit{
 
 
     proceedToPayment(){
-      this.router.navigate(['/student/payment'],{
-        state:{
-          amount:this.total,
-          items:this.cartItems,
-          coupon:this.selectedCoupon
-        }
-      })
+        const dialogRef=this.dialogue.open(PaymentModalComponent,{
+          width:'500px',
+          data:{
+            amount:this.total,
+            items:this.cartItems,
+            coupon:this.selectedCoupon
+          },
+          panelClass:'payment-modal-container'
+        })
+
+
+        dialogRef.afterClosed().subscribe(result=>{
+          if(result?.success){
+            this.cartService.clearCart().subscribe({
+              next:()=>{
+                this.router.navigate(['/student/courses'])
+              },
+              error:(error)=>{
+                console.error('error clearing cart',error)
+              }
+            })
+          }
+        })
     }
 
 
