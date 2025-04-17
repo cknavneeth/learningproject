@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { ConfirmationcomponentComponent } from '../../common/confirmationcomponent/confirmationcomponent.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -16,7 +16,8 @@ import { Router } from '@angular/router';
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'

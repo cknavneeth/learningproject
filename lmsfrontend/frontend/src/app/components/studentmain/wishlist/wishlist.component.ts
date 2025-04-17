@@ -4,7 +4,7 @@ import { CartService } from '../../../services/studentservice/cart/cart.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationcomponentComponent } from '../../common/confirmationcomponent/confirmationcomponent.component';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-wishlist',
-  imports: [MatIconModule,MatProgressSpinner,CommonModule],
+  imports: [MatIconModule,MatProgressSpinner,CommonModule,RouterModule],
   templateUrl: './wishlist.component.html',
   styleUrl: './wishlist.component.scss'
 })

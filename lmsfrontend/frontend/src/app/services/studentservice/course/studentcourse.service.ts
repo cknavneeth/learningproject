@@ -62,9 +62,13 @@ export class StudentcourseService {
   }
 
 
-  getEnrolledCourses():Observable<any>{
-    return this.http.get(`${this.learningUrl}`)
-  }
+  getEnrolledCourses(page: number = 1, limit: number = 6): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+      
+    return this.http.get(`${this.learningUrl}`, { params });
+}
 
 
   getEnrolledCourseDetails(courseId:string):Observable<any>{

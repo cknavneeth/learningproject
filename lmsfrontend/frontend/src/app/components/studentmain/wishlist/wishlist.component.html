@@ -11,7 +11,7 @@
             </h1>
             <button *ngIf="!loading && !error && wishlistItems.length > 0"
                     mat-raised-button color="primary" 
-                    routerLink="/student/courses"
+                    [routerLink]="['/student/courses']"
                     class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 Browse More Courses
             </button>

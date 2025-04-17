@@ -62,4 +62,14 @@
             Browse Courses
         </button>
     </div>
+
+
+    <mat-paginator *ngIf="totalItems > 0"
+        [length]="totalItems"
+        [pageSize]="itemsPerPage"
+        [pageIndex]="currentPage - 1"
+        [pageSizeOptions]="[6, 12, 18]"
+        (page)="handlePageEvent($event)"
+        class="mt-8 bg-gray-800 text-gray-100 rounded-lg shadow-md">
+</mat-paginator>
 </div>
