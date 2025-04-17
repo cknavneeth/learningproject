@@ -5,26 +5,27 @@
   }
   
   @keyframes slideDown {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
-  @keyframes width {
-    from { width: 0; }
-    to { width: 5rem; }
-  }
-  
-  @keyframes pulse-slow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
-  }
-  
-  /* Animation classes */
   .animate-fadeIn {
     animation: fadeIn 0.5s ease-out;
   }
@@ -37,73 +38,42 @@
     animation: slideUp 0.5s ease-out;
   }
   
-  .animate-width {
-    animation: width 0.5s ease-out;
-  }
-  
-  .animate-pulse-slow {
-    animation: pulse-slow 3s infinite;
-  }
-  
-  /* Hover effects */
-  .transform {
-    transition: transform 0.3s ease;
-  }
-  
-  .hover\:scale-102:hover {
-    transform: scale(1.02);
-  }
-  
-  /* Form styling */
-  .form-group {
-    @apply relative;
-  }
-  
-  input, select {
-    &:focus {
-      @apply shadow-lg;
-    }
-  }
-  
-  /* Dark mode specific styles */
-  :host-context(.dark) {
-    input, select {
-      @apply bg-gray-700 text-white border-gray-600;
-      
-      &::placeholder {
-        @apply text-gray-400;
-      }
-      
-      &:focus {
-        @apply border-blue-500 ring-blue-500;
-      }
-    }
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .form-group {
-      @apply mb-4;
-    }
-    
-    input, select {
-      @apply text-sm;
-    }
-  }
-  
-  /* Custom scrollbar for dark mode */
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-gray-800;
+    background: #1f2937;
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-600 rounded-full;
-    
-    &:hover {
-      @apply bg-gray-500;
+    background: #4b5563;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+  
+  /* Material table overrides */
+  ::ng-deep {
+    .mat-mdc-table {
+      background: transparent !important;
+    }
+  
+    .mat-mdc-paginator {
+      background: transparent !important;
+    }
+  
+    .mat-mdc-paginator-page-size-label,
+    .mat-mdc-paginator-range-label {
+      color: #9ca3af !important;
+    }
+  
+    .mat-mdc-paginator-navigation-previous,
+    .mat-mdc-paginator-navigation-next {
+      color: #9ca3af !important;
     }
   }

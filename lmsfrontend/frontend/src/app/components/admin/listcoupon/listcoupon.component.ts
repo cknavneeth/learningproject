@@ -11,7 +11,7 @@ import { ConfirmationcomponentComponent } from '../../common/confirmationcompone
 
 @Component({
   selector: 'app-listcoupon',
-  imports: [MatPaginatorModule,CommonModule, MatTableModule,MatIconModule],
+  imports: [MatPaginatorModule,CommonModule, MatTableModule,MatIconModule,RouterModule],
   templateUrl: './listcoupon.component.html',
   styleUrl: './listcoupon.component.scss'
 })
