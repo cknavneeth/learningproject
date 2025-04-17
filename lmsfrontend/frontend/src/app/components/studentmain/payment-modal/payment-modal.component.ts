@@ -6,6 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PaymentService } from '../../../services/studentservice/payment/payment.service';
 import { environment } from '../../../../environments/environment';
+import Swal from 'sweetalert2';
+
+
 
 declare var Razorpay: any;
 
@@ -111,9 +114,7 @@ export class PaymentModalComponent {
       }).subscribe({
         next: (response) => {
           console.log('Verification successful:', response);
-          this.snackBar.open('Payment successful', 'Close', {
-            duration: 3000
-          });
+          this.showSuccessAlert()
           this.dialogRef.close({success: true});
         },
         error: (error) => {
@@ -124,6 +125,37 @@ export class PaymentModalComponent {
         }
       });
      }  
+
+
+
+
+
+     private showSuccessAlert() {
+      Swal.fire({
+        icon: 'success',
+        title: 'Payment Successful!',
+        text: 'Your course purchase has been completed.',
+        confirmButtonText: 'Start Learning',
+        confirmButtonColor: '#3B82F6',
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        },
+        background: '#fff',
+        customClass: {
+          title: 'swal2-title-custom',
+          htmlContainer: 'swal2-content-custom',
+          confirmButton: 'swal2-confirm-button-custom'
+        },
+        timer: 5000,
+        timerProgressBar: true,
+        allowOutsideClick: false
+      });
+    }
+
+    
 }
 
 

@@ -34,3 +34,82 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+//sweet alert custom style
+// SweetAlert2 Custom Styles
+.swal2-popup {
+    border-radius: 1rem !important;
+    padding: 2rem !important;
+  }
+  
+  .swal2-title {
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .swal2-html-container {
+    font-size: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .swal2-confirm {
+    padding: 0.75rem 2rem !important;
+    font-weight: 600 !important;
+    border-radius: 0.5rem !important;
+  }
+  
+  .swal2-icon {
+    border-width: 3px !important;
+    margin: 1.5rem auto !important;
+  }
+  
+  // Success state customization
+  .swal2-icon.swal2-success {
+    border-color: #10B981 !important;
+    
+    .swal2-success-ring {
+      border-color: #10B981 !important;
+    }
+    
+    [class^='swal2-success-line'] {
+      background-color: #10B981 !important;
+    }
+  }
+  
+  // Error state customization
+  .swal2-icon.swal2-error {
+    border-color: #EF4444 !important;
+    
+    [class^='swal2-x-mark-line'] {
+      background-color: #EF4444 !important;
+    }
+  }
+  
+  // Custom classes for SweetAlert
+  .swal2-title-custom {
+    @apply text-xl font-bold text-gray-800;
+  }
+  
+  .swal2-content-custom {
+    @apply text-gray-600;
+  }
+  
+  .swal2-confirm-button-custom {
+    @apply px-6 py-2 rounded-lg text-white font-semibold;
+  }
+  
+  // Dark mode support
+  .dark {
+    .swal2-popup {
+      background: #1F2937 !important;
+      color: #F3F4F6 !important;
+    }
+    
+    .swal2-title {
+      color: #F3F4F6 !important;
+    }
+    
+    .swal2-html-container {
+      color: #D1D5DB !important;
+    }
+  }
