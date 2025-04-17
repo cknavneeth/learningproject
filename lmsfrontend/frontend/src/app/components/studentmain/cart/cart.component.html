@@ -46,10 +46,29 @@
                             <!-- Price and Remove -->
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <span class="text-2xl font-bold text-white">₹{{ item.courseId.price }}</span>
+
+                                    <div class="flex items-center space-x-2" *ngIf="item.courseId.offer">
+                                        <ng-container *ngIf="item.courseId.offer; else regularPrice">
+                                            <span class="text-sm text-gray-400 line-through">₹{{item.courseId.price}}</span>
+                                            <span class="text-2xl font-bold text-gray-100">₹{{item.courseId.offer.discountPrice}}</span>
+                                            <span class="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded">{{item.courseId.offer.percentage}}% OFF</span>
+                                        </ng-container>
+                                        <ng-template #regularPrice>
+                                            <span class="text-2xl font-bold text-gray-100">₹{{item.courseId.price}}</span>
+                                        </ng-template>
+                                    </div>
+
+
+                                   <div *ngIf="!item.courseId.offer">
+                                    <span class="text-2xl font-bold text-gray-100">₹{{item.courseId.price}}</span>
                                     <span class="text-sm text-gray-400 line-through ml-2">₹{{ item.courseId.price * 2 }}</span>
                                     <span class="text-sm text-green-500 ml-2">50% off</span>
+
+                                   </div>
+                                   
                                 </div>
+
+
                                 <button mat-icon-button color="warn" 
                                         (click)="removeItem(item.courseId._id,item.courseId.title)"
                                         class="hover:scale-110 transition-transform duration-300">

@@ -84,6 +84,7 @@ export class UserRepository implements IUserRepository{
             this.courseModel.find(query)
                 .populate('instructor', 'name profileImage')
                 .populate('category','name')
+                .populate('offer')
                 .select('title description thumbnailUrl price duration level category instructor courseLanguage')
                 .sort({ createdAt: -1 })
                 .skip(skip)

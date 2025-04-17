@@ -86,7 +86,7 @@ export class CheckoutComponent implements OnInit{
 
     calculateTotals(){
       this.subtotal=this.cartItems.reduce((sum,item)=>{
-        const price=item.courseId.offer?item.courseId.price*(1-item.courseId.offer.percentage/100):item.courseId.price
+        const price=item.courseId.offer?item.courseId.offer.discountPrice:item.courseId.price
         return sum+price
       },0)
 
@@ -146,7 +146,8 @@ export class CheckoutComponent implements OnInit{
             items:this.cartItems,
             coupon:this.selectedCoupon
           },
-          panelClass:'payment-modal-container'
+          panelClass:['payment-modal-container','animate__animated', 'animate__fadeInUp'],
+          backdropClass:'payment-modal-backdrop'
         })
 
 

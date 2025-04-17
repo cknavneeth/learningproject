@@ -15,7 +15,7 @@ export class CartRepository implements ICartRepository{
         return this.cartModel.findOne({user:userId})
         .populate({
             path:'items.courseId',
-            select:'title price thumbnailUrl instructor',
+            select:'title price thumbnailUrl instructor offer',
             populate:{
                 path:'instructor',
                 select:'name'
@@ -66,7 +66,7 @@ export class CartRepository implements ICartRepository{
         return this.cartModel.findById(cart._id)
             .populate({
                 path:'items.courseId',
-                select:'title price thumbnailUrl instructor',
+                select:'title price thumbnailUrl instructor offer',
                 populate:{
                     path:'instructor',
                     select:'name'
@@ -89,7 +89,7 @@ export class CartRepository implements ICartRepository{
             const updatedCart=await this.cartModel.findById(cart._id)
             .populate({
                 path:'items.courseId',
-                select:'title price thumbnailUrl instructor',
+                select:'title price thumbnailUrl instructor offer',
                 populate:{
                     path:'instructor',
                     select:'name'
@@ -112,7 +112,7 @@ export class CartRepository implements ICartRepository{
             const clearedCart=await this.cartModel.findById(cart._id)
             .populate({
                 path:'items.courseId',
-                select:'title price thumbnailUrl instructor',
+                select:'title price thumbnailUrl instructor offer',
                 populate:{
                     path:'instructor',
                     select:'name'

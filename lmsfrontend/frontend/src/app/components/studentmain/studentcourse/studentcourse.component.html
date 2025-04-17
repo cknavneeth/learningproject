@@ -195,7 +195,23 @@
                                 border border-blue-800/50 backdrop-blur-sm">
                                 {{getCategoryName(course.category)}}
                     </span>
-                    <span class="text-2xl font-bold text-gray-100">₹{{course.price}}</span>
+
+
+
+                    <div class="flex items-center space-x-2">
+                        <ng-container *ngIf="course.offer; else regularPrice">
+                            <span class="text-sm text-gray-400 line-through">₹{{course.price}}</span>
+                            <span class="text-2xl font-bold text-gray-100">₹{{course.offer.discountPrice}}</span>
+                            <span class="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded">{{course.offer.percentage}}% OFF</span>
+                        </ng-container>
+                        <ng-template #regularPrice>
+                            <span class="text-2xl font-bold text-gray-100">₹{{course.price}}</span>
+                        </ng-template>
+                    </div>
+
+
+
+                    
                 </div>
 
                 <!-- Enroll Button -->

@@ -1,20 +1,73 @@
 <div class="payment-modal">
-    <div class="modal-header">
-      <h2 class="text-2xl font-bold mb-4">Complete Your Purchase</h2>
-      <button mat-icon-button (click)="close()">
-        <mat-icon>close</mat-icon>
+  <!-- Header Section -->
+  <div class="modal-header">
+      <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+          Secure Checkout
+      </h2>
+      <button mat-icon-button (click)="close()" class="close-btn">
+          <mat-icon>close</mat-icon>
       </button>
-    </div>
-
-    <div class="amount-section">
-      <p class="text-lg">Total Amount:</p>
-      <p class="text-3xl font-bold">₹{{ data.amount }}</p>
-    </div>
-
-    <div class="payment-options">
-      <button (click)="initiateRazorpayPayment()" class="razorpay-btn">
-        <img src="assets/razorpay-logo.png" alt="Razorpay" class="h-6">
-        Pay with Razorpay
-      </button>
-    </div>
   </div>
+
+  <!-- Amount Display Section -->
+  <div class="amount-section">
+      <div class="amount-content">
+          <p class="text-lg text-gray-400">Total Amount</p>
+          <p class="amount">₹{{ data.amount }}</p>
+          <div class="secure-badge">
+              <mat-icon class="text-green-500">lock</mat-icon>
+              <span>256-bit secure encryption</span>
+          </div>
+      </div>
+  </div>
+
+  <!-- Course Summary Section -->
+  <div class="course-summary">
+      <h3 class="text-lg font-semibold mb-3">Order Summary</h3>
+      <div class="summary-items">
+          <div class="flex justify-between items-center mb-2">
+              <span>Selected Courses</span>
+              <span>{{data.items?.length || 1}} items</span>
+          </div>
+          <div class="flex justify-between items-center mb-2">
+              <span>Platform Security Fee</span>
+              <span>Included</span>
+          </div>
+          <div *ngIf="data.coupon" class="flex justify-between items-center text-green-500">
+              <span>Applied Coupon</span>
+              <span>{{data.coupon.code}}</span>
+          </div>
+      </div>
+  </div>
+
+  <!-- Payment Options Section -->
+  <div class="payment-options">
+      <h3 class="text-lg font-semibold mb-4">Choose Payment Method</h3>
+      <button (click)="initiateRazorpayPayment()" class="razorpay-btn">
+          <div class="razorpay-logo-container">
+              <img src="razorpaylogo1.png" alt="Razorpay" class="h-8">
+          </div>
+          <div class="btn-content">
+              <span class="btn-title">Pay Securely with Razorpay</span>
+              <span class="btn-subtitle">India's Most Trusted Payment Gateway</span>
+          </div>
+          <mat-icon class="text-gray-400">chevron_right</mat-icon>
+      </button>
+  </div>
+
+  <!-- Trust Badges Section -->
+  <div class="trust-badges">
+      <div class="badge">
+          <mat-icon>verified_user</mat-icon>
+          <span>Secure Payment</span>
+      </div>
+      <div class="badge">
+          <mat-icon>speed</mat-icon>
+          <span>Instant Access</span>
+      </div>
+      <div class="badge">
+          <mat-icon>support_agent</mat-icon>
+          <span>24/7 Support</span>
+      </div>
+  </div>
+</div>

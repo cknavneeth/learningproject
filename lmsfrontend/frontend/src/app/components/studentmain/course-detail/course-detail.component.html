@@ -110,9 +110,18 @@
     <!-- Fixed Purchase Card -->
     <div class="fixed top-24 right-4 lg:right-8 w-full max-w-sm">
       <div class="bg-gray-800 rounded-xl p-6 shadow-2xl">
-        <div class="text-center mb-6">
-          <span class="text-4xl font-bold">₹{{ courseDetails?.price }}</span>
-        </div>
+
+        <div class="flex items-center space-x-2">
+          <ng-container *ngIf="courseDetails?.offer; else regularPrice">
+              <span class="text-sm text-gray-400 line-through">₹{{courseDetails?.price}}</span>
+              <span class="text-2xl font-bold text-gray-100">₹{{courseDetails?.offer?.discountPrice}}</span>
+              <span class="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded">{{courseDetails?.offer?.percentage}}% OFF</span>
+          </ng-container>
+          <ng-template #regularPrice>
+              <span class="text-2xl font-bold text-gray-100">₹{{courseDetails?.price}}</span>
+          </ng-template>
+      </div>
+
         <div class="space-y-4">
             <button (click)="addToCart()" 
             [disabled]="addingToCart"

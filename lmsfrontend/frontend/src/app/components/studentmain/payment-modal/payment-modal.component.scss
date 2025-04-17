@@ -1,43 +1,113 @@
 .payment-modal {
-    padding: 2rem;
-    max-width: 500px;
+  @apply p-6 max-w-md mx-auto bg-white dark:bg-gray-800 rounded-2xl;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-header {
+  @apply flex justify-between items-center mb-6;
+
+  .close-btn {
+    @apply transition-transform hover:rotate-90 hover:text-red-500;
   }
+}
 
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-
-  .amount-section {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
-    border-radius: 1rem;
-  }
-
-  .payment-options {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .razorpay-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: #fff;
-    color: #000;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.amount-section {
+  @apply mb-8 rounded-xl overflow-hidden;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  
+  .amount-content {
+    @apply p-6 text-center text-white;
+    
+    .amount {
+      @apply text-4xl font-bold mb-2;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .secure-badge {
+      @apply flex items-center justify-center gap-2 text-sm mt-3 bg-white/10 rounded-full py-1 px-3 mx-auto w-fit;
     }
   }
+}
+
+.course-summary {
+  @apply mb-8 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/30;
+  
+  .summary-items {
+    @apply text-sm space-y-2;
+  }
+}
+
+.payment-options {
+  @apply mb-8;
+
+  .razorpay-btn {
+    @apply w-full flex items-center gap-4 p-4 bg-white dark:bg-gray-700 
+           rounded-xl border border-gray-200 dark:border-gray-600 
+           transition-all duration-300 hover:shadow-lg hover:scale-[1.02];
+    
+    .razorpay-logo-container {
+      @apply p-2 bg-white rounded-lg;
+    }
+    
+    .btn-content {
+      @apply flex-1 text-left;
+      
+      .btn-title {
+        @apply block font-semibold;
+      }
+      
+      .btn-subtitle {
+        @apply block text-sm text-gray-500 dark:text-gray-400;
+      }
+    }
+  }
+}
+
+.trust-badges {
+  @apply grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700;
+  
+  .badge {
+    @apply flex flex-col items-center text-center gap-2 text-sm text-gray-600 dark:text-gray-400;
+    
+    mat-icon {
+      @apply text-blue-500;
+    }
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark mode adjustments
+:host-context(.dark) {
+  .payment-modal {
+    @apply bg-gray-800 text-white;
+  }
+  
+  .razorpay-btn {
+    @apply bg-gray-700 border-gray-600;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .payment-modal {
+    @apply p-4;
+  }
+  
+  .amount-section .amount-content .amount {
+    @apply text-3xl;
+  }
+  
+  .trust-badges {
+    @apply grid-cols-1 gap-3;
+  }
+}

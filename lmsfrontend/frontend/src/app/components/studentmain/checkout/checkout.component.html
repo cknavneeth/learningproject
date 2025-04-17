@@ -9,7 +9,7 @@
         <!-- Cart Items Section -->
         <div class="md:col-span-2 space-y-6">
             <h2 class="text-3xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                Your Cart
+                Your Cart Courses
             </h2>
             
             <div class="space-y-6">
@@ -20,11 +20,19 @@
                         <div class="flex-grow">
                             <h3 class="text-xl font-semibold mb-2">{{item.courseId.title}}</h3>
                             <p class="text-gray-400 mb-4"> By {{item.courseId.instructor.name}}</p>
-                            <p class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                                ₹{{item.courseId.offer ? 
-                                    (item.courseId.price * (1 - item.courseId.offer.percentage/100)) : 
-                                    item.courseId.price}}
-                            </p>
+
+                            <div class="flex items-center space-x-2">
+                                <ng-container *ngIf="item.courseId.offer; else regularPrice">
+                                    <span class="text-sm text-gray-400 line-through">₹{{item.courseId.price}}</span>
+                                    <span class="text-2xl font-bold text-gray-100">₹{{item.courseId.offer.discountPrice}}</span>
+                                    <span class="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded">{{item.courseId.offer.percentage}}% OFF</span>
+                                </ng-container>
+                                <ng-template #regularPrice>
+                                    <span class="text-2xl font-bold text-gray-100">₹{{item.courseId.price}}</span>
+                                </ng-template>
+                            </div>
+
+                            
                         </div>
                     </div>
                 </div>
@@ -95,7 +103,7 @@
 
             <!-- Price Details -->
             <div class="price-details">
-                <div class="price-row">
+                <div class="price-row text-green-400 ">
                     <span>Subtotal</span>
                     <span>₹{{ subtotal | number:'1.0-2' }}</span>
                 </div>
