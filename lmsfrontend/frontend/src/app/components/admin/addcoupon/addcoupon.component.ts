@@ -22,6 +22,7 @@ export class AddcouponComponent implements OnInit{
   minDate:string
   isEditMode=false
   couponId:string|null=null
+  isSubmitting=false
 
   constructor(
     private fb: FormBuilder,
@@ -40,7 +41,7 @@ export class AddcouponComponent implements OnInit{
     this.couponForm = this.fb.group({
       code: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z0-9]+$')]],
       type: ['', Validators.required],
-      value: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      value: ['', [Validators.required, Validators.min(0)]],
       maxUses: ['', [Validators.required, Validators.min(1)]],
       expiryDate: ['', [Validators.required, this.futureDateValidator()]],
       minPurchaseAmount: ['', [Validators.required, Validators.min(0)]],
@@ -89,6 +90,7 @@ export class AddcouponComponent implements OnInit{
 
   onSubmit() {
     if (this.couponForm.valid) {
+      this.isSubmitting=true
       if (this.isEditMode && this.couponId) {
         // Update existing coupon
         this.couponService.updateCoupon(this.couponId, this.couponForm.value).subscribe({
@@ -141,6 +143,47 @@ export class AddcouponComponent implements OnInit{
           this.loadCouponData(this.couponId)
         }
       })
+
+
+    
+        // ... existing ngOnInit code ...
+      
+        // Subscribe to type changes
+        this.couponForm.get('type')?.valueChanges.subscribe(type => {
+          const maxDiscountAmountControl = this.couponForm.get('maxDiscountAmount');
+          if (type === 'fixed') {
+            maxDiscountAmountControl?.setValue(null);
+            maxDiscountAmountControl?.disable();
+          } else {
+            maxDiscountAmountControl?.enable();
+          }
+        });
+
+
+
+        this.couponForm.get('type')?.valueChanges.subscribe(type => {
+          const valueControl = this.couponForm.get('value');
+          const maxDiscountAmountControl = this.couponForm.get('maxDiscountAmount');
+      
+          if (type === 'fixed') {
+            // For fixed type, only require min 0
+            valueControl?.setValidators([Validators.required, Validators.min(0)]);
+            maxDiscountAmountControl?.setValue(null);
+            maxDiscountAmountControl?.disable();
+          } else {
+            // For percentage type, require 0-100 range
+            valueControl?.setValidators([
+              Validators.required,
+              Validators.min(0),
+              Validators.max(100)
+            ]);
+            maxDiscountAmountControl?.enable();
+          }
+      
+          // Don't forget to update validators
+          valueControl?.updateValueAndValidity();
+        });
+      
   }
 
 
