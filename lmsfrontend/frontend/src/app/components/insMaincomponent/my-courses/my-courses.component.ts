@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { InstructorcourseService } from '../../../services/instructorservice/course/instructorcourse.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
 
@@ -15,7 +15,7 @@ interface StatusClasses{
 
 @Component({
   selector: 'app-my-courses',
-  imports: [CommonModule, MatPaginatorModule],
+  imports: [CommonModule, MatPaginatorModule,RouterModule],
   templateUrl: './my-courses.component.html',
   styleUrl: './my-courses.component.scss'
 })

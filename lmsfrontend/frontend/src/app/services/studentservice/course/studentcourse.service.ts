@@ -1,7 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Course, CourseResponse } from '../../../interfaces/course.interface';
+import { map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { UpdateProgressRequest } from '../../../interfaces/mylearning.interface';
 
 
 
@@ -12,7 +15,12 @@ import { Course, CourseResponse } from '../../../interfaces/course.interface';
 })
 export class StudentcourseService {
 
-  private apiUrl = 'http://localhost:5000/auth/student';
+  // private apiUrl = 'http://localhost:5000/auth/student';
+  private baseUrl = 'http://localhost:5000';
+  private authStudentUrl = `${this.baseUrl}/auth/student`; // For UsersController endpoints
+  private learningUrl = `${this.baseUrl}/auth/student/learning`; 
+
+
 
   constructor(private http:HttpClient) { }
 
@@ -44,12 +52,61 @@ export class StudentcourseService {
   if (filters.limit) {
       params = params.set('limit', filters.limit.toString());
   }
-    console.log('Making API request to:', `${this.apiUrl}/courses`);
-    return this.http.get<CourseResponse>(`${this.apiUrl}/courses`,{params})
+    console.log('Making API request to:', `${this.authStudentUrl}/courses`);
+    return this.http.get<CourseResponse>(`${this.authStudentUrl}/courses`,{params})
   }
 
 
   getCourseById(courseId:string):Observable<Course>{
-    return this.http.get<Course>(`${this.apiUrl}/courses/${courseId}`,{})
+    return this.http.get<Course>(`${this.authStudentUrl}/courses/${courseId}`,{})
+  }
+
+
+  getEnrolledCourses():Observable<any>{
+    return this.http.get(`${this.learningUrl}`)
+  }
+
+
+  getEnrolledCourseDetails(courseId:string):Observable<any>{
+    console.log('ingot ethaninda')
+    return this.http.get(`${this.learningUrl}/course/${courseId}`)
+    .pipe(
+      catchError((error) => {
+        console.error('API Error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  updateCourseProgress(courseId:string,data:UpdateProgressRequest):Observable<any>{
+    return this.http.put(`${this.learningUrl}/course/${courseId}/progress`,data)
+  }
+
+  downloadResource(courseId: string, resourceId: string): Observable<any> {
+    return this.http.get(`${this.learningUrl}/course/${courseId}/resources/${resourceId}/download`, {
+        responseType: 'blob',
+        observe: 'response'
+    }).pipe(
+        map(response => {
+            const contentDisposition = response.headers.get('content-disposition');
+            const fileName = contentDisposition ? 
+                contentDisposition.split(';')[1].split('=')[1].replace(/"/g, '') : 
+                'download';
+            
+            const blob = response.body;
+            if (!blob) {
+                throw new Error('No content received');
+            }
+            
+            const url = window.URL.createObjectURL(blob);
+            
+            return { fileUrl: url, fileName: fileName };
+        })
+    );
+  }
+
+
+  getCourseProgress(courseId: string): Observable<any> {
+    return this.http.get(`${this.learningUrl}/course/${courseId}/progress`);
   }
 }

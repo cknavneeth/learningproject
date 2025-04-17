@@ -1,0 +1,76 @@
+<div class="container mx-auto px-4 py-8">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center h-64">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div *ngIf="!loading && courseData && courseData.sections" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Video Player Section -->
+        <div class="lg:col-span-2">
+            <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg">
+                <video 
+                    #videoPlayer
+                    [src]="courseData.sections[currentSection].videoUrl"
+                    (ended)="onVideoComplete()"
+                    controls
+                    class="w-full aspect-video">
+                </video>
+                
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">
+                        {{courseData.sections[currentSection].title}}
+                    </h2>
+                    <p class="text-gray-400">
+                        {{courseData.sections[currentSection].description}}
+                    </p>
+
+                    <!-- Resources Section -->
+                    <div *ngIf="courseData.sections[currentSection].resources?.length" 
+                         class="mt-6">
+                        <h3 class="text-xl font-semibold mb-4">Resources</h3>
+                        <div class="space-y-3">
+                            <div *ngFor="let resource of courseData.sections[currentSection].resources"
+                                 class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                                <span class="flex items-center">
+                                    <mat-icon class="mr-2">attachment</mat-icon>
+                                    {{resource.title}}
+                                </span>
+                                <button (click)="downloadResource(resource)"
+                                        class="text-blue-400 hover:text-blue-500">
+                                    Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Content Sidebar -->
+        <div class="bg-gray-800 rounded-xl p-6 h-fit">
+            <h3 class="text-xl font-bold mb-6">Course Content</h3>
+            
+            <div class="space-y-4">
+                <div *ngFor="let section of courseData.sections; let i = index"
+                     class="p-4 rounded-lg transition-all duration-300"
+                     [ngClass]="{'bg-gray-700': i === currentSection,
+                                'bg-gray-750': i !== currentSection,
+                                'opacity-50': isLocked(i)}">
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
+                                {{i + 1}}
+                            </span>
+                            <span [class.line-through]="isLocked(i)">
+                                {{section.title}}
+                            </span>
+                        </div>
+                        <mat-icon *ngIf="isLocked(i)">lock</mat-icon>
+                        <mat-icon *ngIf="i < currentSection">check_circle</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

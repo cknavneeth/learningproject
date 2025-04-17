@@ -33,6 +33,7 @@ import { PaymentController } from './payment/controller/payment.controller';
 import { PaymentService } from './payment/service/payment.service';
 import { paymentRepository } from './payment/repository/payment.repository';
 import { PaymentModule } from './payment/payment.module';
+import { MylearningModule } from './mylearning/mylearning.module';
 
 
 console.log(process.env.MONGO_URI)
@@ -52,10 +53,11 @@ console.log(process.env.MONGO_URI)
     WishlistModule,
     CategoryModule,
     CouponModule,
-    PaymentModule
+    PaymentModule,
+    MylearningModule
   ],
-  controllers: [AppController, CartController, CouponController, PaymentController, ],
-  providers: [AppService,GuardGuard, CloudinaryService, EmailService, CouponService, PaymentService, ],
+  controllers: [AppController, CartController, CouponController, PaymentController,  ],
+  providers: [AppService,GuardGuard, CloudinaryService, EmailService, CouponService, PaymentService ],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

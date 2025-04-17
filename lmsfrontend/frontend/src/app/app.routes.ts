@@ -39,6 +39,8 @@ import { AddcouponComponent } from './components/admin/addcoupon/addcoupon.compo
 import { ListcouponComponent } from './components/admin/listcoupon/listcoupon.component';
 import { CheckoutComponent } from './components/studentmain/checkout/checkout.component';
 import { MyCoursesComponent } from './components/insMaincomponent/my-courses/my-courses.component';
+import { MyLearningComponent } from './components/studentmain/my-learning/my-learning.component';
+import { CoursePlayerComponent } from './components/studentmain/course-player/course-player.component';
 
 export const routes: Routes = [
     {
@@ -124,6 +126,17 @@ export const routes: Routes = [
             {
                 path:'checkout',
                 component:CheckoutComponent,
+            },
+            
+            {
+                path:'learning',
+                component:MyLearningComponent,
+                canActivate:[authGuard]
+            },
+            {
+                path: 'course-player/:id',  // Add this new route
+                component: CoursePlayerComponent,
+                // canActivate: [authGuard]
             }
            
         ]

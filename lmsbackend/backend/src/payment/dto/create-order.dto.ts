@@ -14,6 +14,7 @@ export class CreateOrderDto{
 
     
     @IsArray()
+    @IsNotEmpty()
     items:string[]
 
     @IsOptional()

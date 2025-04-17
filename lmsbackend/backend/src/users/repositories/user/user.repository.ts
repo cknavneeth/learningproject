@@ -83,6 +83,7 @@ export class UserRepository implements IUserRepository{
         const [courses, total] = await Promise.all([
             this.courseModel.find(query)
                 .populate('instructor', 'name profileImage')
+                .populate('category','name')
                 .select('title description thumbnailUrl price duration level category instructor courseLanguage')
                 .sort({ createdAt: -1 })
                 .skip(skip)

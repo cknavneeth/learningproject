@@ -48,6 +48,8 @@ export class PaymentService implements IPaymentService{
                 .filter(id => Types.ObjectId.isValid(id))
                 .map(id => new Types.ObjectId(id));
 
+                console.log('Course IDs being saved:', courseIds);
+
                 const userId = createOrderDto.userId;
                 if (!userId) {
                     throw new BadRequestException('User ID is required');

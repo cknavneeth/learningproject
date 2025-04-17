@@ -30,7 +30,7 @@ export class WishlistService {
         console.log('course kitti')
         try {
             const wishlist = await this.wishlistRepository.findByUser(userId)
-            console.log('Wishlist query result:', wishlist); 
+            // console.log('Wishlist query result:', wishlist); 
     
             if (!wishlist) {
                 console.log('Creating new wishlist for user:', userId);
@@ -40,7 +40,7 @@ export class WishlistService {
     
             console.log('wishlist kitti')
             const courseExists = wishlist.courses.some(course => course._id.toString() === courseId)
-            console.log('courseExists kitti', courseExists)
+            // console.log('courseExists kitti', courseExists)
             
             if (courseExists) {
                 throw new Error(MESSAGES.WISHLIST.ALREADY_IN_WISHLIST)

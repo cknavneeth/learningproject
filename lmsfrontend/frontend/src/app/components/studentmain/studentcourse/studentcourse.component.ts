@@ -9,6 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
+import { CategoryService } from '../../../services/instructorservice/category/category.service';
 
 @Component({
   selector: 'app-studentcourse',
@@ -35,6 +36,8 @@ export class StudentcourseComponent implements OnInit{
   searchTerm:string=''
   filteredCourses:any[]=[]
 
+  categories: Map<string, string> = new Map();
+
   currentPage: number = 1;
   itemsPerPage: number = 9; // Number of courses per page
   totalItems: number = 0;
@@ -50,10 +53,22 @@ export class StudentcourseComponent implements OnInit{
   selectedLanguage: string = '';
   selectedLevel: string = '';
 
-  constructor(private studentService:StudentcourseService,private snackBar:MatSnackBar,private router:Router){}
+  constructor(private studentService:StudentcourseService,private snackBar:MatSnackBar,private router:Router,private categoryService:CategoryService){}
 
   ngOnInit():void{
-    this.loadCourses()
+    this.categoryService.getAllCategories().subscribe({
+      next: (response) => {
+        console.log(response)
+        if (response && response.categories) {
+          response.categories.forEach((category: any) => {
+            this.categories.set(category._id, category.name);
+          });
+        }
+        // Load courses after categories are loaded
+        this.loadCourses();
+      },
+      error: (error) => console.error('Error loading categories:', error)
+    });
   }
 
   loadCourses(){
@@ -194,6 +209,11 @@ export class StudentcourseComponent implements OnInit{
       this.filters.levels = [value]; // Replace with single value
       this.applyFilters();
     }
+  }
+
+
+  getCategoryName(categoryId: string): string {
+    return this.categories.get(categoryId) || categoryId;
   }
 
 

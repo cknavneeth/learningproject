@@ -14,10 +14,12 @@ export class PaymentService {
   createOrder(orderData:any):Observable<any>{
 
     const amountInPaise=Math.round(orderData.amount*100)
+    const courseIds = orderData.items.map((item: {courseId: {_id?: string} | string}) => 
+      typeof item.courseId === 'string' ? item.courseId : (item.courseId._id || ''));
     const payload = {
       amount: amountInPaise,
       currency: orderData.currency || 'INR',
-      items: orderData.items,
+      items: courseIds,
       coupon: orderData.coupon
     };
     console.log('Sending payload to backend:', payload);
