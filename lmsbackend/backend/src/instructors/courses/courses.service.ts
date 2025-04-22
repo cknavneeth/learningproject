@@ -191,4 +191,46 @@ export class CoursesService {
         }
     }
 
+
+
+
+    async getEnrolledStudents(instructorId:string,page:number,limit:number){
+        try {
+            const result=await this.courseRepository.getEnrolledStudents(new Types.ObjectId(instructorId),page,limit)
+
+            const totalStudents=result.total
+
+            return {
+                status:'success',
+                data:{
+                    students:result.students.map(enrollment=>({
+                        studentId:enrollment._id,
+                        name:enrollment.name,
+                        email:enrollment.email,
+                        totalPurchases:enrollment.totalPurchases,
+                        lastPurchaseDate:enrollment.lastPurchaseDate,
+                        courses:enrollment.courses.flat().map(course=>({
+                            courseId:course._id,
+                            title:course.title,
+                            price:course.price
+                        }))
+                    })),
+                    pagination:{
+                        total:totalStudents,
+                        page,
+                        limit,
+                        totalPages:Math.ceil(result.total/limit)
+                    }
+                }
+            }
+            
+        } catch (error) {
+
+            console.log('error fetching enrolled students',error)
+            throw new BadRequestException('Failed to fetch enrolled students')
+
+        }
+
+    }
+
 }

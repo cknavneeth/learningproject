@@ -1,0 +1,105 @@
+<div class="p-6 bg-gray-900 min-h-screen">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold text-white">Enrolled Students</h1>
+        <p class="text-gray-400 mt-2">Total Students: {{ totalStudents }}</p>
+      </div>
+  
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex justify-center items-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+  
+      <!-- Error State -->
+      <div *ngIf="error" class="bg-red-500 text-white p-4 rounded-lg mb-6">
+        {{ error }}
+      </div>
+  
+      <!-- Students List -->
+      <div *ngIf="!loading && !error && students.length > 0" class="bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-700">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Student</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Courses Enrolled</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Last Purchase</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Total Purchases</th>
+              </tr>
+            </thead>
+            <tbody class="bg-gray-800 divide-y divide-gray-700">
+              <tr *ngFor="let student of students" class="hover:bg-gray-700 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div>
+                      <div class="text-sm font-medium text-white">{{ student.name }}</div>
+                      <div class="text-sm text-gray-400">{{ student.email }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm text-gray-300">
+                    <div *ngFor="let course of student.courses" class="mb-1">
+                      {{ course.title }}
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-300">{{ formatDate(student.lastPurchaseDate) }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-300">{{ student.totalPurchases }}</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <!-- Pagination -->
+        <div class="bg-gray-800 px-4 py-3 border-t border-gray-700 sm:px-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 flex justify-between sm:hidden">
+              <button 
+                [disabled]="currentPage === 1"
+                (click)="onPageChange(currentPage - 1)"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700"
+                [class.opacity-50]="currentPage === 1">
+                Previous
+              </button>
+              <button 
+                [disabled]="currentPage === totalPages"
+                (click)="onPageChange(currentPage + 1)"
+                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700"
+                [class.opacity-50]="currentPage === totalPages">
+                Next
+              </button>
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-gray-400">
+                  Showing page {{ currentPage }} of {{ totalPages }}
+                </p>
+              </div>
+              <div>
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                  <button 
+                    *ngFor="let page of [].constructor(totalPages); let i = index"
+                    (click)="onPageChange(i + 1)"
+                    [class.bg-gray-700]="currentPage === i + 1"
+                    class="relative inline-flex items-center px-4 py-2 border border-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-700">
+                    {{ i + 1 }}
+                  </button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Empty State -->
+      <div *ngIf="!loading && !error && students.length === 0" class="text-center py-8">
+        <p class="text-gray-400">No students enrolled yet.</p>
+      </div>
+    </div>
+  </div>

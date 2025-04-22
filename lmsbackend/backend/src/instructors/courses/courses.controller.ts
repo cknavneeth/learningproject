@@ -139,6 +139,27 @@ export class CoursesController {
     }
 
 
+    ///get student who purchased instructors course
+    @Get('enrolled-students')
+    @UseGuards(GuardGuard)
+    async getEnrolledStudents(@Request() req,
+    @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,
+    @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number)
+   {
+
+    try {
+         const instructorId=req.user.InstructorId
+
+         const result=await this.coursesService.getEnrolledStudents(instructorId,page,limit)
+         return result
+    } catch (error) {
+        throw new BadRequestException('Failed to fetch enrolled students')
+    }
+
+   }
+    
+
+
     @Get(':id')
     @UseGuards(GuardGuard)
     async getCourseById(@Param('id') id:string,@Request() req){
@@ -163,8 +184,8 @@ export class CoursesController {
     }
 
 
-    //for offerss
-    
+    //get enrolled courses
+   
 
 
 

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Course, CourseDocument, CourseStatus } from "../course.schema";
 
 export interface ICourseRepository{
@@ -8,4 +9,6 @@ export interface ICourseRepository{
     findById(courseId:string):Promise<CourseDocument|null>
     findByIdAndDelete(courseId:string):Promise<CourseDocument|null>
     findByInstructorWithPagination(instructorId:string,page:number,limit:number):Promise<{courses:CourseDocument[],total:number}>
+
+    getEnrolledStudents(instructorId:Types.ObjectId,page:number,limit:number):Promise<{students:any[];total:number}>
 }

@@ -6,10 +6,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Course, CourseSchema } from './course.schema';
 import { CloudinaryModule } from '../../shared/cloudinary/cloudinary.module';
 import { AuthenticationModule } from '../../authentication/auth.module';
+import { Payment, PaymentSchema } from 'src/payment/schema/payment.schema';
 
 
 @Module({
-  imports:[MongooseModule.forFeature([{name:Course.name,schema:CourseSchema}]),CloudinaryModule,AuthenticationModule],
+  imports:[MongooseModule.forFeature([{name:Course.name,schema:CourseSchema},{name:Payment.name,schema:PaymentSchema}]),CloudinaryModule,AuthenticationModule],
   controllers:[CoursesController],
   providers: [CourseRepository,CoursesService],
   exports:[CourseRepository,CoursesService]

@@ -59,4 +59,10 @@ export class InstructorcourseService {
     return this.http.get<any>(`${this.apiUrl}`,{params:new HttpParams().set('page',page.toString()).set('limit',limit.toString())})
   }
 
+
+  getEnrolledStudents(page:number=1,limit:number=10):Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}/enrolled-students`,{params:{page:page.toString(),limit:limit.toString()}})
+     
+  }
+
 }

@@ -41,6 +41,7 @@ import { CheckoutComponent } from './components/studentmain/checkout/checkout.co
 import { MyCoursesComponent } from './components/insMaincomponent/my-courses/my-courses.component';
 import { MyLearningComponent } from './components/studentmain/my-learning/my-learning.component';
 import { CoursePlayerComponent } from './components/studentmain/course-player/course-player.component';
+import { InstructorstudentsComponent } from './components/insMaincomponent/instructorstudents/instructorstudents.component';
 
 export const routes: Routes = [
     {
@@ -209,6 +210,10 @@ export const routes: Routes = [
             {
                 path:'my-courses',
                 component:MyCoursesComponent
+            },
+            {
+                path:'enrolled-students',
+                component:InstructorstudentsComponent
             }
 
         ]

@@ -107,7 +107,6 @@ export class Course {
     @Prop({type:Offer})
     offer:Offer
 
-
 }
 
 
