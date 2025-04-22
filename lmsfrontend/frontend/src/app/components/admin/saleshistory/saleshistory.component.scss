@@ -1,0 +1,75 @@
+// Custom scrollbar
+::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 6px;
+    border: 3px solid #1f2937;
+    
+    &:hover {
+      background-color: #6b7280;
+    }
+  }
+  
+  // Material Paginator Dark Theme Override
+  ::ng-deep {
+    .mat-mdc-paginator {
+      background: transparent;
+      
+      .mat-mdc-paginator-container {
+        @apply text-gray-300;
+      }
+      
+      .mat-mdc-paginator-page-size-label,
+      .mat-mdc-paginator-range-label {
+        @apply text-gray-400;
+      }
+      
+      .mat-mdc-paginator-navigation-previous,
+      .mat-mdc-paginator-navigation-next {
+        @apply text-gray-300 hover:bg-gray-700/50;
+      }
+      
+      .mat-mdc-paginator-navigation-previous:disabled,
+      .mat-mdc-paginator-navigation-next:disabled {
+        @apply text-gray-600;
+      }
+    }
+  }
+  
+  // Animation for cards
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Apply animation to cards
+  div[class*="bg-gray-800"] {
+    animation: fadeInUp 0.3s ease-out;
+    animation-fill-mode: both;
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .grid-cols-3 {
+      @apply grid-cols-1;
+    }
+  }

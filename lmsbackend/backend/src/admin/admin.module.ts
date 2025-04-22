@@ -11,9 +11,10 @@ import { InstructorsModule } from 'src/instructors/instructors.module';
 import { AdminRepository } from './repositories/admin/admin.repository';
 import { Course, CourseSchema } from 'src/instructors/courses/course.schema';
 import { EmailModule } from 'src/shared/email/email.module';
+import { Payment, PaymentSchema } from 'src/payment/schema/payment.schema';
 
 @Module({
-  imports :[MongooseModule.forFeature([{name:admin.name,schema:adminSchema},{ name: user.name, schema: userSchema },{name:instructor.name,schema:instructorSchema},{name:Course.name,schema:CourseSchema}]),UsersModule, InstructorsModule,EmailModule],
+  imports :[MongooseModule.forFeature([{name:admin.name,schema:adminSchema},{ name: user.name, schema: userSchema },{name:instructor.name,schema:instructorSchema},{name:Course.name,schema:CourseSchema},{name:Payment.name,schema:PaymentSchema}]),UsersModule, InstructorsModule,EmailModule],
   controllers: [AdminController],
   providers: [AdminService,AdminRepository],
   exports:[AdminService],

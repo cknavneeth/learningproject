@@ -225,4 +225,72 @@ export class AdminService {
     }
 
 
+
+
+    //for getting sales history
+    async getSalesHistory(page:number=1,limit:number=10){
+        const {sales,total}=await this.adminRepository.getSalesHistory(page,limit)
+
+        const formattedSales=sales.map(sale=>({
+            _id: sale._id ,
+            orderId: sale.orderId,
+            student: {
+                name:sale.student?.username||'unknown name',
+                email: sale.student?.email||'unknown email'
+            },
+            courses: sale.courses,
+            totalAmount: sale.amount,
+            status: sale.status,
+            purchaseDate: sale.purchaseDate,
+            cancellationReason: sale.cancellationReason
+        }))
+
+        return {
+            sales:formattedSales,
+            pagination:{
+                total,
+                page,
+                limit,
+                totalPages:Math.ceil(total/limit)
+            }
+
+        }
+    }
+
+
+    async approveRefund(orderId:string){
+        const payment=await this.adminRepository.getOrderById(orderId)
+
+        if(!payment){
+            throw new NotFoundException('order not found')
+        }
+
+        if(payment.status!=='refund_requested'){
+            throw new BadRequestException('refund not requested')
+        }
+
+        const updatedPayment=await this.adminRepository.updateOrderStatus(orderId,'cancelled')
+
+        if(!updatedPayment){
+            throw new BadRequestException('Failed to update order')
+        }
+
+        try {
+            await this.emailService.sendRefundApprovalEmail(
+                (updatedPayment.userId as any).email,
+                orderId,
+                updatedPayment.courses.map(course=>(course as any).title),
+                updatedPayment.amount
+            )
+        } catch (error) {
+            console.error('Error sending refund approval email',error)
+        }
+
+        return {
+            message:'Refund approved successfully',
+            orderId:updatedPayment.orderId
+        }
+    }
+
+
 }

@@ -1,0 +1,94 @@
+<div class="min-h-screen bg-gray-900 p-6">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+          Sales History
+        </h1>
+        <p class="text-gray-400 mt-2">Track and manage all course sales</p>
+      </div>
+  
+      <!-- Loading Spinner -->
+      <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+  
+      <!-- Error Message -->
+      <div *ngIf="error" class="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-lg mb-6">
+        {{ error }}
+      </div>
+  
+      <!-- Sales Grid -->
+      <div *ngIf="!isLoading && !error" class="space-y-4">
+        <div *ngFor="let sale of salesHistory" 
+             class="bg-gray-800/50 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 hover:transform hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:border-blue-500/30">
+          
+          <!-- Header Row -->
+          <div class="flex justify-between items-start mb-4">
+            <!-- Order Info -->
+            <div>
+              <h3 class="text-gray-300 font-medium">Order #{{ sale.orderId }}</h3>
+              <p class="text-sm text-gray-400">{{ formatDate(sale.purchaseDate) }}</p>
+            </div>
+            
+            <!-- Status Badge -->
+            <span [ngClass]="{
+              'bg-green-500/20 text-green-500': sale.status === 'completed',
+              'bg-yellow-500/20 text-yellow-500': sale.status === 'pending',
+              'bg-red-500/20 text-red-500': sale.status === 'cancelled',
+              'bg-blue-500/20 text-blue-500': sale.status === 'refund_requested'
+            }" class="px-3 py-1 rounded-full text-sm font-medium">
+              {{ sale.status }}
+            </span>
+          </div>
+  
+          <!-- Content Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <!-- Student Info -->
+            <div class="bg-gray-700/30 rounded-lg p-4">
+              <h4 class="text-gray-400 text-sm mb-2">Student Details</h4>
+              <p class="text-white font-medium">{{ sale.student.name }}</p>
+              <p class="text-gray-400 text-sm">{{ sale.student.email }}</p>
+            </div>
+  
+            <!-- Courses Info -->
+            <div class="bg-gray-700/30 rounded-lg p-4">
+              <h4 class="text-gray-400 text-sm mb-2">Purchased Courses</h4>
+              <p class="text-white font-medium">{{ getTotalCourses(sale.courses) }} course(s)</p>
+              <div class="mt-1 space-y-1">
+                <p *ngFor="let course of sale.courses" class="text-gray-400 text-sm truncate">
+                  {{ course.title }}
+                </p>
+              </div>
+            </div>
+  
+            <!-- Amount Info -->
+            <div class="bg-gray-700/30 rounded-lg p-4">
+              <h4 class="text-gray-400 text-sm mb-2">Payment Details</h4>
+              <p class="text-white font-medium text-lg">₹{{ sale.totalAmount }}</p>
+            </div>
+          </div>
+  
+          <!-- Actions -->
+          <div *ngIf="sale.status === 'refund_requested'" class="mt-4">
+            <button mat-button
+                    (click)="approveRefund(sale.orderId)"
+                    class="bg-blue-500/10 text-blue-400 px-4 py-2 rounded-lg hover:bg-blue-500/20 transition-colors duration-200 flex items-center gap-2">
+              <mat-icon>check_circle</mat-icon>
+              Approve Refund
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Paginator -->
+      <mat-paginator
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="pageIndex"
+        (page)="handlePageEvent($event)"
+        class="bg-transparent text-white mt-6">
+      </mat-paginator>
+    </div>
+  </div>

@@ -115,4 +115,25 @@ export class AdminController {
             throw new BadRequestException(error.message)
          }
     }
+
+
+    //for getting sales history in the admin page
+    @Get('sales-history')
+    async getSalesHistory(
+        @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,
+        @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number
+    ){
+        const salesreport=await this.adminservice.getSalesHistory(page,limit)
+        return salesreport
+    }
+
+    //admin need to approve cancel right,then do
+    @Post('sales/refund/:orderId')
+    async approveRefund(@Param('orderId') orderId:string){
+        const result=await this.adminservice.approveRefund(orderId)
+        return result
+    }
+
+
+
 }

@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AdminLoginResponse, instructors } from '../interfaces/auth.interface';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, catchError } from 'rxjs';
 import { students } from '../interfaces/auth.interface';
 import { TokenserviceService } from './tokenservice.service';
 import { Router } from '@angular/router';
+import { SalesHistory } from '../interfaces/saleshistory.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +86,34 @@ export class AdminserviceService {
 
   removeCourseOffer(courseId: string): Observable<any> {
     return this.http.delete(`${this.apiurl}/courses/${courseId}/offer`);
+  }
+
+
+ 
+
+  approveRefund(orderId:string):Observable<any>{
+     return this.http.post(`${this.apiurl}/sales/approve-refund/${orderId}`,{})
+  }
+
+  getSalesHistory(page: number = 1, limit: number = 10): Observable<{
+    sales: SalesHistory[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    }
+  }> {
+    return this.http.get<{
+      sales: SalesHistory[];
+      pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      }
+    }>(`${this.apiurl}/sales-history?page=${page}&limit=${limit}`);
+  }
 }
 
-}
+

@@ -1,13 +1,16 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, PipelineStage, Types } from 'mongoose';
 import { Course, CourseDocument, CourseStatus } from 'src/instructors/courses/course.schema';
 import { IAdminRepository } from '../admin.repository.interface';
+import { Payment, PaymentDocument } from 'src/payment/schema/payment.schema';
 
 @Injectable()
 export class AdminRepository implements IAdminRepository{
 
-    constructor(@InjectModel(Course.name) private courseModel:Model<CourseDocument> ){}
+    constructor(@InjectModel(Course.name) private courseModel:Model<CourseDocument>, 
+                @InjectModel(Payment.name) private paymentModel:Model<PaymentDocument>
+         ){}
 
     async getAllCourses(page:number=1,limit:number=10):Promise<{courses:CourseDocument[],total:number}> {
         const skip=(page-1)*limit
@@ -112,5 +115,107 @@ export class AdminRepository implements IAdminRepository{
         .populate('instructor')
         .exec()
     }
+
+
+
+    //for getting sales history
+    async getSalesHistory(page:number=1,limit:number=10):Promise<{sales:Payment[],total:number}>{
+        console.log('getting sales history')
+        const skip=(page-1)*limit
+
+        const pipeline=[
+            {
+                $match: {
+                    status: { $in: ['completed'] }, 
+                    userId: { $exists: true },
+                    courses: { $exists: true, $ne: [] }
+                }
+            },
+            {
+                $lookup:{
+                    from:'users',
+                    localField:'userId',
+                    foreignField:'_id',
+                    as:'userDetails'
+                }
+            },
+            {
+                $unwind:{
+                    path:'$userDetails',
+                    preserveNullAndEmptyArrays:false
+                }
+            },
+            {
+                $lookup:{
+                    from:'courses',
+                    localField:'courses',
+                    foreignField:'_id',
+                    as:'courseDetails'
+                }
+            },
+            {
+                $match: {
+                    'courseDetails': { $ne: [] }
+                }
+            },
+            {
+                $project:{
+                    _id:1,
+                    orderId:1,
+                    status:1,
+                    amount:1,
+                    purchaseDate:'$createdAt',
+                    cancellationReason:1,
+                    courses:'$courseDetails',
+                    student:{
+                        username:'$userDetails.username',
+                        email:'$userDetails.email'
+                    }
+                }
+            },
+            {
+                $sort:{createdAt:-1}
+            },
+            {
+                $skip:skip
+            },
+            {
+                $limit:limit
+            }
+        ]
+
+        const [sales,totalCount]=await Promise.all([
+           this.paymentModel.aggregate(pipeline as PipelineStage[]),
+           this.paymentModel.countDocuments()
+        ])
+        console.log('sales',sales)
+        console.log('total',totalCount)
+        return {sales,total:totalCount}
+    }
+
+
+
+    async getOrderById(orderId:string):Promise<PaymentDocument|null>{
+        return this.paymentModel.findOne({orderId})
+        .populate('userId','name email')
+        .populate('courses','title')
+        .exec()
+    }
+
+    async updateOrderStatus(orderId:string,status:string):Promise<PaymentDocument|null>{
+        const updatedStatus=await this.paymentModel.findOneAndUpdate(
+            {orderId:orderId},
+            {$set:{status}},
+            {new:true}
+        )
+        .populate('userId','name email')
+        .populate('courses','title')
+        .exec()
+
+        return updatedStatus
+    }
+
+
+
 
 }

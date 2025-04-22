@@ -8,10 +8,11 @@ import { paymentRepository } from './repository/payment.repository';
 import { AuthenticationModule } from 'src/authentication/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { user, userSchema } from 'src/users/users.schema';
 
 @Module({
     imports:[
-        MongooseModule.forFeature([{name:Payment.name,schema:PaymentSchema}]),
+        MongooseModule.forFeature([{name:Payment.name,schema:PaymentSchema},{name:user.name,schema:userSchema}]),
         AuthenticationModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],

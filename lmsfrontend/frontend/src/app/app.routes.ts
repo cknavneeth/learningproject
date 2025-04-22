@@ -42,6 +42,7 @@ import { MyCoursesComponent } from './components/insMaincomponent/my-courses/my-
 import { MyLearningComponent } from './components/studentmain/my-learning/my-learning.component';
 import { CoursePlayerComponent } from './components/studentmain/course-player/course-player.component';
 import { InstructorstudentsComponent } from './components/insMaincomponent/instructorstudents/instructorstudents.component';
+import { SaleshistoryComponent } from './components/admin/saleshistory/saleshistory.component';
 
 export const routes: Routes = [
     {
@@ -261,6 +262,10 @@ export const routes: Routes = [
                 path:'coupons',
                 component:ListcouponComponent
             },
+            {
+                path:'sales-history',
+                component:SaleshistoryComponent
+            }
            
         ]
     }

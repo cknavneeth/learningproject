@@ -141,6 +141,36 @@ export class EmailService {
         });
     }
 
+
+    //for sending email after cancellation rejection
+    async sendRefundApprovalEmail(email: string, orderId: string, courseNames: string[], totalAmount: number): Promise<void> {
+        await this.sendMail({
+            to: email,
+            subject: 'Course Refund Approved',
+            text: `Your refund request for order ${orderId} has been approved. The refund will be processed within 5-7 business days.`,
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">
+                    <h2 style="color: #333;">Refund Approved</h2>
+                    <p style="color: #666;">Your refund request for order ${orderId} has been approved.</p>
+                     <div style="margin-top: 20px; padding: 15px; background-color: #fff; border-radius: 5px;">
+                        <p style="color: #666;">Courses:</p>
+                        <ul style="color: #666;">
+                            ${courseNames.map(course => `<li>${course}</li>`).join('')}
+                        </ul>
+                        <p style="color: #666;">Total Amount: ₹${totalAmount}</p>
+                        <p style="color: #666;">The refund will be processed within 5-7 business days.</p>
+                    </div>
+                    <p style="color: #999; font-size: 12px; margin-top: 20px;">If you have any questions, please contact our support team.</p>
+                </div>
+            `
+        });
+    }
+
+
+
+
+
+
     private async sendMail(options: {
         to: string;
         subject: string;
