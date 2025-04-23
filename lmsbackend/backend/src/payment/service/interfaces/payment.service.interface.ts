@@ -8,4 +8,6 @@ export interface IPaymentService{
     verifyPayment(verifyPaymentDto:VerifyPaymentDto):Promise<Payment|null>
 
     getPaymentHistory(userId:string)
+
+    requestCourseCancellation(userId:string,courseId:string,reason:string):Promise<Payment>
 }

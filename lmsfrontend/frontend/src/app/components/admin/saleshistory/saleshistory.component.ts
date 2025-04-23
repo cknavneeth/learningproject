@@ -86,7 +86,10 @@ export class SaleshistoryComponent implements OnInit {
     return new Date(date).toLocaleDateString();
   }
 
+  
   getTotalCourses(courses: Array<{ title: string }>): number {
     return courses.length;
   }
+
+
 }

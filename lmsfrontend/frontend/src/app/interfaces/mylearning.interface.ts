@@ -7,6 +7,8 @@ export interface EnrolledCourse{
         name:string
     };
     progress:number;
+    status: 'active' | 'cancelled' | 'cancellation_pending';
+    purchaseDate: Date;
 }
 
 export interface UpdateProgressRequest {

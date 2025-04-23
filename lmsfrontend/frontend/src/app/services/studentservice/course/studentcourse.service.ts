@@ -113,4 +113,20 @@ export class StudentcourseService {
   getCourseProgress(courseId: string): Observable<any> {
     return this.http.get(`${this.learningUrl}/course/${courseId}/progress`);
   }
+
+
+
+  requestCourseCancellation(courseId: string, reason: string): Observable<any> {
+    // Update to correct endpoint: student/payment/cancel/:courseId
+    return this.http.post(`${this.baseUrl}/student/payment/cancel/${courseId}`, { reason })
+        .pipe(
+            catchError((error) => {
+                console.error('API Error:', error);
+                return throwError(() => error);
+            })
+        );
+  }
+
+
+  
 }

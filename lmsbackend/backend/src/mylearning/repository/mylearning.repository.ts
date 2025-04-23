@@ -39,7 +39,10 @@ export class MylearningRepository implements IMyLearningRepository {
         console.log('Raw completed payments:', completedPayments);
 
         //iam extracting all courses id from completed payments
-        const enrolledCourseIds=completedPayments.reduce((acc,payment)=>[...acc,...payment.courses],[])
+        const enrolledCourseIds = completedPayments.reduce((acc: Types.ObjectId[], payment) => {
+            const courseIds = payment.coursesDetails?.map(detail => detail.courseId) || [];
+            return [...acc, ...courseIds];
+        }, []);
 
 
 
@@ -80,6 +83,15 @@ export class MylearningRepository implements IMyLearningRepository {
                     return null;
                 }
 
+                //finding payement record to get purchase date
+                const payment = await this.paymentModel.findOne({
+                    userId: new Types.ObjectId(userId),
+                    'coursesDetails.courseId': new Types.ObjectId(courseId),
+                    status: 'completed'
+                })
+                .select('purchaseDate')
+                .lean();
+
                 const progress = await this.progressModel
                     .findOne({
                         userId: new Types.ObjectId(userId),
@@ -97,7 +109,8 @@ export class MylearningRepository implements IMyLearningRepository {
                     instructor: {
                         name: (course.instructor as any)?.name || 'Unknown'
                     },
-                    progress: progress?.overallProgress || 0
+                    progress: progress?.overallProgress || 0,
+                    purchaseDate:payment?.purchaseDate
                 } as EnrolledCourse;
 
                 console.log('Constructed enrolled course:', enrolledCourse);

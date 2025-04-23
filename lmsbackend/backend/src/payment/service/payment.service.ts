@@ -62,7 +62,11 @@ export class PaymentService implements IPaymentService{
                     amount: amountInRupees,
                     currency: order.currency,
                     status: 'pending',
-                    courses: courseIds,  // Add items to track what's being purchased
+                    coursesDetails:courseIds.map(courseId=>({
+                        courseId,
+                        amount:amountInRupees,
+                        status:'active'
+                    })) ,// Add items to track what's being purchased
                     userId:new Types.ObjectId(userId) // Add userId if available in DTO
                 });
                 console.log('Payment record created:', payment);
@@ -145,7 +149,7 @@ export class PaymentService implements IPaymentService{
                     currency: paymentDetails.currency,
                     status: 'completed',
                     userId: originalPayment.userId,
-                    courses: originalPayment.courses // Also include courses if they exist
+                    coursesDetails: originalPayment.coursesDetails// Also include courses if they exist
                 });
                 return newPayment;
             }
@@ -159,5 +163,60 @@ export class PaymentService implements IPaymentService{
 
     async getPaymentHistory(userId: string) {
         return this.paymentRepository.findByUserId(userId)
+    }
+
+
+    async requestCourseCancellation(userId:string,courseId:string,reason:string):Promise<Payment>{
+
+        console.log('hello requestilek kerunnundo testing hnyy',userId,courseId,reason)
+         const payment=await this.paymentRepository.findLatestPaymentByCourse(userId,courseId)
+
+         console.log('Found payment:', payment); 
+
+         if(!payment){
+            throw new BadRequestException('No payment record found for this course')
+         }
+
+         console.log('CourseDetails:', payment.coursesDetails.map(detail => ({
+            courseId: detail.courseId.toString(),
+            status: detail.status
+        })));
+    
+
+         const coursePurchase=payment.coursesDetails.find(detail=>{
+            const  detailCourseId=detail.courseId.toString()
+            console.log('Comparing:', { detailCourseId, courseId, status: detail.status });
+           return detailCourseId === courseId && detail.status === 'active';
+        })
+
+         if(!coursePurchase){
+            throw new BadRequestException('Course is not active or not found in payment record')
+         }
+
+         console.log('Purchase Date:', payment.purchaseDate);
+         console.log('Current Time:', new Date());
+
+
+         const purchaseTime=payment.purchaseDate
+         const currentTime=new Date()
+         const hoursSincePurchase=(currentTime.getTime()-purchaseTime.getTime())/(1000*60*60)
+
+         console.log('Hours since purchase:', hoursSincePurchase);
+
+         if(hoursSincePurchase>24){
+            throw new BadRequestException('Cancellation is not allowed after 24 hours')
+         }
+
+         if(coursePurchase.status==='cancellation_pending'){
+            throw new BadRequestException('Cancellation request is already pending')
+         }
+
+         const updatedPayment=await this.paymentRepository.updateCourseCancellationStatus(payment._id.toString(),courseId,reason)
+
+         if(!updatedPayment){
+            throw new BadRequestException('Failed to update cancellation status')
+         }
+
+         return updatedPayment
     }
 }

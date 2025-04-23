@@ -1,0 +1,45 @@
+
+<div class="bg-gray-900 rounded-lg">
+    <div class="p-6">
+      <h2 class="text-xl font-semibold text-white mb-4">Confirm Course Cancellation</h2>
+      
+      <div *ngIf="!data.isEligible" class="bg-red-500/10 border border-red-500/50 rounded-lg p-4 mb-4">
+        <p class="text-red-400">
+          Sorry, the 24-hour cancellation window has expired. You can no longer cancel this course.
+        </p>
+      </div>
+
+      <div *ngIf="data.isEligible">
+        <p class="text-gray-300 mb-4">
+          Are you sure you want to cancel "{{ data.courseName }}"? This action will need admin approval.
+        </p>
+         
+        <div class="mb-4">
+            <label class="block text-gray-400 mb-2">Reason for cancellation:</label>
+            <textarea 
+              [(ngModel)]="reason"
+              class="w-full bg-gray-800 text-gray-300 border border-gray-700 rounded-lg p-3"
+              rows="3"
+              placeholder="Please provide a reason for cancellation">
+            </textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 p-4 flex justify-end space-x-3">
+        <button 
+          mat-button
+          (click)="onClose()"
+          class="px-4 py-2 text-gray-400 hover:bg-gray-800 rounded-lg transition-colors">
+          Close
+        </button>
+        <button 
+          *ngIf="data.isEligible"
+          mat-button
+          [disabled]="!reason.trim()"
+          (click)="onConfirm()"
+          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          Request Cancellation
+        </button>
+      </div>
+    </div>

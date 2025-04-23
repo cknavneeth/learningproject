@@ -238,11 +238,11 @@ export class AdminService {
                 name:sale.student?.username||'unknown name',
                 email: sale.student?.email||'unknown email'
             },
-            courses: sale.courses,
+            courses: sale.coursesDetails || [],
             totalAmount: sale.amount,
             status: sale.status,
             purchaseDate: sale.purchaseDate,
-            cancellationReason: sale.cancellationReason
+            cancellationReason: sale.coursesDetails.map(course=>course.cancellationReason)
         }))
 
         return {
@@ -279,7 +279,7 @@ export class AdminService {
             await this.emailService.sendRefundApprovalEmail(
                 (updatedPayment.userId as any).email,
                 orderId,
-                updatedPayment.courses.map(course=>(course as any).title),
+                updatedPayment.coursesDetails.map(course=>(course as any).title),
                 updatedPayment.amount
             )
         } catch (error) {
@@ -294,3 +294,4 @@ export class AdminService {
 
 
 }
+

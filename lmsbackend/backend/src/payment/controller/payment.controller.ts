@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Inject, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { PAYMENT_SERVICE } from '../constants/payment-constant';
 import { IPaymentService } from '../service/interfaces/payment.service.interface';
 import { CreateOrderDto } from '../dto/create-order.dto';
@@ -27,4 +27,25 @@ export class PaymentController {
         const userId=req.user.userId
         return this.paymentService.getPaymentHistory(userId)
     }
+
+
+    @Post('cancel/:courseId')
+    @UseGuards(GuardGuard)
+    async requestCancellation(
+        @Param('courseId') courseId:string,
+        @Body('reason') reason:string,
+        @Req() req
+    ){
+
+        if(!reason){
+            throw new BadRequestException('cancellation reason is required')
+        }
+
+        const userId=req.user.userId
+
+        return this.paymentService.requestCourseCancellation(userId,courseId,reason)
+
+    }
+
+
 }

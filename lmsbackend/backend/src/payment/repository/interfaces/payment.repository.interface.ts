@@ -5,4 +5,8 @@ export interface IPaymentRepository{
     findByOrderId(orderId:string):Promise<PaymentDocument|null>
     updatePaymentStatus(paymentId:string,status:string):Promise<PaymentDocument|null>
     findByUserId(userId:string):Promise<PaymentDocument[]>
+
+    findLatestPaymentByCourse(userId:string,courseId:string):Promise<PaymentDocument|null>
+
+    updateCourseCancellationStatus(paymentId:string,courseId:string,reason:string):Promise<PaymentDocument|null>
 }

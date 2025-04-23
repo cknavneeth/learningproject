@@ -5,6 +5,28 @@ import { Course, CourseDocument, CourseStatus } from 'src/instructors/courses/co
 import { IAdminRepository } from '../admin.repository.interface';
 import { Payment, PaymentDocument } from 'src/payment/schema/payment.schema';
 
+
+interface AggregatedSale {
+    _id: Types.ObjectId;
+    orderId: string;
+    status: string;
+    amount: number;
+    createdAt:Date
+    purchaseDate: Date;
+    coursesDetails: {
+        courseId: Types.ObjectId;
+        amount: number;
+        status: string;
+        cancellationReason?: string;
+        cancellationDate?: Date;
+        cancellationStatus?: string;
+    }[];
+    student: {
+        username: string;
+        email: string;
+    };
+}
+
 @Injectable()
 export class AdminRepository implements IAdminRepository{
 
@@ -119,16 +141,21 @@ export class AdminRepository implements IAdminRepository{
 
 
     //for getting sales history
-    async getSalesHistory(page:number=1,limit:number=10):Promise<{sales:Payment[],total:number}>{
+    async getSalesHistory(page:number=1,limit:number=10):Promise<{sales:AggregatedSale[],total:number}>{
         console.log('getting sales history')
         const skip=(page-1)*limit
+
+        const mostRecent = await this.paymentModel.findOne({ status: 'completed' })
+        .sort({ createdAt: -1 })
+        .lean();
+    console.log('Most recent payment in DB:', mostRecent);
 
         const pipeline=[
             {
                 $match: {
                     status: { $in: ['completed'] }, 
                     userId: { $exists: true },
-                    courses: { $exists: true, $ne: [] }
+                    coursesDetails: { $exists: true, $ne: [] }
                 }
             },
             {
@@ -146,17 +173,40 @@ export class AdminRepository implements IAdminRepository{
                 }
             },
             {
-                $lookup:{
-                    from:'courses',
-                    localField:'courses',
-                    foreignField:'_id',
-                    as:'courseDetails'
+                $unwind:{
+                    path:'$coursesDetails',
+                    preserveNullAndEmptyArrays:true
                 }
             },
             {
-                $match: {
-                    'courseDetails': { $ne: [] }
+                $lookup:{
+                    from:'courses',
+                    localField:'coursesDetails.courseId',
+                    foreignField:'_id',
+                    as:'courseInfo'
                 }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    orderId: { $first: '$orderId' },
+                    status: { $first: '$status' },
+                    amount: { $first: '$amount' },
+                    createdAt: { $first: '$createdAt' },
+                    purchaseDate: { $first: '$createdAt' },
+                    coursesDetails: { 
+                        $push: {
+                            $mergeObjects: [
+                                '$coursesDetails',
+                                { courseInfo: { $arrayElemAt: ['$courseInfo', 0] } }
+                            ]
+                        }
+                    },
+                    userDetails: { $first: '$userDetails' }
+                }
+            },
+            {
+                $sort:{createdAt:-1}
             },
             {
                 $project:{
@@ -164,17 +214,14 @@ export class AdminRepository implements IAdminRepository{
                     orderId:1,
                     status:1,
                     amount:1,
-                    purchaseDate:'$createdAt',
-                    cancellationReason:1,
-                    courses:'$courseDetails',
+                    createdAt:1,
+                    purchaseDate:1,
+                    coursesDetails:1,
                     student:{
                         username:'$userDetails.username',
                         email:'$userDetails.email'
                     }
                 }
-            },
-            {
-                $sort:{createdAt:-1}
             },
             {
                 $skip:skip
@@ -185,7 +232,7 @@ export class AdminRepository implements IAdminRepository{
         ]
 
         const [sales,totalCount]=await Promise.all([
-           this.paymentModel.aggregate(pipeline as PipelineStage[]),
+           this.paymentModel.aggregate<AggregatedSale>(pipeline as PipelineStage[]),
            this.paymentModel.countDocuments()
         ])
         console.log('sales',sales)
