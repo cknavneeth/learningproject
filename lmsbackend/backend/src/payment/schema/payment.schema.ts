@@ -16,6 +16,8 @@ export type PaymentDocument = Payment & Document;
 @Schema()
 export class CoursePaymentDetail{
 
+    
+
     @Prop({type: Types.ObjectId, ref: 'Course'})
     courseId: Types.ObjectId;
 

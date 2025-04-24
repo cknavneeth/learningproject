@@ -243,23 +243,68 @@ export class AdminRepository implements IAdminRepository{
 
 
     async getOrderById(orderId:string):Promise<PaymentDocument|null>{
-        return this.paymentModel.findOne({orderId})
-        .populate('userId','name email')
-        .populate('courses','title')
+        console.log('searching for order',orderId)
+        const payment=await  this.paymentModel.findOne({orderId:orderId,status:'completed'})
+        .populate('userId','name email') 
+        .populate('coursesDetails.courseId','title')
         .exec()
+
+        console.log('Found payment document:', payment);
+
+        return payment
     }
 
-    async updateOrderStatus(orderId:string,status:string):Promise<PaymentDocument|null>{
-        const updatedStatus=await this.paymentModel.findOneAndUpdate(
-            {orderId:orderId},
-            {$set:{status}},
-            {new:true}
-        )
-        .populate('userId','name email')
-        .populate('courses','title')
-        .exec()
+    async updateOrderStatus(orderId:string,courseId:string,status:string):Promise<PaymentDocument|null>{
+        console.log('updating the order status',{orderId,courseId,status})
+        if(!Types.ObjectId.isValid(courseId)){
+            throw new BadRequestException('Invalid course id')
+        }
 
-        return updatedStatus
+        const payment=await this.paymentModel.findOne({orderId:orderId,status:'completed'})
+
+        console.log('Found payment document:', payment);
+
+        if(!payment){
+            throw new NotFoundException('order not found')
+        }
+
+        const courseDetail = payment.coursesDetails.find(detail => 
+            detail.courseId._id.toString() === courseId || 
+            detail.courseId.toString() === courseId
+        );
+
+        console.log('hashim jihaneey',courseDetail)
+
+
+    
+        if (!courseDetail) {
+            throw new NotFoundException('Course not found in order');
+        }
+
+        const updatedPayment=await this.paymentModel.findOneAndUpdate(
+            {
+                orderId:orderId,
+                status:'completed',
+                'coursesDetails.courseId':courseDetail.courseId
+            },
+            {
+                $set:{
+                    'coursesDetails.$.status':status,
+                    'coursesDetails.$.updatedAt':new Date()
+                }
+            },
+            {
+                new:true
+            }
+        ).populate('userId')
+
+       console.log('Updated payment document:', updatedPayment);
+
+       if (!updatedPayment) {
+        throw new BadRequestException('Failed to update payment status');
+    }
+
+        return updatedPayment
     }
 
 

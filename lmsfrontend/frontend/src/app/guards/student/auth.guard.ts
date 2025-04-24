@@ -8,7 +8,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     const tokenService=inject(TokenserviceService)
     const studentAccessToken=tokenService.getStudentToken()
 
-    console.log("Auth Guard - Token Found:", studentAccessToken); // 🔍 Debug Log
+    console.log("Auth Guard - Token Found:", studentAccessToken); 
 
   if (studentAccessToken) {
     console.log('accessgranted')

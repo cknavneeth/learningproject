@@ -164,7 +164,7 @@ export class CourseRepository implements ICourseRepository{
             }
         ];
 
-        // Debug each stage
+        
         let currentPipeline: PipelineStage[] = [];
         for (const stage of pipeline) {
             currentPipeline.push(stage);

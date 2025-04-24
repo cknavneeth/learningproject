@@ -12,7 +12,6 @@ export class Category{
     @Prop({required:true})
     description:string
 
-   
 }
 
 export const CategorySchema=SchemaFactory.createForClass(Category)

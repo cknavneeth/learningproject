@@ -8,14 +8,35 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { SalesHistory } from '../../../interfaces/saleshistory.interface' 
+
+interface Course {
+  courseId: string;
+  amount: number;
+  status: string;
+  _id: string;
+  cancellationDate?: string;
+}
+
+interface SalesHistory {
+  _id: string;
+  orderId: string;
+  student: {
+    name: string;
+    email: string;
+  };
+  courses: Course[];
+  totalAmount: number;
+  purchaseDate: string;
+  status: string;
+  cancellationReason?: string[];
+}
 
 @Component({
   selector: 'app-saleshistory',
   standalone: true,
   imports: [
-    MatPaginatorModule,
     CommonModule,
+    MatPaginatorModule,
     FormsModule,
     MatTableModule,
     MatProgressSpinnerModule,
@@ -23,7 +44,7 @@ import { SalesHistory } from '../../../interfaces/saleshistory.interface'
     MatButtonModule
   ],
   templateUrl: './saleshistory.component.html',
-  styleUrls: ['./saleshistory.component.scss']
+  styleUrl: './saleshistory.component.scss'
 })
 export class SaleshistoryComponent implements OnInit {
   salesHistory: SalesHistory[] = [];
@@ -42,24 +63,18 @@ export class SaleshistoryComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadSalesHistory();
   }
 
-  loadSalesHistory(): void {
-    this.isLoading = true;
-    this.error = null;
-
-    this.adminService.getSalesHistory(this.pageIndex + 1, this.pageSize).subscribe({
+  loadSalesHistory() {
+    this.adminService.getSalesHistory().subscribe({
       next: (response) => {
         this.salesHistory = response.sales;
-        this.totalItems = response.pagination.total;
-        this.isLoading = false;
+        console.log('Sales data:', this.salesHistory);
       },
       error: (error) => {
-        this.error = 'Failed to load sales history';
-        this.isLoading = false;
-        this.snackBar.open(this.error, 'Close', { duration: 3000 });
+        console.error('Error loading sales history:', error);
       }
     });
   }
@@ -70,14 +85,15 @@ export class SaleshistoryComponent implements OnInit {
     this.loadSalesHistory();
   }
 
-  approveRefund(orderId: string): void {
-    this.adminService.approveRefund(orderId).subscribe({
-      next: () => {
+  approveRefund(orderId: string, courseId: string): void {
+    this.adminService.approveRefund({ orderId, courseId }).subscribe({
+      next: (response) => {
         this.snackBar.open('Refund approved successfully', 'Close', { duration: 3000 });
         this.loadSalesHistory();
       },
       error: (error) => {
         this.snackBar.open('Failed to approve refund', 'Close', { duration: 3000 });
+        console.error('Error approving refund:', error);
       }
     });
   }
@@ -86,7 +102,7 @@ export class SaleshistoryComponent implements OnInit {
     return new Date(date).toLocaleDateString();
   }
 
-  
+
   getTotalCourses(courses: Array<{ title: string }>): number {
     return courses.length;
   }

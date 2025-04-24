@@ -1,17 +1,21 @@
-export interface SalesHistory{
-    _id:string,
-    orderId:string,
-    courses:Array<{
-        _id:string,
-        title:string,
-        price:number
-    }>
-    totalAmount:number,
-    purchaseDate:Date,
-    status:'completed'|'pending'|'cancelled'|'refund_requested',
-    student:{
-        name:string,
-        email:string
-    }
-    cancellationReason?:string
+interface Course {
+  courseId: string;
+  amount: number;
+  status: string;
+  _id: string;
+  cancellationDate?: string;
+}
+
+export interface SalesHistory {
+  _id: string;
+  orderId: string;
+  student: {
+    name: string;
+    email: string;
+  };
+  courses: Course[];
+  totalAmount: number;
+  purchaseDate: string;
+  status: string;
+  cancellationReason?: string[];
 }

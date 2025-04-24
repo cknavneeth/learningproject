@@ -49,6 +49,10 @@ export class user{
     bio:string
 
 
+    @Prop({default:0})
+    wallet:number
+
+
 }
 
 export const userSchema=SchemaFactory.createForClass(user)

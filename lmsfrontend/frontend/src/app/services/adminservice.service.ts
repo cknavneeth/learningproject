@@ -91,8 +91,8 @@ export class AdminserviceService {
 
  
 
-  approveRefund(orderId:string):Observable<any>{
-     return this.http.post(`${this.apiurl}/sales/approve-refund/${orderId}`,{})
+  approveRefund(params: { orderId: string, courseId: string }): Observable<any> {
+    return this.http.patch(`${this.apiurl}/refund/${params.orderId}/${params.courseId}/approve`, {});
   }
 
   getSalesHistory(page: number = 1, limit: number = 10): Observable<{
@@ -115,5 +115,6 @@ export class AdminserviceService {
     }>(`${this.apiurl}/sales-history?page=${page}&limit=${limit}`);
   }
 }
+
 
 

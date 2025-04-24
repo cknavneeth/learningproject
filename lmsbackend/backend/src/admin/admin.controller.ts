@@ -128,10 +128,20 @@ export class AdminController {
     }
 
     //admin need to approve cancel right,then do
-    @Post('sales/refund/:orderId')
-    async approveRefund(@Param('orderId') orderId:string){
-        const result=await this.adminservice.approveRefund(orderId)
-        return result
+    @Patch('refund/:orderId/:courseId/approve')
+    async approveRefund(
+        @Param('orderId') orderId:string,
+        @Param('courseId') courseId:string,
+    ){
+        try {
+            const result= await this.adminservice.approveRefund(orderId,courseId)
+            return result
+        } catch (error) {
+            if(error instanceof NotFoundException){
+                throw error
+            }
+            throw new BadRequestException('Failed to approve refund')
+        }
     }
 
 

@@ -258,40 +258,93 @@ export class AdminService {
     }
 
 
-    async approveRefund(orderId:string){
+    async approveRefund(orderId:string,courseId:string){
+        console.log('Processing refund in service')
         const payment=await this.adminRepository.getOrderById(orderId)
+
+        console.log('found payment',payment)
 
         if(!payment){
             throw new NotFoundException('order not found')
         }
 
-        if(payment.status!=='refund_requested'){
+        console.log('Courses Details:', JSON.stringify(payment.coursesDetails, null, 2));
+
+        const courseToRefund = payment.coursesDetails.find(course => {
+            console.log('Comparing:', {
+                providedCourseId: courseId,
+                currentCourseId: course.courseId.toString(),
+                status: course.status
+            });
+            // Check if courseId is populated object or ObjectId
+            const currentCourseId = course.courseId._id ? course.courseId._id.toString() : course.courseId.toString();
+            return currentCourseId === courseId && course.status === 'cancellation_pending';
+        });
+        console.log('course to refund',courseToRefund)
+
+        if(!courseToRefund){
             throw new BadRequestException('refund not requested')
         }
 
-        const updatedPayment=await this.adminRepository.updateOrderStatus(orderId,'cancelled')
+        if (courseToRefund.status !== 'cancellation_pending') {
+            throw new BadRequestException('Refund not requested for this course');
+        }
+
+        const refundAmount=courseToRefund.amount
+
+
+        console.log('Attempting to update order status with:', {
+            orderId,
+            courseId,
+            refundAmount
+        });
+
+        const updatedPayment=await this.adminRepository.updateOrderStatus(orderId,courseId,'cancelled')
 
         if(!updatedPayment){
             throw new BadRequestException('Failed to update order')
         }
 
+        //now i need to add refund amount to the students wallet
+        const student=await this.usermodel.findById(payment.userId)
+        if(!student){
+            throw new NotFoundException('student not found')
+        }
+
+
+        if(!student.wallet){
+            student.wallet=0
+        }
+
+
+        student.wallet+=refundAmount
+        await student.save()
+
         try {
             await this.emailService.sendRefundApprovalEmail(
-                (updatedPayment.userId as any).email,
+                (payment.userId as any).email,
                 orderId,
-                updatedPayment.coursesDetails.map(course=>(course as any).title),
-                updatedPayment.amount
+                [(courseToRefund.courseId as any).title],
+                refundAmount
+                
             )
         } catch (error) {
             console.error('Error sending refund approval email',error)
         }
 
+
         return {
             message:'Refund approved successfully',
-            orderId:updatedPayment.orderId
+            orderId:updatedPayment.orderId,
+            courseId:courseId,
+            refundAmount:refundAmount
+
         }
+
+
     }
 
 
 }
+
 
