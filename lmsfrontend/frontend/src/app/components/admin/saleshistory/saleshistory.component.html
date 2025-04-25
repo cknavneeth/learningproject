@@ -35,7 +35,7 @@
         <p class="text-gray-400 text-sm">Status: {{ course.status }}</p>
         
         <button *ngIf="course.status === 'cancellation_pending'"
-                (click)="approveRefund(sale.orderId,course.courseId)"
+                (click)="approveRefund(sale.orderId,course.courseId,course.amount)"
                 class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2">
           <mat-icon>check_circle</mat-icon>
           Approve Refund

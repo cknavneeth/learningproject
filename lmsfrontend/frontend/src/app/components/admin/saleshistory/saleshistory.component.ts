@@ -8,6 +8,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { RefundconfirmationmodalComponent } from '../refundconfirmationmodal/refundconfirmationmodal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface Course {
   courseId: string;
@@ -60,7 +62,8 @@ export class SaleshistoryComponent implements OnInit {
 
   constructor(
     private adminService: AdminserviceService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog:MatDialog
   ) {}
 
   ngOnInit() {
@@ -85,17 +88,38 @@ export class SaleshistoryComponent implements OnInit {
     this.loadSalesHistory();
   }
 
-  approveRefund(orderId: string, courseId: string): void {
-    this.adminService.approveRefund({ orderId, courseId }).subscribe({
-      next: (response) => {
-        this.snackBar.open('Refund approved successfully', 'Close', { duration: 3000 });
-        this.loadSalesHistory();
-      },
-      error: (error) => {
-        this.snackBar.open('Failed to approve refund', 'Close', { duration: 3000 });
-        console.error('Error approving refund:', error);
+  approveRefund(orderId: string, courseId: string,amount:number): void {
+
+   const dialogRef=this.dialog.open(
+      RefundconfirmationmodalComponent,{
+        width:'500px',
+        data:{
+          orderId,
+          courseId,
+          amount
+        }
       }
-    });
+   )
+
+
+   dialogRef.afterClosed().subscribe(confirmed=>{
+    if(confirmed){
+      this.adminService.approveRefund({ orderId, courseId }).subscribe({
+        next: (response) => {
+          this.snackBar.open('Refund approved successfully', 'Close', { duration: 3000 });
+          this.loadSalesHistory();
+        },
+        error: (error) => {
+          this.snackBar.open('Failed to approve refund', 'Close', { duration: 3000 });
+          console.error('Error approving refund:', error);
+        }
+      });
+    }
+   })
+
+
+
+    
   }
 
   formatDate(date: Date): string {
