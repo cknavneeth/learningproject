@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { StudentcertificateService } from '../../../services/studentservice/certificate/studentcertificate.service';
 
 @Component({
   selector: 'app-course-player',
@@ -25,11 +26,14 @@ export class CoursePlayerComponent {
    error=''
    completedSections:string[]=[]
 
+   previousOverallProgress:number=0
+
    constructor(
     private route:ActivatedRoute,
     private studentCourseService:StudentcourseService,
     private snackBar:MatSnackBar,
-    private router:Router
+    private router:Router,
+    private certificateService:StudentcertificateService
    ){ }
 
    ngOnInit():void{
@@ -106,6 +110,11 @@ export class CoursePlayerComponent {
       next:response=>{
         this.snackBar.open('Progress updated successfully','Close',{duration:3000})
         // this.loadCourseData()
+        if(response.overallProgress===100&&this.previousOverallProgress!==100){
+          console.log('gonna generate certificate for me')
+          this.generateCertificate()
+        }
+        this.previousOverallProgress=response.overallProgress
       },
       error:error=>{
         this.snackBar.open('Failed to update progress','Close',{duration:3000})
@@ -146,6 +155,12 @@ export class CoursePlayerComponent {
         if (progress) {
           this.currentSection = parseInt(progress.currentSection) || 0;
           this.completedSections = progress.completedSections || [];
+          this.previousOverallProgress = progress.overallProgress || 0;
+
+
+          if(progress.overallProgress==100){
+            this.generateCertificate()
+          }
 
           //autoscroll
           setTimeout(() => {
@@ -164,6 +179,32 @@ export class CoursePlayerComponent {
 
 
 
+
+
+  //for generating certificates
+  private generateCertificate(): void {
+    this.certificateService.generateCertificate(this.courseId).subscribe({
+      next: (response) => {
+        this.snackBar.open('Congratulations! Course completed. Your certificate is ready!', 'View', {
+          duration: 6000
+        }).onAction().subscribe(() => {
+          window.open(response.certificateUrl, '_blank');
+        });
+      },
+      error: (error) => {
+        if (error.status === 409) { // If certificate already exists
+          this.snackBar.open('Certificate already exists for this course', 'Close', {
+            duration: 3000
+          });
+        } else {
+          console.error('Certificate generation error:', error);
+          this.snackBar.open('Failed to generate certificate', 'Close', {
+            duration: 3000
+          });
+        }
+      }
+    });
+  }
   
   
 }

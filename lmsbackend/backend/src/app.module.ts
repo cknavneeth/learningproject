@@ -34,6 +34,11 @@ import { PaymentService } from './payment/service/payment.service';
 import { paymentRepository } from './payment/repository/payment.repository';
 import { PaymentModule } from './payment/payment.module';
 import { MylearningModule } from './mylearning/mylearning.module';
+import { CertificateController } from './certificate/controller/certificate.controller';
+import { CertificateService } from './certificate/service/certificate.service';
+import { CertificateRepository } from './certificate/repository/certificate.repository';
+import { CertificateModule } from './certificate/certificate.module';
+import { CoursesModule } from './instructors/courses/courses.module';
 
 
 console.log(process.env.MONGO_URI)
@@ -54,10 +59,13 @@ console.log(process.env.MONGO_URI)
     CategoryModule,
     CouponModule,
     PaymentModule,
-    MylearningModule
+    MylearningModule,
+    CertificateModule,
+    CoursesModule,
+    UsersModule
   ],
-  controllers: [AppController, CartController, CouponController, PaymentController,  ],
-  providers: [AppService,GuardGuard, CloudinaryService, EmailService, CouponService, PaymentService ],
+  controllers: [AppController, CartController, CouponController, PaymentController, CertificateController,  ],
+  providers: [AppService,GuardGuard, CloudinaryService, EmailService, CouponService, PaymentService, CertificateService ],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

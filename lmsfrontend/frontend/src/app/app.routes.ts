@@ -43,6 +43,7 @@ import { MyLearningComponent } from './components/studentmain/my-learning/my-lea
 import { CoursePlayerComponent } from './components/studentmain/course-player/course-player.component';
 import { InstructorstudentsComponent } from './components/insMaincomponent/instructorstudents/instructorstudents.component';
 import { SaleshistoryComponent } from './components/admin/saleshistory/saleshistory.component';
+import { CertificatesComponent } from './components/studentmain/certificates/certificates.component';
 
 export const routes: Routes = [
     {
@@ -139,7 +140,13 @@ export const routes: Routes = [
                 path: 'course-player/:id',  // Add this new route
                 component: CoursePlayerComponent,
                 // canActivate: [authGuard]
+            },
+            {
+                path:'certificates',
+                component:CertificatesComponent,
+                canActivate:[authGuard]
             }
+
            
         ]
     },

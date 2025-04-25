@@ -24,25 +24,40 @@ export class CloudinaryService {
 
         const uploadPreset = this.configservice.get<string>('CLOUDINARY_UPLOAD_PRESET');
         const isVideo = file.mimetype.includes('video');
+        const isCertificate = file.fieldname === 'certificate';
 
         console.log('Preparing to upload file:', {
             mimetype: file.mimetype,
             size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-            isVideo
+            isVideo,
+            isCertificate
         });
 
         try {
             const result: UploadApiResponse = await new Promise((resolve, reject) => {
-                const stream = cloudinary.uploader.upload_stream(
-                    {
+                const uploadOptions = {
+                    resource_type: 'auto',
+                    folder: isVideo ? 'course-videos' : 
+                            isCertificate ? 'student-certificates' : 
+                            'course-thumbnails',
+                    upload_preset: uploadPreset,
+                    chunk_size: 2000000, // 2MB chunks
+                    timeout: 600000, // 10 minutes
+                };
+
+                
+                if (isCertificate) {
+                    Object.assign(uploadOptions, {
+                        format: 'pdf',
                         resource_type: 'auto',
-                        folder: isVideo ? 'course-videos' : 
-                                file.fieldname === 'certificate' ? 'instructor-certificate' : 
-                                'course-thumbnails',
-                        upload_preset: uploadPreset,
-                        chunk_size: 2000000, // 2MB chunks
-                        timeout: 600000, // 10 minutes
-                    },
+                        access_mode: 'public',
+                        type: 'upload',
+                        flags: 'attachment'
+                    });
+                }
+
+                const stream = cloudinary.uploader.upload_stream(
+                    uploadOptions as any,
                     (error, result) => {
                         if (error) {
                             console.error('Cloudinary Upload Error:', error);
@@ -85,7 +100,8 @@ export class CloudinaryService {
             console.log('Upload successful:', {
                 url: result.secure_url,
                 fileType: file.mimetype,
-                fileSize: `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+                fileSize: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
+                publicId: result.public_id
             });
 
             return result.secure_url;

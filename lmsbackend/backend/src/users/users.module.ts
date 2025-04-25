@@ -15,6 +15,6 @@ import { Course, CourseSchema } from 'src/instructors/courses/course.schema';
    UserRepository
   ],
   controllers: [UsersController],
-  exports:[UsersService]
+  exports:[UsersService,UserRepository]
 })
 export class UsersModule {}

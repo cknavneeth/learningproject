@@ -20,8 +20,8 @@ export class CartService {
 
   addToCart(courseId:string):Observable<any>{
     const url = `${this.apiUrl}/add`;
-    console.log('Making request to:', url);  // Debug log
-    console.log('With payload:', { courseId });  // Debug log
+    console.log('Making request to:', url); 
+    console.log('With payload:', { courseId });  
     return this.http.post(`${this.apiUrl}/add`,{courseId})
     .pipe(
       tap(cart=>{
