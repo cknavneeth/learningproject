@@ -15,6 +15,6 @@ import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
   imports:[MongooseModule.forFeature([{name:instructor.name,schema:instructorSchema}]),AuthenticationModule, CoursesModule,CloudinaryModule],
   providers: [InstructorsService, InstructorRepository, CoursesService],
   controllers: [InstructorsController, CoursesController],
-  exports:[InstructorsService]
+  exports:[InstructorsService,InstructorRepository]
 })
 export class InstructorsModule {}

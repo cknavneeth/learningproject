@@ -3,6 +3,7 @@ import { StudentcertificateService } from '../../../services/studentservice/cert
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-certificates',
@@ -14,9 +15,15 @@ export class CertificatesComponent implements OnInit{
      
   certificates:any[]=[]
   loading=false
-  currentPage=1
   totalPages=1
-  limit=10
+  limit=3
+  pagedCertificates: any[] = [];
+
+
+  currentPage = 0;
+  pageSize = 3;
+  totalItems = 0;
+  pageSizeOptions = [3,6,9,12];
 
 
   constructor(private certificateService:StudentcertificateService,private snackBar:MatSnackBar){}
@@ -33,6 +40,7 @@ export class CertificatesComponent implements OnInit{
          this.currentPage=response.pagination.page
          this.totalPages=response.pagination.totalPages
          this.loading=false
+         this.updatePagedCertificates()
       },
       error:(error)=>{
          this.snackBar.open('Failed to load certificates','Close',{duration:3000})
@@ -42,9 +50,9 @@ export class CertificatesComponent implements OnInit{
   }
 
 
-  onPageChange(page:number):void{
-    this.loadCertificates(page)
-  }
+  // onPageChange(page:number):void{
+  //   this.loadCertificates(page)
+  // }
 
   downloadCertificate(certificateUrl: string): void {
     fetch(certificateUrl)
@@ -76,6 +84,28 @@ export class CertificatesComponent implements OnInit{
       this.snackBar.open('Please allow pop-ups to view the certificate', 'Close', {
         duration: 3000
       });
+    }
+  }
+
+
+  handlePageEvent(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadCertificates();
+    // Smooth scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updatePagedCertificates() {
+    const startIndex = this.currentPage * this.pageSize;
+    this.pagedCertificates = this.certificates;
+  }
+
+  onPageChange(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.loadCertificates(page);
+      // Smooth scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 }

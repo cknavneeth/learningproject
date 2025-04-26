@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.certificates-container {
+  padding-top: 6rem; // Add more padding to account for fixed header
+  @apply px-4 md:px-6 lg:px-8;
+}
+
+.section-title {
+  @apply text-3xl font-bold mb-8;
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Animations
+@keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  // Apply animations
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  
+  // Material Paginator Dark Theme Override
+  ::ng-deep {
+    .mat-mdc-paginator {
+      background: transparent !important;
+      
+      .mat-mdc-paginator-container {
+        @apply text-gray-200;
+      }
+  
+      .mat-mdc-paginator-page-size-label,
+      .mat-mdc-paginator-range-label {
+        @apply text-gray-300;
+      }
+  
+      .mat-mdc-paginator-navigation-previous,
+      .mat-mdc-paginator-navigation-next {
+        @apply text-gray-300;
+  
+        &:disabled {
+          @apply text-gray-600;
+        }
+      }
+  
+      .mat-mdc-select-value-text {
+        @apply text-gray-300;
+      }
+  
+      .mat-mdc-select-arrow {
+        @apply text-gray-300;
+      }
+  
+      .mat-mdc-paginator-icon {
+        @apply fill-current text-gray-300;
+      }
+    }
+  
+    // Style the select dropdown
+    .mat-mdc-select-panel {
+      @apply bg-gray-800 text-gray-200;
+  
+      .mat-mdc-option {
+        @apply text-gray-200;
+  
+        &:hover:not(.mat-mdc-option-disabled) {
+          @apply bg-gray-700;
+        }
+  
+        &.mat-mdc-option-selected {
+          @apply bg-blue-600;
+        }
+      }
+    }
+  }
+  
+  // Card hover effects
+  .certificate-card {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .grid-cols-3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .grid-cols-3, .grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+  }

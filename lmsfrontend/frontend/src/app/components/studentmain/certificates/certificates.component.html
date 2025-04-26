@@ -1,58 +1,73 @@
-<div class="container mx-auto px-4 py-8">
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-800 dark:text-white">My Certificates</h1>
-      <p class="text-gray-600 dark:text-gray-300 mt-2">View and download your course completion certificates</p>
-    </div>
-  
-    <!-- Loading Spinner -->
-    <div *ngIf="loading" class="flex justify-center items-center h-64">
-      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-  
-    <!-- Certificates Grid -->
-    <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let certificate of certificates" 
-           class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-transform hover:-translate-y-1">
-        <!-- Certificate Details -->
-        <div class="mb-4">
-          <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">{{certificate.courseName}}</h3>
-          <p class="text-gray-600 dark:text-gray-300 text-sm">
-            Completed on: {{certificate.completionDate | date}}
-          </p>
-        </div>
-  
-        <!-- Actions -->
-        <div class="flex space-x-3">
-          <button (click)="viewCertificate(certificate.certificateUrl)"
-                  class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors">
-            <i class="fas fa-eye mr-2"></i> View
-          </button>
-          <button (click)="downloadCertificate(certificate.certificateUrl)"
-                  class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors">
-            <i class="fas fa-download mr-2"></i> Download
-          </button>
-        </div>
-      </div>
-    </div>
-  
-    <!-- No Certificates Message -->
-    <div *ngIf="!loading && certificates.length === 0" 
-         class="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
-      <p class="text-gray-600 dark:text-gray-300">You haven't earned any certificates yet.</p>
-    </div>
-  
-    <!-- Pagination -->
-    <div *ngIf="totalPages > 1" class="mt-8 flex justify-center">
-      <nav class="flex space-x-2">
-        <button *ngFor="let page of [].constructor(totalPages); let i = index"
-                (click)="onPageChange(i + 1)"
-                [class.bg-blue-500]="currentPage === i + 1"
-                [class.text-white]="currentPage === i + 1"
-                [class.bg-gray-200]="currentPage !== i + 1"
-                class="px-4 py-2 rounded-lg transition-colors">
-          {{i + 1}}
-        </button>
-      </nav>
-    </div>
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 pt-24 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+  <!-- Header Section -->
+  <div class="max-w-7xl mx-auto mb-12">
+      <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
+          My Certificates
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">Your achievements, certified and ready to showcase</p>
   </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center h-64">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+  </div>
+
+  <!-- Certificates Grid -->
+  <div *ngIf="!loading" class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let certificate of pagedCertificates" 
+               class="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+              <div class="p-6">
+                  <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                      <i class="fas fa-certificate text-xl text-blue-500"></i>
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                      {{certificate.courseName}}
+                  </h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                      <i class="far fa-calendar-alt mr-2"></i>
+                      Completed on: {{certificate.completionDate | date:'mediumDate'}}
+                  </p>
+                  <div class="flex space-x-4">
+                      <button (click)="viewCertificate(certificate.certificateUrl)"
+                              class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                          <i class="fas fa-eye mr-2"></i> View
+                      </button>
+                      <button (click)="downloadCertificate(certificate.certificateUrl)"
+                              class="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                          <i class="fas fa-download mr-2"></i> Download
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && certificates.length === 0" class="text-center py-12">
+          <p class="text-xl text-gray-500 dark:text-gray-400">No certificates found.</p>
+          <a routerLink="/student/courses" 
+             class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+              Browse Courses
+          </a>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="certificates.length > 0" class="mt-8 flex justify-center">
+          <nav class="flex items-center gap-2">
+              <button (click)="onPageChange(currentPage - 1)"
+                      [disabled]="currentPage === 1"
+                      class="px-3 py-1 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50">
+                  Previous
+              </button>
+              <span class="px-4 py-1 text-gray-700 dark:text-gray-200">
+                  Page {{currentPage}} of {{totalPages}}
+              </span>
+              <button (click)="onPageChange(currentPage + 1)"
+                      [disabled]="currentPage === totalPages"
+                      class="px-3 py-1 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50">
+                  Next
+              </button>
+          </nav>
+      </div>
+  </div>
+</div>

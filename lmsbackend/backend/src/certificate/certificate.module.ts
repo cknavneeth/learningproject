@@ -7,13 +7,15 @@ import { CertificateService } from './service/certificate.service';
 import { CoursesModule } from 'src/instructors/courses/courses.module';
 import { UsersModule } from 'src/users/users.module';
 import { CertificateRepository } from './repository/certificate.repository';
+import { InstructorsModule } from 'src/instructors/instructors.module';
 
 @Module({
     imports:[
         MongooseModule.forFeature([{name:Certificate.name,schema:CertificateSchema}]),
         CloudinaryModule,
         CoursesModule,
-        UsersModule
+        UsersModule,
+        InstructorsModule
 
     ],
     providers:[
