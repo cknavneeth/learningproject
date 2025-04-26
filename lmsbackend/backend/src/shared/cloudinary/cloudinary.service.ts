@@ -45,14 +45,17 @@ export class CloudinaryService {
                     timeout: 600000, // 10 minutes
                 };
 
-                
+
                 if (isCertificate) {
                     Object.assign(uploadOptions, {
                         format: 'pdf',
                         resource_type: 'auto',
                         access_mode: 'public',
                         type: 'upload',
-                        flags: 'attachment'
+                        public_id: `certificate-${Date.now()}`,
+                        overwrite: true,
+                        
+
                     });
                 }
 

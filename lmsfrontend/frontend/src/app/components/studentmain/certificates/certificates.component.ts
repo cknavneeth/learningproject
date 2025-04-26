@@ -46,16 +46,36 @@ export class CertificatesComponent implements OnInit{
     this.loadCertificates(page)
   }
 
-  downloadCertificate(certificateUrl:string):void{
-    const link = document.createElement('a');
-    link.href = certificateUrl;
-    link.download = 'certificate.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  downloadCertificate(certificateUrl: string): void {
+    fetch(certificateUrl)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'certificate.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(error => {
+        this.snackBar.open('Failed to download certificate', 'Close', {
+          duration: 3000
+        });
+        console.error('Download error:', error);
+      });
   }
 
   viewCertificate(certificateUrl: string): void {
-    window.open(certificateUrl, '_blank');
+    // For viewing, we'll use the browser's PDF viewer
+    const newWindow = window.open();
+    if (newWindow) {
+      newWindow.location.href = certificateUrl;
+    } else {
+      this.snackBar.open('Please allow pop-ups to view the certificate', 'Close', {
+        duration: 3000
+      });
+    }
   }
 }
