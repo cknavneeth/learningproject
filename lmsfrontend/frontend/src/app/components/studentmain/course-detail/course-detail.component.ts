@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartService } from '../../../services/studentservice/cart/cart.service';
 import { WishlistService } from '../../../services/studentservice/wishlist/wishlist.service';
+import { ReviewService } from '../../../services/studentservice/review/review.service';
+import { Review } from '../../../interfaces/review.interface';
 
 @Component({
   selector: 'app-course-detail',
@@ -29,7 +31,9 @@ export class CourseDetailComponent {
   addingToWishlist:boolean=false
   isInWishlist:boolean=false
 
-  constructor(private route:ActivatedRoute,private studentCourseService:StudentcourseService,private snackBar:MatSnackBar,private cartService:CartService,private wishlistService:WishlistService){}
+  reviews:Review[]=[]
+
+  constructor(private route:ActivatedRoute,private studentCourseService:StudentcourseService,private snackBar:MatSnackBar,private cartService:CartService,private wishlistService:WishlistService,private reviewService:ReviewService){}
 
   ngOnInit():void{
     this.loading=true
@@ -40,6 +44,7 @@ export class CourseDetailComponent {
         response=>{
           this.courseDetails=response
           this.loading=false
+          this.loadReviews()
         },
         error=>{
           this.error='Failed to load course details'
@@ -49,6 +54,7 @@ export class CourseDetailComponent {
     }
 
     this.checkWishlistStatus()
+    
   }
 
 
@@ -141,6 +147,30 @@ export class CourseDetailComponent {
         }
       )
     
+  }
+
+
+  //for showing reviews here
+  private loadReviews(){
+    const courseId=this.route.snapshot.paramMap.get('id')
+    if(courseId){
+      this.reviewService.getReviewsByCourse(courseId).subscribe(
+        response=>{
+          this.reviews=response
+          console.log('loaded reviews',this.reviews)
+        },
+        error=>{
+          console.log('error loading reviews',error)
+        }
+      )
+    }
+  }
+
+
+  getAverageRating(): number {
+    if (!this.reviews || this.reviews.length === 0) return 0;
+    const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0);
+    return Math.round((sum / this.reviews.length) * 10) / 10;
   }
 
 

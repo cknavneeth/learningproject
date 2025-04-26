@@ -25,6 +25,9 @@ export class CourseProgress{
 
         @Prop({ type: [String], default: [] })
         completedSections: string[];
+
+        @Prop({type:Boolean,default:false})
+        hasReviewed:boolean
 }
 
 export const CourseProgressSchema=SchemaFactory.createForClass(CourseProgress)

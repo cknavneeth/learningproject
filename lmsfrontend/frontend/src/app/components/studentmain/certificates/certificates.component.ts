@@ -19,7 +19,6 @@ export class CertificatesComponent implements OnInit{
   limit=3
   pagedCertificates: any[] = [];
 
-
   currentPage = 0;
   pageSize = 3;
   totalItems = 0;

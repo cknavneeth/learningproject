@@ -49,6 +49,14 @@
                         class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">
                     Continue Learning
                 </button>
+
+
+                <!-- Review Button -->
+                <button *ngIf="course.progress === 100 && !course.hasReviewed" 
+                        (click)="openReviewDialog(course._id)" 
+                        class="w-full mt-2 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">
+                    Add Review
+                </button>
             </div>
 
             <!-- Course Cancellation Button -->

@@ -110,6 +110,7 @@ export class MylearningRepository implements IMyLearningRepository {
                         name: (course.instructor as any)?.name || 'Unknown'
                     },
                     progress: progress?.overallProgress || 0,
+                    hasReviewed:progress?.hasReviewed||false,
                     purchaseDate:payment?.purchaseDate
                 } as EnrolledCourse;
 

@@ -25,7 +25,7 @@ import { Payment, PaymentSchema } from 'src/payment/schema/payment.schema';
             useClass:MylearningRepository
         }
     ],
-    exports:[MYLEARNING_SERVICE]
+    exports:[MYLEARNING_SERVICE,MYLEARNING_REPOSITORY,MongooseModule]
     
 })
 export class MylearningModule {}

@@ -8,6 +8,9 @@ import { EnrolledCourse } from '../../../interfaces/mylearning.interface';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CourseCancellationModalComponent } from '../course-cancellation-modal/course-cancellation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ReviewDialogComponent } from '../review-dialog/review-dialog.component';
+import { ReviewService } from '../../../services/studentservice/review/review.service';
+import { Review } from '../../../interfaces/review.interface';
 
 @Component({
   selector: 'app-my-learning',
@@ -27,15 +30,19 @@ export class MyLearningComponent implements OnInit {
       totalItems:number=0
       totalPages:number=0
 
+      courseReviews:{[courseId:string]:Review}={}
+
       constructor(
         private studentService:StudentcourseService,
         private router:Router,
         private snackBar:MatSnackBar,
-        private dialog:MatDialog
+        private dialog:MatDialog,
+        private reviewService:ReviewService
       ){}
 
       ngOnInit():void{
         this.loadEnrolledCourses()
+        // this.loadUserReviews()
       }
 
       loadEnrolledCourses(): void {
@@ -126,4 +133,31 @@ export class MyLearningComponent implements OnInit {
           }
         });
       }
+
+
+
+      openReviewDialog(courseId:string):void{
+        const dialogRef=this.dialog.open(ReviewDialogComponent,{
+          width:'500px',
+          data:{courseId}
+        })
+
+        dialogRef.afterClosed().subscribe(result=>{
+          if(result){
+            this.reviewService.createReview(courseId,result).subscribe(
+              Response=>{
+                this.snackBar.open('Review submitted successfully','Close',{duration:3000})
+                this.loadEnrolledCourses()
+              },
+              error=>{
+                this.snackBar.open('Failed to submit review','Close',{duration:3000})
+              }
+            )
+          }
+        })
+      }
+
+
+//for editing reviews
+     
 }
