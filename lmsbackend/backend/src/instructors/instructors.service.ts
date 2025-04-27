@@ -129,4 +129,12 @@ export class InstructorsService {
             message:'Reapply request sent successfully'
         }
     }
+
+
+
+    //get instructor dashboard stats
+
+    async getDashboardStats(instructorId:string){
+        return this.instructorRepository.getDashboardStats(instructorId)
+    }
 }

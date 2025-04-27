@@ -44,6 +44,7 @@ import { CoursePlayerComponent } from './components/studentmain/course-player/co
 import { InstructorstudentsComponent } from './components/insMaincomponent/instructorstudents/instructorstudents.component';
 import { SaleshistoryComponent } from './components/admin/saleshistory/saleshistory.component';
 import { CertificatesComponent } from './components/studentmain/certificates/certificates.component';
+import { InstructorDashboardComponent } from './components/insMaincomponent/instructor-dashboard/instructor-dashboard.component';
 
 export const routes: Routes = [
     {
@@ -222,8 +223,11 @@ export const routes: Routes = [
             {
                 path:'enrolled-students',
                 component:InstructorstudentsComponent
+            },
+            {
+                path:'dashboard',
+                component:InstructorDashboardComponent
             }
-
         ]
     },
     {

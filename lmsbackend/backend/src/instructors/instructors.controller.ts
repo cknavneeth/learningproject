@@ -38,4 +38,13 @@ export class InstructorsController {
       return this.instructorservice.reapplyAsInstructor(instructorId)
    }
 
+
+   //gonna do instructor dashboard ok
+   @Get('dashboard-stats')
+   @UseGuards(GuardGuard)
+   async getDashboardStats(@Request() req){
+    const instructorId=req.user.InstructorId
+    return this.instructorservice.getDashboardStats(instructorId)
+   }
+
 }

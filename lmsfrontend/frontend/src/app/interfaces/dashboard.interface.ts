@@ -34,3 +34,15 @@ export interface DashboardStats {
     topSellingCourses: TopSellingCourse[];
     topInstructors: TopInstructor[];
 }
+
+
+export interface instructorDashboard{
+    totalCourses:number,
+    totalStudents:number,
+    totalEarnings:number,
+    monthlySalesData:{
+        month:string;
+        revenue:number;
+        purchases:number;
+    }[]
+}
