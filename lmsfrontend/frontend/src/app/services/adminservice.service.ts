@@ -6,6 +6,7 @@ import { students } from '../interfaces/auth.interface';
 import { TokenserviceService } from './tokenservice.service';
 import { Router } from '@angular/router';
 import { SalesHistory } from '../interfaces/saleshistory.interface';
+import { DashboardStats } from '../interfaces/dashboard.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -113,6 +114,13 @@ export class AdminserviceService {
         totalPages: number;
       }
     }>(`${this.apiurl}/sales-history?page=${page}&limit=${limit}`);
+  }
+
+
+
+  //for getting dashboard for admin
+  getDashboarStats():Observable<DashboardStats>{
+    return this.http.get<DashboardStats>(`${this.apiurl}/dashboard/stats`)
   }
 }
 

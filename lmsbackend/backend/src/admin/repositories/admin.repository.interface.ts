@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { TopInstructor, TopSellingCourse } from "src/common/interfaces/dashboard.interface";
 import { CourseDocument } from "src/instructors/courses/course.schema";
 import { Payment, PaymentDocument } from "src/payment/schema/payment.schema";
 
@@ -31,4 +32,21 @@ export interface IAdminRepository{
     getSalesHistory(page:number,limit:number):Promise<{sales:AggregatedSale[],total:number}>
 
     getOrderById(orderId:string):Promise<PaymentDocument|null>
+
+    //for admin dashboard
+    getDashboardStats():Promise<{
+        totalStudents:number;
+        totalInstructors:number;
+        totalCourses:number;
+        totalRevenue:number;
+        totalPurchases:number;
+        monthlySalesData:{
+            month:string;
+            revenue:number;
+            purchases:number;
+        }[],
+        topSellingCourses:TopSellingCourse[],
+        topInstructors:TopInstructor[]
+
+    }>
 }

@@ -146,4 +146,12 @@ export class AdminController {
 
 
 
+
+    @Get('dashboard/stats')
+    async getDashboardStats(){
+        return this.adminservice.getDashboardStats()
+    }
+
+
+
 }

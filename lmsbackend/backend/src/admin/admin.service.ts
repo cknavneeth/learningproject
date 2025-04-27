@@ -345,6 +345,12 @@ export class AdminService {
     }
 
 
+    //get dashboard stats from service
+    async getDashboardStats(){
+        return this.adminRepository.getDashboardStats()
+    }
+
+
 }
 
 

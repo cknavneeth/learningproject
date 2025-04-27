@@ -9,6 +9,17 @@
 
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center space-x-10 font-inter">
+
+            <a [routerLink]="['/student/certificates']" 
+            class="text-gray-300 hover:text-white text-sm font-medium transition-all duration-300 relative group">
+             <span class="relative z-10">Certificates</span>
+             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-purple-500 group-hover:w-full transition-all duration-300"></span>
+         </a>
+
+
+
+
+
             <a [routerLink]="['/student/courses']" 
                class="text-gray-300 hover:text-white text-sm font-medium transition-all duration-300 relative group">
                 <span class="relative z-10">Courses</span>

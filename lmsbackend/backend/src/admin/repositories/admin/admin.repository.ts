@@ -4,6 +4,8 @@ import { Model, PipelineStage, Types } from 'mongoose';
 import { Course, CourseDocument, CourseStatus } from 'src/instructors/courses/course.schema';
 import { IAdminRepository } from '../admin.repository.interface';
 import { Payment, PaymentDocument } from 'src/payment/schema/payment.schema';
+import { user, userDocument } from 'src/users/users.schema';
+import { instructor, instructorDocument } from 'src/instructors/instructor.schema';
 
 
 interface AggregatedSale {
@@ -31,7 +33,9 @@ interface AggregatedSale {
 export class AdminRepository implements IAdminRepository{
 
     constructor(@InjectModel(Course.name) private courseModel:Model<CourseDocument>, 
-                @InjectModel(Payment.name) private paymentModel:Model<PaymentDocument>
+                @InjectModel(Payment.name) private paymentModel:Model<PaymentDocument>,
+                @InjectModel(user.name) private userModel:Model<userDocument>,
+                @InjectModel(instructor.name) private instructorModel:Model<instructorDocument>
          ){}
 
     async getAllCourses(page:number=1,limit:number=10):Promise<{courses:CourseDocument[],total:number}> {
@@ -305,6 +309,187 @@ export class AdminRepository implements IAdminRepository{
     }
 
         return updatedPayment
+    }
+
+
+
+    ///here iam gonna do the code for getting admin dashboard
+    async getDashboardStats(){
+
+        //gonna fetch all the counts i need
+        const [totalStudents,totalInstructors,totalCourses]=await Promise.all([
+            this.userModel.countDocuments(),
+            this.instructorModel.countDocuments(),
+            this.courseModel.countDocuments()
+        ])
+
+
+        const currentYear=new Date().getFullYear()
+
+        const monthlyData=await this.paymentModel.aggregate([
+            {
+                $match:{
+                    status:'completed',
+                    createdAt:{
+                        $gte:new Date(currentYear,0,1),
+                        $lte:new Date(currentYear,11,31)
+                    }
+                }
+            },
+            {
+                $group:{
+                    _id:{$month:'$createdAt'},
+                    revenue:{$sum:'$amount'},
+                    purchases:{$sum:1}
+                }
+            },
+            {
+                $sort:{_id:1}
+            }
+        ])
+
+        const monthlySalesData = Array.from({ length: 12 }, (_, i) => {
+            const monthData = monthlyData.find(data => data._id === i + 1) || { revenue: 0, purchases: 0 };
+            return {
+                month: new Date(2024, i).toLocaleString('default', { month: 'short' }),
+                revenue: monthData.revenue || 0,
+                purchases: monthData.purchases || 0
+            };
+        })
+
+
+        const totalRevenue=monthlySalesData.reduce((sum,data)=>sum+data.revenue,0)
+        const totalPurchases=monthlySalesData.reduce((sum,data)=>sum+data.purchases,0)
+
+
+        //finding top selling courses here
+        const topSellingCourses=await this.paymentModel.aggregate([
+            {
+                $match:{status:'completed'}
+            },
+            {
+                $unwind:'$coursesDetails'
+            },
+            {
+                $group:{
+                    _id:'$coursesDetails.courseId',
+                    totalSales:{$sum:1},
+                    revenue:{$sum:'$coursesDetails.amount'}
+                }
+            },
+            {
+                $lookup:{
+                    from:'courses',
+                    localField:'_id',
+                    foreignField:'_id',
+                    as:'courseDetails'
+                }
+            },
+            {
+                $unwind:'$courseDetails'
+            },
+            {
+                $lookup:{
+                    from:'instructors',
+                    localField:'courseDetails.instructor',
+                    foreignField:'_id',
+                    as:'instructorDetails'
+                }
+            },
+            {
+                $unwind:'$instructorDetails'
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: '$courseDetails.title',
+                    instructor: {
+                        name: '$instructorDetails.name',
+                        email: '$instructorDetails.emailaddress'
+                    },
+                    totalSales: 1,
+                    revenue: 1
+                }
+            },
+            {
+                $sort:{totalSales:-1}
+            },
+            {
+                $limit:5
+            }
+
+        ])
+
+
+        const topInstructors=await this.paymentModel.aggregate([
+            {
+                $match:{status:'completed'}
+            },
+            {
+                $unwind:'$coursesDetails'
+            },
+            {
+                $lookup:{
+                    from:'courses',
+                    localField:'coursesDetails.courseId',
+                    foreignField:'_id',
+                    as:'courseInfo'
+                }
+            },
+            {
+                $unwind:'$courseInfo'
+            },
+            {
+                $group:{
+                    _id:'$courseInfo.instructor',
+                    totalSales:{$sum:1},
+                    totalRevenue:{$sum:'$coursesDetails.amount'},
+                    uniqueStudents:{$addToSet:'$userId'}
+                }
+            },
+            {
+                $lookup:{
+                    from:'instructors',
+                    localField:'_id',
+                    foreignField:'_id',
+                    as:'instructorDetails'
+                }
+            },
+            {
+                $unwind:'$instructorDetails'
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: '$instructorDetails.name',
+                    email: '$instructorDetails.emailaddress',
+                    totalSales: 1,
+                    totalRevenue: 1,
+                    totalStudents: { $size: '$uniqueStudents' }  
+                }
+            },
+            {
+                $sort: { totalRevenue: -1 }  
+            },
+            {
+                $limit: 5
+            }
+
+        ])
+
+
+        return {
+            totalStudents,
+            totalInstructors,
+            totalCourses,
+            totalRevenue,
+            totalPurchases,
+            monthlySalesData,
+            topSellingCourses,
+            topInstructors  
+        }
+
+
     }
 
 
