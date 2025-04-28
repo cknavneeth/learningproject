@@ -199,12 +199,11 @@ export class PaymentService implements IPaymentService{
 
          const purchaseTime=payment.purchaseDate
          const currentTime=new Date()
-         const hoursSincePurchase=(currentTime.getTime()-purchaseTime.getTime())/(1000*60*60)
+         const minuteSincePurchase=(currentTime.getTime()-purchaseTime.getTime())/(1000*60)
 
-         console.log('Hours since purchase:', hoursSincePurchase);
 
-         if(hoursSincePurchase>24){
-            throw new BadRequestException('Cancellation is not allowed after 24 hours')
+         if(minuteSincePurchase>30){
+            throw new BadRequestException('Cancellation is not allowed after 30 minutes of purchase')
          }
 
          if(coursePurchase.status==='cancellation_pending'){

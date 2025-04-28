@@ -7,6 +7,8 @@ import { UpdateProgressDto } from '../dto/update-progress.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 import axios from 'axios';
+import { Roles } from 'src/decorators/roles.decarotor';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('auth/student/learning')
 export class MylearningController {
@@ -15,6 +17,7 @@ export class MylearningController {
 
     @Get()
     @UseGuards(GuardGuard)
+    @Roles(Role.STUDENT)
     async getEnrolledCourses(
         @Req() req,
         @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,

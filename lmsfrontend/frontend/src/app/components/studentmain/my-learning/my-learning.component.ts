@@ -77,30 +77,20 @@ export class MyLearningComponent implements OnInit {
       }
 
 
-      isWithin24Hours(purchaseDate: Date): boolean {
+      isWithin30Minutes(purchaseDate: Date): boolean {
         if (!purchaseDate) return false;
         
         // Force current time to be actual current time
-        const now = new Date();
-        const purchase = new Date(purchaseDate);
-        
-        // Calculate difference in hours
-        const hoursDifference = Math.abs(now.getTime() - purchase.getTime()) / (1000 * 60 * 60);
-        
-        // Single debug log for clarity
-        console.log({
-          now: now.toISOString(),
-          purchase: purchase.toISOString(),
-          hoursDifference
-        });
-        
-        return hoursDifference <= 24;
+        const currentTime = new Date();
+        const purchaseTime = new Date(purchaseDate);
+        const minutesSincePurchase = (currentTime.getTime() - purchaseTime.getTime()) / (1000 * 60);
+        return minutesSincePurchase <= 30;
       }
 
 
       requestCancellation(course: EnrolledCourse): void {
         // Single check for cancellation eligibility
-        const isEligible = this.isWithin24Hours(course.purchaseDate);
+        const isEligible = this.isWithin30Minutes(course.purchaseDate);
         
         if (!isEligible) {
           this.snackBar.open('Course cancellation is only available within 24 hours of purchase', 'Close', {

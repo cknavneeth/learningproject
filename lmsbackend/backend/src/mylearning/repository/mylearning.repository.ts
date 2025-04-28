@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { IMyLearningRepository } from './interfaces/mylearning.repository.interface';
 import { CourseProgress, CourseProgressDocument } from '../schema/course-progress.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -20,6 +20,10 @@ interface PopulatedCourse extends Document {
 
 @Injectable()
 export class MylearningRepository implements IMyLearningRepository {
+
+    private logger=new Logger(MylearningRepository.name)
+
+
     constructor(
         @InjectModel(CourseProgress.name) private progressModel: Model<CourseProgressDocument>,
         @InjectModel(Course.name) private courseModel: Model<CourseDocument>,
@@ -55,7 +59,7 @@ export class MylearningRepository implements IMyLearningRepository {
         const safeSkip = Math.min(skip, uniqueCourseIds.length);
         const paginatedCourseIds = uniqueCourseIds.slice(safeSkip, safeSkip + limit);
 
-        console.log('Paginated course IDs:', paginatedCourseIds);
+        this.logger.log('Paginated course IDs:', paginatedCourseIds);
 
         if (paginatedCourseIds.length === 0) {
             return {
@@ -67,7 +71,7 @@ export class MylearningRepository implements IMyLearningRepository {
 
         const courses = await Promise.all(
             paginatedCourseIds.map(async (courseId) => {
-                console.log('Fetching course with ID:', courseId);
+                this.logger.log('Fetching course with ID:', courseId);
 
                   try {
                 const course = await this.courseModel
@@ -76,7 +80,7 @@ export class MylearningRepository implements IMyLearningRepository {
                     .populate('instructor', 'name')
                     .lean();
 
-                console.log('Course found from database:', course);
+                this.logger.log('Course found from database:', course);
 
                 if (!course) {
                     console.log(`No course found for ID: ${courseId}`);
@@ -99,7 +103,7 @@ export class MylearningRepository implements IMyLearningRepository {
                     })
                     .lean();
 
-                console.log('Progress found:', progress);
+                this.logger.log('Progress found:', progress);
 
                 const enrolledCourse = {
                     _id: courseId,
@@ -114,7 +118,7 @@ export class MylearningRepository implements IMyLearningRepository {
                     purchaseDate:payment?.purchaseDate
                 } as EnrolledCourse;
 
-                console.log('Constructed enrolled course:', enrolledCourse);
+                this.logger.log('Constructed enrolled course:', enrolledCourse);
                 return enrolledCourse;
             } catch (error) {
                 console.error('Error fetching course:', error);
@@ -153,7 +157,7 @@ export class MylearningRepository implements IMyLearningRepository {
             status:'completed'
         })
 
-        console.log('Payment record found:', payment);
+        this.logger.log('Payment record found:', payment);
         return !!payment
     }
 

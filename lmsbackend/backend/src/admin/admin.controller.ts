@@ -4,6 +4,8 @@ import { BadRequestException, Body, Controller, Get, NotFoundException, Param, P
     Post,
     Delete} from '@nestjs/common';
 import { AdminService } from './admin.service';
+import { Roles } from 'src/decorators/roles.decarotor';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('auth/admin')
 export class AdminController {
@@ -148,6 +150,7 @@ export class AdminController {
 
 
     @Get('dashboard/stats')
+    @Roles(Role.ADMIN)
     async getDashboardStats(){
         return this.adminservice.getDashboardStats()
     }

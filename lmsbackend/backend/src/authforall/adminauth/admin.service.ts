@@ -24,7 +24,7 @@ export class AdminService {
     }
 
     generateadmintoken(payload:object){
-        const expiresIn='2hr'
+        const expiresIn=process.env.JWT_ADMIN_MAX_AGE||'2hr'
         let newtoken=this.jwtService.sign(payload, { expiresIn })
         return newtoken
     }
