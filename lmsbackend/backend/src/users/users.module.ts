@@ -15,6 +15,6 @@ import { Course, CourseSchema } from 'src/instructors/courses/course.schema';
    UserRepository
   ],
   controllers: [UsersController],
-  exports:[UsersService,UserRepository]
+  exports:[UsersService,UserRepository,MongooseModule]
 })
 export class UsersModule {}
