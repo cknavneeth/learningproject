@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Inject, Logger, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { QuizService } from '../service/quiz.service';
 import { QUIZ_SERVICE } from '../constants/quiz.constant';
 import { IQuizService } from '../service/interfaces/quiz.service.interface';
+import { GuardGuard } from 'src/authentication/guard/guard.guard';
 
 @Controller('quiz')
 export class QuizController {
@@ -29,27 +30,37 @@ export class QuizController {
 
 
     @Post('submit')
-    async submitQuiz(@Body() body:{
+    @UseGuards(GuardGuard)
+    async submitQuiz(@Req() req,@Body() body:{
         quizId:string,
-        userId:string,
         topic:string,
         answers:number[],
         questions:any[]
     }) {
+
+       
+
+        const userId=req.user.userId
+
+        this.logger.log(`Attempting to submit quiz with ID: ${body.quizId}, userId: ${userId}, topic: ${body.topic}`);
         const result=await this.quizService.submitQuiz(
             body.quizId,
-            body.userId,
+            userId,
             body.topic,
             body.answers,
             body.questions
         )
+
+        return result
     }
 
 
-    @Get('history/:userId')
-    async getQuizHistory(@Param('userId') userId:string){
+    @Get('userHistory')
+    @UseGuards(GuardGuard)
+    async getQuizHistory(@Req() req){
 
         try {
+            const userId=req.user.userId
             const result=await this.quizService.getQuizHistory(userId)
             return result
         } catch (error) {

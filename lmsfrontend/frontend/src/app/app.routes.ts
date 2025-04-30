@@ -46,6 +46,7 @@ import { SaleshistoryComponent } from './components/admin/saleshistory/saleshist
 import { CertificatesComponent } from './components/studentmain/certificates/certificates.component';
 import { InstructorDashboardComponent } from './components/insMaincomponent/instructor-dashboard/instructor-dashboard.component';
 import { AdminquizComponent } from './components/admin/adminquiz/adminquiz.component';
+import { StudentquizComponent } from './components/studentmain/studentquiz/studentquiz.component';
 
 export const routes: Routes = [
     {
@@ -146,6 +147,11 @@ export const routes: Routes = [
             {
                 path:'certificates',
                 component:CertificatesComponent,
+                canActivate:[authGuard]
+            },
+            {
+                path:'quiz',
+                component:StudentquizComponent,
                 canActivate:[authGuard]
             }
 

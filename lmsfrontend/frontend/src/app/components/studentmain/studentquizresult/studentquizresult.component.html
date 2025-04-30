@@ -1,0 +1,50 @@
+<div class="p-6 max-h-[80vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Quiz Results: {{ quiz.topic }}</h2>
+      <button mat-icon-button (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+  
+    <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-gray-600 dark:text-gray-400">Total Questions: {{ quiz.totalQuestions }}</p>
+          <p class="text-gray-600 dark:text-gray-400">Correct Answers: {{ quiz.correctAnswers }}</p>
+        </div>
+        <div>
+          <span [ngClass]="getScoreClass(quiz.score)" class="text-2xl font-bold px-4 py-2 rounded-full">
+            {{ quiz.score }}%
+          </span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="space-y-6">
+      <div *ngFor="let question of quiz.questions; let i = index" class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+        <h3 class="font-medium text-lg mb-3 text-gray-800 dark:text-white">{{ i + 1 }}. {{ question.question }}</h3>
+        
+        <div class="space-y-2">
+          <div *ngFor="let option of question.options; let j = index" 
+               [ngClass]="getOptionClass(i, j)"
+               class="p-3 rounded-lg flex items-center">
+            <span class="mr-2">{{ ['A', 'B', 'C', 'D'][j] }}.</span>
+            <span>{{ option }}</span>
+            
+            <span *ngIf="question.correctAnswer === j" class="ml-auto text-green-600">
+              <mat-icon>check_circle</mat-icon>
+            </span>
+            
+            <span *ngIf="question.userAnswer === j && question.correctAnswer !== j" class="ml-auto text-red-600">
+              <mat-icon>cancel</mat-icon>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="mt-6 flex justify-end">
+      <button mat-button color="primary" (click)="closeDialog()">Close</button>
+    </div>
+  </div>

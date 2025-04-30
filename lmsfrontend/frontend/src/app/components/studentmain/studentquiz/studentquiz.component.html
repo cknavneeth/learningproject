@@ -1,0 +1,82 @@
+<div class="min-h-screen bg-gray-900">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8 text-white animate__animated animate__fadeIn">Available Quizzes</h1>
+      
+      <!-- Available Quizzes -->
+      <div class="bg-gray-800 rounded-xl shadow-lg p-6 mb-8 animate__animated animate__fadeInUp">
+        <div *ngIf="isLoading" class="flex justify-center py-8">
+          <mat-spinner color="accent" diameter="40"></mat-spinner>
+        </div>
+        
+        <div *ngIf="!isLoading && quizzes.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div *ngFor="let quiz of quizzes" 
+               class="relative rounded-lg p-4 transition-all duration-300 shadow-md"
+               [ngClass]="{
+                 'bg-gray-600 opacity-85 cursor-not-allowed': quiz.isSubmitted,
+                 'bg-gray-700 hover:bg-gray-600 cursor-pointer transform hover:-translate-y-1': !quiz.isSubmitted
+               }"
+               (click)="quiz.isSubmitted ? viewQuizResult(quiz) : openQuizAttemptModal(quiz)">
+            <div class="relative">
+              <h3 class="font-semibold text-lg text-gray-100">{{ quiz.topic }}</h3>
+              <p class="text-gray-400 text-sm">{{ quiz.questions?.length || 0 }} questions</p>
+              <div class="mt-2 flex justify-between items-center">
+                <span class="text-xs text-gray-400">
+                  {{ quiz.isSubmitted ? 'Click to view results' : 'Click to attempt' }}
+                </span>
+                <span class="px-2 py-1 text-xs rounded-full"
+                      [ngClass]="quiz.isSubmitted ? 
+                        'bg-green-800 text-green-100' : 
+                        'bg-indigo-800 text-indigo-100'">
+                        {{ isQuizSubmitted(quiz._id) ? 'Attempted' : 'Not attempted' }}
+                </span>
+              </div>
+              <div *ngIf="quiz.isSubmitted" class="absolute top-0 right-0 mt-2 mr-2">
+                <mat-icon class="text-green-400">check_circle</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="text-2xl font-bold mb-4 mt-8 text-white animate__animated animate__fadeIn">My Quiz History</h1>
+        <div class="bg-gray-800 rounded-xl shadow-lg p-6 animate__animated animate__fadeInUp">
+          <div *ngIf="isHistoryLoading" class="flex justify-center py-8">
+            <mat-spinner color="accent" diameter="40"></mat-spinner>
+          </div>
+          <div *ngIf="!isHistoryLoading && quizHistory.length > 0" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-700">
+              <thead class="bg-gray-700">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Topic</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Score</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-gray-800 divide-y divide-gray-700">
+                <tr *ngFor="let quiz of quizHistory" class="hover:bg-gray-700 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">{{ quiz.topic }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ formatDate(quiz.createdAt) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [ngClass]="getScoreClass(quiz.score)" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                      {{ quiz.score }}%
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                    <button 
+                      (click)="viewQuizResult(quiz)"
+                      class="text-indigo-400 hover:text-indigo-300 transition-colors"
+                      matTooltip="View Results">
+                      <mat-icon class="animate-pulse">visibility</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        
+        <div *ngIf="!isLoading && quizzes.length === 0" class="text-center py-8 text-gray-400">
+          No quizzes available
+        </div>
+      </div>
+    </div>
+  </div>

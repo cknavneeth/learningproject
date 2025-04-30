@@ -73,6 +73,8 @@ export class QuizService implements IQuizService{
             })
     
             const savedQuiz=await quiz.save()
+
+            this.logger.log('quiz saved heehhehhe',savedQuiz)
     
             return{
                quizId: savedQuiz._id,
@@ -98,6 +100,20 @@ export class QuizService implements IQuizService{
         answers: number[],
         questions: any[]
     ) {
+
+        const existingSubmission=await this.quizModel.findOne({
+            originalQuizId:quizId,
+            userId:new Types.ObjectId(userId),
+            isSubmitted:true
+        })
+
+        if(existingSubmission){
+            this.logger.error(`User ${userId} has already submitted quiz ${quizId}`);
+            throw new Error('You have already submitted this quiz');
+        }
+        
+
+
         const correctAnswers = questions.reduce((count, question, index) => {
             return question.correctAnswer === answers[index] ? count + 1 : count;
         }, 0);
@@ -108,25 +124,32 @@ export class QuizService implements IQuizService{
 
         const score = (correctAnswers / questions.length) * 100;
 
-       
 
-        const quiz=await this.quizModel.findById(quizId)
+        const originalQuiz=await this.quizModel.findById(quizId)
 
-        if(!quiz){
-            this.logger.log('quiz not found')
-            throw new NotFoundException('quiz is not in the collection')
+        if(!originalQuiz){
+            this.logger.error(`Quiz not found with ID: ${quizId}`);
+            throw new NotFoundException('quiz is not in the collection');
         }
 
-        quiz.userId=new Types.ObjectId(userId)
-        quiz.correctAnswers = correctAnswers;
-        quiz.score = score;
-        quiz.isSubmitted = true;
-        quiz.questions = quiz.questions.map((q, i) => ({
-        ...q,
-        userAnswer: answers[i]
-    }));
 
-        await quiz.save();
+        this.logger.log(`Quiz found, updating with user answers`);
+
+        const userQuizSubmission=new this.quizModel({
+            userId: new Types.ObjectId(userId),
+            topic: originalQuiz.topic,
+            score: score,
+            totalQuestions: questions.length,
+            correctAnswers: correctAnswers,
+            isSubmitted: true,
+            questions: originalQuiz.questions.map((q, i) => ({
+                ...q,
+                userAnswer: answers[i]
+            })),
+            originalQuizId: quizId
+        })
+
+        const savedSubmission=await userQuizSubmission.save();
 
         if(score>80){
             let user=await this.userModel.findById(userId)
@@ -142,20 +165,23 @@ export class QuizService implements IQuizService{
             
         }
 
-        return quiz
+        return savedSubmission
     }
 
     async getQuizHistory(userId: string) {
-        const user = new Types.ObjectId(userId);
-        const result = await this.quizModel.find({ userId });
+        const userObjectId = new Types.ObjectId(userId);
+        const result = await this.quizModel.find({
+             userId :userObjectId,
+             isSubmitted:true
+            })
         return result;
     }
 
 
 
     async loadQuiz(){
-        const result=await this.quizModel.find()
-        .select('questions topic -_id')
+        const result=await this.quizModel.find({userId:{$exists:false}})
+        .select('questions topic _id isSubmitted')
         return result
     }
 }

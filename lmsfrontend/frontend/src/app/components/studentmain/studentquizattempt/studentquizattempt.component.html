@@ -1,0 +1,57 @@
+<div class="quiz-modal bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+    <!-- Header -->
+    <div class="modal-header border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+      <div class="flex items-center justify-between px-6 py-4">
+        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+          {{ quiz.topic }}
+        </h2>
+        <button mat-icon-button (click)="confirmClose()" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Content -->
+    <div class="modal-content p-6 max-h-[70vh] overflow-y-auto">
+      <div class="space-y-8">
+        <div *ngFor="let question of quiz.questions; let i = index" class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
+              {{ i + 1 }}
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">{{ question.question }}</h3>
+              
+              <div class="space-y-3 mt-4">
+                <div *ngFor="let option of question.options; let j = index" 
+                     class="flex items-center p-3 rounded-lg cursor-pointer"
+                     [ngClass]="{'bg-indigo-100 dark:bg-indigo-900 border border-indigo-500': selectedAnswers[i] === j, 
+                                'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600': selectedAnswers[i] !== j}"
+                     (click)="selectAnswer(i, j)">
+                  <div class="w-6 h-6 rounded-full flex items-center justify-center mr-3"
+                       [ngClass]="{'bg-indigo-500 text-white': selectedAnswers[i] === j, 
+                                  'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300': selectedAnswers[i] !== j}">
+                    {{ ['A', 'B', 'C', 'D'][j] }}
+                  </div>
+                  <span class="text-gray-800 dark:text-gray-200">{{ option }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Footer -->
+    <div class="modal-footer border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-4 flex justify-between items-center">
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        {{ getAnsweredCount() }} of {{ quiz.questions?.length }} questions answered
+      </div>
+      <button 
+        (click)="submitQuiz()"
+        [disabled]="!isAllQuestionsAnswered()"
+        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+        Submit Quiz
+      </button>
+    </div>
+  </div>

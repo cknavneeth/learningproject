@@ -8,6 +8,9 @@ export class Quiz{
     @Prop({type:Types.ObjectId,ref:'user'})
     userId:Types.ObjectId
 
+    @Prop({type:Types.ObjectId,ref:'user'})
+    originalQuizId:Types.ObjectId
+
     @Prop({required:true})
     topic:string
 

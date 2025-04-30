@@ -5,11 +5,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Quiz, QuizSchema } from './schema/quiz.schema';
 import { UsersModule } from 'src/users/users.module';
 import { QUIZ_SERVICE } from './constants/quiz.constant';
+import { AuthenticationModule } from 'src/authentication/auth.module';
 
 @Module({
     imports:[
         MongooseModule.forFeature([{name:Quiz.name,schema:QuizSchema}]),
-        UsersModule
+        UsersModule,
+        AuthenticationModule
     ],
    
     providers: [
