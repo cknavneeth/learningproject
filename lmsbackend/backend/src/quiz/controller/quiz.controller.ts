@@ -60,4 +60,16 @@ export class QuizController {
     }
 
 
+    @Get('history')
+    async loadQuiz(){
+        try {
+            const result=await this.quizService.loadQuiz()
+            return result
+        } catch (error) {
+            this.logger.log('error',error)
+            throw error
+        }
+    }
+
+
 }

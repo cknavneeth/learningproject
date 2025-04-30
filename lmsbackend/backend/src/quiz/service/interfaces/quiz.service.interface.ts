@@ -8,4 +8,5 @@ export interface IQuizService{
         questions:any[]
     ):Promise<any>,
     getQuizHistory(userId:string):Promise<any>
+    loadQuiz():Promise<any>
 }

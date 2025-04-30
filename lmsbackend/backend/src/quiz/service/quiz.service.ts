@@ -53,11 +53,10 @@ export class QuizService implements IQuizService{
             });
     
     
-            this.logger.log('Raw response:', response.text);
     
             const sanitizedResponse = response.text!.replace(/```json|```/g, '').trim();
     
-            this.logger.log(this.ai,'chat ahneyy')
+            
             
             const {questions} = JSON.parse(sanitizedResponse);
     
@@ -150,5 +149,13 @@ export class QuizService implements IQuizService{
         const user = new Types.ObjectId(userId);
         const result = await this.quizModel.find({ userId });
         return result;
+    }
+
+
+
+    async loadQuiz(){
+        const result=await this.quizModel.find()
+        .select('questions topic -_id')
+        return result
     }
 }

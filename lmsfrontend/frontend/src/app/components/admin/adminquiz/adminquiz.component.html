@@ -1,0 +1,62 @@
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8 text-gray-800 dark:text-white">Quiz Management</h1>
+  
+      <!-- Quiz Generator Form -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">Generate New Quiz</h2>
+        
+        <form [formGroup]="quizForm" (ngSubmit)="generateQuiz()" class="space-y-4">
+          <div>
+            <label for="topic" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Topic</label>
+            <input 
+              type="text" 
+              id="topic" 
+              formControlName="topic" 
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              placeholder="Enter quiz topic (e.g., JavaScript Basics, Python Data Structures)">
+            
+            <div *ngIf="quizForm.get('topic')?.invalid && quizForm.get('topic')?.touched" class="text-red-500 text-sm mt-1">
+              <span *ngIf="quizForm.get('topic')?.errors?.['required']">Topic is required</span>
+              <span *ngIf="quizForm.get('topic')?.errors?.['minlength']">Topic must be at least 3 characters</span>
+            </div>
+          </div>
+          
+          <button 
+            type="submit" 
+            [disabled]="quizForm.invalid || isGenerating"
+            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="isGenerating" class="mr-2">
+              <mat-spinner diameter="20"></mat-spinner>
+            </span>
+            <span>Generate Quiz</span>
+          </button>
+        </form>
+      </div>
+  
+      <!-- Quiz History -->
+    
+  
+      <!-- Available Quizzes -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">Available Quizzes</h2>
+        
+        <div *ngIf="isLoading" class="flex justify-center py-8">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+        
+        <div *ngIf="!isLoading && quizzes.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div *ngFor="let quiz of quizzes" 
+               class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer shadow-md"
+               (click)="openQuizModal(quiz)">
+            <h3 class="font-semibold text-lg text-gray-800 dark:text-gray-100">{{ quiz.topic }}</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">{{ quiz.questions?.length || 0 }} questions</p>
+          </div>
+        </div>
+        
+        <div *ngIf="!isLoading && quizzes.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+          No quizzes available
+        </div>
+      </div>
+    </div>
+  </div>

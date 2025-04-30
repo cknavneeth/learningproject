@@ -45,6 +45,7 @@ import { InstructorstudentsComponent } from './components/insMaincomponent/instr
 import { SaleshistoryComponent } from './components/admin/saleshistory/saleshistory.component';
 import { CertificatesComponent } from './components/studentmain/certificates/certificates.component';
 import { InstructorDashboardComponent } from './components/insMaincomponent/instructor-dashboard/instructor-dashboard.component';
+import { AdminquizComponent } from './components/admin/adminquiz/adminquiz.component';
 
 export const routes: Routes = [
     {
@@ -276,6 +277,10 @@ export const routes: Routes = [
             {
                 path:'sales-history',
                 component:SaleshistoryComponent
+            },
+            {
+                path:'quiz-management',
+                component:AdminquizComponent
             }
            
         ]
