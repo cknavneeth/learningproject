@@ -140,7 +140,7 @@ export class StudentquizComponent implements OnInit{
       return false;
     }
     
-    // Check if this quiz exists in the history with isSubmitted = true
+  
     return this.quizHistory.some(historyQuiz => 
       historyQuiz.originalQuizId === quizId && historyQuiz.isSubmitted === true
     );

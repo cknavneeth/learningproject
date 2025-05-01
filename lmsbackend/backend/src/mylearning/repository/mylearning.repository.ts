@@ -44,7 +44,7 @@ export class MylearningRepository implements IMyLearningRepository {
 
         //iam extracting all courses id from completed payments
         const enrolledCourseIds = completedPayments.reduce((acc: Types.ObjectId[], payment) => {
-            const courseIds = payment.coursesDetails?.map(detail => detail.courseId) || [];
+            const courseIds = payment.coursesDetails?.filter(detail=>detail.status!=='cancelled').map(detail => detail.courseId) || [];
             return [...acc, ...courseIds];
         }, []);
 
