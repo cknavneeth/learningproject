@@ -152,10 +152,10 @@ export class InstructorauthService {
         }
     
         generateInstructorAccess(instructor:instructorDocument){
-            return jwt.sign({InstructorId:instructor._id.toString(),emailaddress:instructor.emailaddress,role:instructor.role||'instructor'},process.env.JWT_SECRET_KEY as string,{expiresIn:process.env.JWT_EXPIRES_IN})
+            return jwt.sign({InstructorId:instructor._id.toString(),emailaddress:instructor.emailaddress,role:instructor.role||'instructor',username:instructor.name},process.env.JWT_SECRET_KEY as string,{expiresIn:process.env.JWT_EXPIRES_IN})
         }
         generateInstructorRefresh(instructor:instructorDocument){
-           return jwt.sign({InstructorId:instructor._id.toString(),emailaddress:instructor.emailaddress,role:instructor.role||'instructor'},process.env.REFRESH_TOKEN_SECRET as string,{expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN})
+           return jwt.sign({InstructorId:instructor._id.toString(),emailaddress:instructor.emailaddress,role:instructor.role||'instructor',username:instructor.name},process.env.REFRESH_TOKEN_SECRET as string,{expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN})
         }
     
     

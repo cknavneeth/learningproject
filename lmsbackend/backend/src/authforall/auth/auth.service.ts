@@ -147,12 +147,12 @@ export class AuthService {
     }
 
     generateAccessToken(user:user|userDocument){
-       return jwt.sign({userId:user._id.toString(),email:user.email,role:user.role||'student'},process.env.JWT_SECRET_KEY as string,{expiresIn:process.env.JWT_EXPIRES_IN})
+       return jwt.sign({userId:user._id.toString(),email:user.email,role:user.role||'student',username:user.username},process.env.JWT_SECRET_KEY as string,{expiresIn:process.env.JWT_EXPIRES_IN})
     }
 
 
     generateRefreshToken(user:user|userDocument){
-        return jwt.sign({userId:user._id,email:user.email,role:user.role||'student'},process.env.REFRESH_TOKEN_SECRET as string,{expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN})
+        return jwt.sign({userId:user._id,email:user.email,role:user.role||'student',username:user.username},process.env.REFRESH_TOKEN_SECRET as string,{expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN})
     }
 
 
