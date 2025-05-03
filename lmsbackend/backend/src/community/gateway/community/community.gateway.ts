@@ -26,8 +26,8 @@ interface DeleteMessageDto{
 
 @WebSocketGateway({
   cors:{
-    origin:'*',
-    credentials:true
+    origin:'http://localhost:4200',
+    credentials:false
   },
   namespace:'community'
 })
@@ -39,7 +39,7 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
 
   private readonly logger=new Logger(CommunityGateway.name)
 
-  private readonly connectedClients=new Map<string,{userId:string,username:string}>()
+  private readonly connectedClients=new Map<string,{userId:string,username:string,role?:string}>()
 
 
   @WebSocketServer()
@@ -68,10 +68,18 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
       try {
         const decoded=this.jwtService.verify(token)
 
-        const userId=decoded.userId
-        const username=decoded.email||'aparichithan'
-        this.connectedClients.set(client.id,{userId,username})
-        this.logger.log(`Authenticated User connected: ${username} ${userId}`)
+        const userId=decoded.userId||decoded.InstructorId
+        const username=decoded.username||decoded.username||'unknown'
+        const role=decoded.role||(decoded.isInstructor?'instructor':'student')
+
+        this.logger.log(`User connected: ${username} (${userId}) with role: ${role}`);
+
+
+        this.connectedClients.set(client.id,{userId,username,role})
+
+        
+
+         this.logger.log(`Authenticated User connected: ${username} ${userId} with role ${role}`);
       } catch (error) {
         this.logger.log(`Invalid token provided: ${error.message}`)
         client.disconnect()
@@ -103,21 +111,52 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
         return {success:false,message:'Client not authenticated'}
       }
 
-      const {userId}=clientData
+      const {userId,role}=clientData
+
+      this.logger.log(`User ${userId} with role ${role} attempting to join room for course ${courseId}`)
+
+      //for instructor
+      if (role === 'instructor') {
+        this.logger.log(`User is an instructor, bypassing all checks`);
+        
+        // Join the room
+        client.join(courseId);
+        this.logger.log(`Instructor joined room for course ${courseId}`);
+        
+        // Get messages
+        const messages = await this.communityService.getMessages(courseId);
+        
+        return {
+          success: true,
+          messages,
+          userId,
+          isInstructor: true
+        };
+      }
+
+      //for instructor
 
       //fetching instructor here for checking if user is instructor
       const community=await this.communityService.getCommunity(courseId)
-      const isInstructor=community.instructor.toString()===userId
 
-      const haspaid=await this.paymentModel.findOne({
-        userId:new Types.ObjectId(userId),
-        'coursesDetails.courseId':new Types.ObjectId(courseId),
-        status:'completed'
-      })
+      this.logger.log(`Community data: ${JSON.stringify(community)}`)
 
-      if(!haspaid && !isInstructor){
-        this.logger.error(`User ${userId} has not paid for course ${courseId}`)
-        return {success:false,message:'You have not paid for this course'}
+      const isInstructor = community && community.instructorId ? 
+      community.instructorId.toString() === userId : false;
+
+      this.logger.log(`Is user an instructor? ${isInstructor}`);
+
+      if (!isInstructor) {
+        const hasPaid = await this.paymentModel.findOne({
+          userId: new Types.ObjectId(userId),
+          'coursesDetails.courseId': new Types.ObjectId(courseId),
+          status: 'completed'
+        });
+  
+        if (!hasPaid) {
+          this.logger.error(`User ${userId} has not paid for course ${courseId}`);
+          return { success: false, message: 'You have not paid for this course' };
+        }
       }
 
       client.join(courseId)
@@ -127,7 +166,9 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
 
       return {
         success:true,
-        messages
+        messages,
+        userId,
+        isInstructor
       }
     } catch (error) {
        this.logger.error(`Error joining room: ${error.message}`)

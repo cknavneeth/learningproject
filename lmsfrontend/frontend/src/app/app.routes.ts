@@ -47,6 +47,8 @@ import { CertificatesComponent } from './components/studentmain/certificates/cer
 import { InstructorDashboardComponent } from './components/insMaincomponent/instructor-dashboard/instructor-dashboard.component';
 import { AdminquizComponent } from './components/admin/adminquiz/adminquiz.component';
 import { StudentquizComponent } from './components/studentmain/studentquiz/studentquiz.component';
+import { InstructorcommunityComponent } from './components/insMaincomponent/instructorcommunity/instructorcommunity.component';
+import { StudentcommunityComponent } from './components/studentmain/studentcommunity/studentcommunity.component';
 
 export const routes: Routes = [
     {
@@ -153,6 +155,10 @@ export const routes: Routes = [
                 path:'quiz',
                 component:StudentquizComponent,
                 canActivate:[authGuard]
+            },
+            {
+                path:'community',
+                component:StudentcommunityComponent
             }
 
            
@@ -234,6 +240,10 @@ export const routes: Routes = [
             {
                 path:'dashboard',
                 component:InstructorDashboardComponent
+            },
+            {
+                path:'community',
+                component:InstructorcommunityComponent
             }
         ]
     },

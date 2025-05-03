@@ -71,13 +71,14 @@ export class CloudinaryService {
                 );
 
                 // Handle stream errors
+                
                 stream.on('error', (error) => {
                     console.error('Stream Error:', error);
                     reject(error);
                 });
 
-                // Write file buffer to stream in chunks
-                const chunkSize = 2000000; // 2MB chunks
+                
+                const chunkSize = 2000000;
                 let offset = 0;
                 
                 function uploadNextChunk() {

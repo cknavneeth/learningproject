@@ -19,6 +19,7 @@ export class InstructorsidebarComponent {
     { icon: 'fas fa-dollar-sign', label: 'Earnings', route: '/instructor/earnings' },
     { icon: 'fas fa-envelope', label: 'Messages', route: '/instructor/messages' },
     {icon:'fas fa-file-alt' ,label:'Your Draft',route:'/instructor/drafts'},
-    {icon:'fas fa-user' ,label:'My Students',route:'/instructor/enrolled-students'}
+    {icon:'fas fa-user' ,label:'My Students',route:'/instructor/enrolled-students'},
+    {icon:'fas fa-user' ,label:'Community',route:'/instructor/community'}
   ];
 }

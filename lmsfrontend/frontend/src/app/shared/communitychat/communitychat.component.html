@@ -1,0 +1,88 @@
+<div class="chat-container">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="chat-loading">
+      <div class="spinner"></div>
+      <p>Connecting to community...</p>
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="error" class="chat-error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+  
+    <!-- Chat Content -->
+    <ng-container *ngIf="!loading && !error">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <h2>Course Community</h2>
+        <div *ngIf="isInstructor" class="instructor-badge">Instructor</div>
+      </div>
+      
+      <!-- Messages Container -->
+      <div class="messages-container" #messagesContainer>
+        <div *ngIf="messages.length === 0" class="empty-messages">
+          <p>No messages yet. Be the first to start the conversation!</p>
+        </div>
+        
+        <div *ngFor="let message of messages" 
+             class="message" 
+             [ngClass]="{'own-message': isCurrentUser(message.senderId)}">
+          <div class="message-avatar">
+            {{ message.username.charAt(0).toUpperCase() }}
+          </div>
+          <div class="message-content">
+            <div class="message-header">
+              <span class="message-username">{{ message.username }}</span>
+              <span class="message-time">{{ message.createdAt | date:'short' }}</span>
+            </div>
+            
+            <div class="message-body">
+              <div *ngIf="message.type === 'text'" class="message-text">
+                {{ message.content }}
+              </div>
+              <div *ngIf="message.type === 'image'" class="message-image">
+                <img [src]="message.content" alt="Shared image">
+              </div>
+            </div>
+            
+            <div *ngIf="canDeleteMessage(message)" class="message-actions">
+              <button mat-icon-button color="warn" (click)="deleteMessage(message._id)" matTooltip="Delete message">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Message Input -->
+      <div class="message-input">
+        <mat-form-field appearance="outline" class="message-field">
+          <input matInput 
+                 [(ngModel)]="newMessage" 
+                 (keyup.enter)="sendMessage()" 
+                 placeholder="Type your message...">
+        </mat-form-field>
+        
+        <button mat-icon-button 
+                color="primary" 
+                (click)="triggerFileInput()" 
+                matTooltip="Send image">
+          <mat-icon>image</mat-icon>
+        </button>
+        
+        <button mat-fab 
+                color="primary" 
+                (click)="sendMessage()" 
+                [disabled]="!newMessage.trim()">
+          <mat-icon>send</mat-icon>
+        </button>
+        
+        <input type="file" 
+               #fileInput 
+               hidden 
+               accept="image/*" 
+               (change)="handleFileInput($event)">
+      </div>
+    </ng-container>
+  </div>

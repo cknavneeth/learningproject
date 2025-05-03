@@ -27,7 +27,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   } else if (req.url.includes('/instructor')) {
     accesstoken = tokenservice.getInstructorToken()
     
-
   }
 
   if (accesstoken) {

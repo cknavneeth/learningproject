@@ -1,0 +1,33 @@
+<div class="community-container">
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading your courses...</p>
+    </div>
+  
+    <div *ngIf="!loading && error" class="error-container">
+      <p>{{ error }}</p>
+    </div>
+  
+    <div *ngIf="!loading && !error" class="community-content">
+      <div class="course-list-container">
+        <app-courselist 
+          [courses]="instructorCourses" 
+          [selectedCourseId]="selectedCourseId"
+          userType="instructor"
+          (courseSelected)="onCourseSelected($event)">
+        </app-courselist>
+      </div>
+  
+      <div class="chat-container">
+        <app-communitychat 
+          *ngIf="selectedCourseId" 
+          [courseId]="selectedCourseId"
+          userType="instructor">
+        </app-communitychat>
+  
+        <div *ngIf="!selectedCourseId" class="no-course-selected">
+          <p>Select a course to join its community</p>
+        </div>
+      </div>
+    </div>
+  </div>

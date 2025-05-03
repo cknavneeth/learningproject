@@ -1,0 +1,25 @@
+
+<div class="course-list">
+    <div class="course-list-header">
+      <h2 class="text-lg font-semibold mb-4">{{ userType === 'student' ? 'My Enrolled Courses' : 'My Courses' }}</h2>
+    </div>
+  
+    <div class="course-list-items">
+      <div *ngFor="let course of courses" 
+           class="course-item" 
+           [class.active]="course._id === selectedCourseId"
+           (click)="selectCourse(course._id)">
+        <div class="course-avatar">
+          <img [src]="course.thumbnailUrl || 'assets/images/default-course.png'" alt="Course thumbnail">
+        </div>
+        <div class="course-info">
+          <div class="course-title">{{ course.title }}</div>
+          <div class="course-subtitle">{{ userType === 'student' ? 'Instructor: ' + (course.instructor?.name || 'Unknown') : 'Students: ' + (course.enrollmentCount || 0) }}</div>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="courses.length === 0" class="empty-state">
+      <p>{{ userType === 'student' ? 'You haven\'t enrolled in any courses yet.' : 'You haven\'t created any courses yet.' }}</p>
+    </div>
+  </div>
