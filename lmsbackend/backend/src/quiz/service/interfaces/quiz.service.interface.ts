@@ -1,3 +1,5 @@
+import { QuizDocument } from "src/quiz/schema/quiz.schema"
+
 export interface IQuizService{
     generateQuestions(topic:string):Promise<any>
     submitQuiz(
@@ -9,4 +11,5 @@ export interface IQuizService{
     ):Promise<any>,
     getQuizHistory(userId:string):Promise<any>
     loadQuiz():Promise<any>
+    deleteQuiz(quizId:string):Promise<QuizDocument>
 }

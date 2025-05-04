@@ -65,4 +65,11 @@ export class QuizService {
     // Default: return empty string if no topic found
     return '';
   }
+
+
+
+
+  deleteQuiz(quizId:string):Observable<any>{
+    return this.http.delete<any>(`${this.apiUrl}/${quizId}`)
+  }
 }

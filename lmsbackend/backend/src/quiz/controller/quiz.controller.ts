@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { QuizService } from '../service/quiz.service';
 import { QUIZ_SERVICE } from '../constants/quiz.constant';
 import { IQuizService } from '../service/interfaces/quiz.service.interface';
@@ -79,6 +79,18 @@ export class QuizController {
         } catch (error) {
             this.logger.log('error',error)
             throw error
+        }
+    }
+
+
+    @Delete(':quizId')
+    async deleteQuiz(@Param('quizId') quizId:string){
+        try {
+            const result=await this.quizService.deleteQuiz(quizId)
+            return {success:true,message:'Quiz deleted successfully'}
+        } catch (error) {
+            this.logger.error('Error deleting quiz',error)
+            throw new HttpException('failed to delete quiz',HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 

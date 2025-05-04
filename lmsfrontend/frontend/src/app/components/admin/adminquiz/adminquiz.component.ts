@@ -8,6 +8,7 @@ import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { QuizmodalComponent } from '../quizmodal/quizmodal.component';
+import { ConfirmationcomponentComponent } from '../../common/confirmationcomponent/confirmationcomponent.component';
 
 @Component({
   selector: 'app-adminquiz',
@@ -119,4 +120,33 @@ export class AdminquizComponent {
           data:quiz
       })
     }
+
+
+
+
+    
+    deleteQuiz(quizId:string,event?:Event):void{
+
+      if (event) {
+        event.stopPropagation();
+      }
+      const dialogRef=this.dialog.open(ConfirmationcomponentComponent,{
+        data:{title:'Confirm Deletion',message:'Are you sure you want to delete this quiz?'}
+      })
+  
+      dialogRef.afterClosed().subscribe(result=>{
+        if(result){
+          this.quizService.deleteQuiz(quizId).subscribe(
+            response=>{
+              this.snackBar.open('Quiz deleted successfully','Close',{duration:3000})
+              this.loadQuiz()
+            },
+            error=>{
+              this.snackBar.open('Failed to delete quiz','Close',{duration:3000})
+            }
+          )
+        }
+      })
+    }
+
 }

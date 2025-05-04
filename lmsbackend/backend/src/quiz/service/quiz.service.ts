@@ -30,6 +30,13 @@ export class QuizService implements IQuizService{
 
     async generateQuestions(topic: string) {
         console.log('service il ethi for quiz')
+        const adminQuizCount=await this.quizModel.countDocuments({userId:{$exists:false}})
+
+        if(adminQuizCount>=3){
+            throw new Error("Maximum limit of 3 quizzes reached")
+        }
+
+
 
         this.logger.log(this.ai,'gemini')
         const prompt = `Generate 5 multiple questions about the topic ${topic}.
@@ -183,5 +190,19 @@ export class QuizService implements IQuizService{
         const result=await this.quizModel.find({userId:{$exists:false}})
         .select('questions topic _id isSubmitted')
         return result
+    }
+
+
+    async deleteQuiz(quizId:string):Promise<QuizDocument>{
+        try {
+            const result=await this.quizModel.findByIdAndDelete(quizId)
+            if(!result){
+                throw new NotFoundException('Quiz not found')
+            }
+            return result
+        } catch (error) {
+            this.logger.error('Error deleting quiz',error)
+            throw error
+        }
     }
 }
