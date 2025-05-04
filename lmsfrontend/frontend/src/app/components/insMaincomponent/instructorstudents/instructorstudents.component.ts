@@ -27,7 +27,6 @@ export class InstructorstudentsComponent implements OnInit{
     this.loading=true
     this.error=null
 
-
     this.instructorService.getEnrolledStudents(page,this.limit).subscribe({
       next:(response)=>{
         console.log('Full response:', response.data);
@@ -48,17 +47,30 @@ export class InstructorstudentsComponent implements OnInit{
   }
 
 
+  // onPageChange(page: number): void {
+  //   if (page !== this.currentPage && page > 0 && page <= this.totalPages) {
+  //     this.loadStudents(page);
+  //   }
+  // }
+
+  // formatDate(date: string): string {
+  //   return new Date(date).toLocaleDateString('en-US', {
+  //     year: 'numeric',
+  //     month: 'short',
+  //     day: 'numeric'
+  //   });
+  // }
+
+
   onPageChange(page: number): void {
-    if (page !== this.currentPage && page > 0 && page <= this.totalPages) {
+    if (page !== this.currentPage) {
       this.loadStudents(page);
     }
   }
-
-  formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+  
+  formatDate(dateString: string): string {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
   }
 }

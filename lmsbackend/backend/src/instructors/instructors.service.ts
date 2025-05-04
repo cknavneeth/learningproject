@@ -133,7 +133,6 @@ export class InstructorsService {
 
 
     //get instructor dashboard stats
-
     async getDashboardStats(instructorId:string){
         return this.instructorRepository.getDashboardStats(instructorId)
     }

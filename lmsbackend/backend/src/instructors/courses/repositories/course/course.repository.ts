@@ -73,7 +73,6 @@ export class CourseRepository implements ICourseRepository{
     async getEnrolledStudents(instructorId: Types.ObjectId, page: number, limit: number): Promise<{ students: any[]; total: number }> {
         const skip = (page - 1) * limit;
 
-        // Get instructor's courses
         const instructorCourses = await this.courseModel.find({ instructor: instructorId }).select('_id').lean();
         const courseIds = instructorCourses.map(course => course._id);
         
@@ -81,7 +80,7 @@ export class CourseRepository implements ICourseRepository{
 
         // First check if we have any payments matching our criteria
         const matchingPayments = await this.paymentModal.find({
-            courses: { $in: courseIds },
+            'coursesDetails.courseId': { $in: courseIds },
             status: 'completed'
         }).lean();
         
@@ -94,7 +93,7 @@ export class CourseRepository implements ICourseRepository{
         const countPipeline=[
             {
                 $match:{
-                    courses:{$in:courseIds},
+                    'coursesDetails.courseId':{$in:courseIds},
                     status:'completed'
                 }
             },
@@ -115,7 +114,7 @@ export class CourseRepository implements ICourseRepository{
         const pipeline = [
             {
                 $match: {
-                    courses: { $in: courseIds },
+                    'coursesDetails.courseId': { $in: courseIds },
                     status: 'completed'
                 }
             },
