@@ -32,11 +32,7 @@ interface DeleteMessageDto{
   namespace:'community'
 })
 export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnect{
-  // @SubscribeMessage('message')
-  // handleMessage(client: any, payload: any): string {
-  //   return 'Hello world!';
-  // }
-
+ 
   private readonly logger=new Logger(CommunityGateway.name)
 
   private readonly connectedClients=new Map<string,{userId:string,username:string,role?:string}>()
@@ -57,6 +53,8 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
       this.logger.log(`Client connected: ${client.id}`)
 
       const token=client.handshake.auth.token
+
+      this.logger.log('initially got connected to community')
 
       if(!token){
         this.logger.error('No token provided')

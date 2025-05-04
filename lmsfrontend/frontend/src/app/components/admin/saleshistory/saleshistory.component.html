@@ -55,4 +55,16 @@
       <p class="text-white bg-gray-700/30 p-3 rounded-lg">{{ sale.cancellationReason?.[0] }}</p>
     </div>
   </div>
+
+</div>
+
+<div class="mt-6">
+  <mat-paginator
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="handlePageEvent($event)"
+    class="bg-gray-800 text-gray-100 rounded-lg shadow-md">
+  </mat-paginator>
 </div>

@@ -71,18 +71,24 @@ export class SaleshistoryComponent implements OnInit {
   }
 
   loadSalesHistory() {
-    this.adminService.getSalesHistory().subscribe({
+    this.isLoading = true;
+    this.adminService.getSalesHistory(this.pageIndex + 1, this.pageSize).subscribe({
       next: (response) => {
         this.salesHistory = response.sales;
+        this.totalItems = response.pagination.total;
+        this.isLoading = false;
         console.log('Sales data:', this.salesHistory);
       },
       error: (error) => {
+        this.error = 'Failed to load sales history';
+        this.isLoading = false;
         console.error('Error loading sales history:', error);
       }
     });
   }
 
   handlePageEvent(event: PageEvent): void {
+    console.log('Page event:', event);
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadSalesHistory();
@@ -130,6 +136,9 @@ export class SaleshistoryComponent implements OnInit {
   getTotalCourses(courses: Array<{ title: string }>): number {
     return courses.length;
   }
+
+
+ 
 
 
 }

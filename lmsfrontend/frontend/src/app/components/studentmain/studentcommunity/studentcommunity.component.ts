@@ -4,10 +4,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { CourselistComponent } from '../../../shared/courselist/courselist.component';
 import { CommunitychatComponent } from '../../../shared/communitychat/communitychat.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-studentcommunity',
-  imports: [CommonModule,CourselistComponent,CommunitychatComponent],
+  imports: [CommonModule,CourselistComponent,CommunitychatComponent,MatIconModule],
   templateUrl: './studentcommunity.component.html',
   styleUrl: './studentcommunity.component.scss'
 })

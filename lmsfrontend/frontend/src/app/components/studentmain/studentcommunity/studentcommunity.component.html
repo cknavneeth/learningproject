@@ -1,33 +1,36 @@
-<div class="community-container">
-    <div *ngIf="loading" class="loading-container">
-      <div class="spinner"></div>
-      <p>Loading your courses...</p>
+<div class="flex flex-col h-[calc(100vh-64px)] bg-gray-900">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center h-full p-6 text-center text-gray-400">
+    <div class="w-10 h-10 border-4 border-gray-600 border-t-purple-500 rounded-full animate-spin mb-4"></div>
+    <p>Loading courses...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="flex flex-col items-center justify-center h-full p-6 text-center text-gray-400">
+    <mat-icon class="text-red-500 text-3xl mb-2">error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error" class="flex flex-col md:flex-row h-full overflow-hidden">
+    <div class="w-full md:w-72 h-full md:h-full md:flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-700">
+      <app-courselist 
+        [courses]="enrolledCourses" 
+        [selectedCourseId]="selectedCourseId"
+        userType="student"
+        (courseSelected)="onCourseSelected($event)">
+      </app-courselist>
     </div>
-  
-    <div *ngIf="!loading && error" class="error-container">
-      <p>{{ error }}</p>
-    </div>
-  
-    <div *ngIf="!loading && !error" class="community-content">
-      <div class="course-list-container">
-        <app-courselist 
-          [courses]="enrolledCourses" 
-          [selectedCourseId]="selectedCourseId"
-          userType="student"
-          (courseSelected)="onCourseSelected($event)">
-        </app-courselist>
-      </div>
-  
-      <div class="chat-container">
-        <app-communitychat 
-          *ngIf="selectedCourseId" 
-          [courseId]="selectedCourseId"
-          userType="student">
-        </app-communitychat>
-  
-        <div *ngIf="!selectedCourseId" class="no-course-selected">
-          <p>Select a course to join its community</p>
-        </div>
+
+    <div class="flex-1 h-full overflow-hidden">
+      <app-communitychat 
+        *ngIf="selectedCourseId" 
+        [courseId]="selectedCourseId"
+        userType="student">
+      </app-communitychat>
+
+      <div *ngIf="!selectedCourseId" class="flex items-center justify-center h-full bg-gray-900 text-gray-400 text-center p-4">
+        <p>Select a course to join its community</p>
       </div>
     </div>
   </div>
+</div>

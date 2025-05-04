@@ -1,25 +1,30 @@
+<div class="flex flex-col h-full bg-gray-900 border-r border-gray-700">
+  <div class="p-4 border-b border-gray-700 bg-gray-800 mt-2">
+    <h2 class="text-lg font-semibold text-white mb-1">
+      {{ userType === 'student' ? 'My Enrolled Courses' : 'My Courses' }}
+    </h2>
+  </div>
 
-<div class="course-list">
-    <div class="course-list-header">
-      <h2 class="text-lg font-semibold mb-4">{{ userType === 'student' ? 'My Enrolled Courses' : 'My Courses' }}</h2>
-    </div>
-  
-    <div class="course-list-items">
-      <div *ngFor="let course of courses" 
-           class="course-item" 
-           [class.active]="course._id === selectedCourseId"
-           (click)="selectCourse(course._id)">
-        <div class="course-avatar">
-          <img [src]="course.thumbnailUrl || 'assets/images/default-course.png'" alt="Course thumbnail">
-        </div>
-        <div class="course-info">
-          <div class="course-title">{{ course.title }}</div>
-          <div class="course-subtitle">{{ userType === 'student' ? 'Instructor: ' + (course.instructor?.name || 'Unknown') : 'Students: ' + (course.enrollmentCount || 0) }}</div>
+  <div class="flex-1 overflow-y-auto">
+    <div *ngFor="let course of courses" 
+         class="flex items-center p-3 cursor-pointer border-b border-gray-800 transition-colors duration-200 hover:bg-gray-800"
+         [ngClass]="{'bg-purple-900 hover:bg-purple-800': course._id === selectedCourseId}"
+         (click)="selectCourse(course._id)">
+      <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0 mr-3">
+        <img [src]="course.thumbnailUrl || 'assets/images/default-course.png'" 
+             alt="Course thumbnail"
+             class="w-full h-full object-cover">
+      </div>
+      <div class="min-w-0 flex-1">
+        <div class="font-medium text-white truncate">{{ course.title }}</div>
+        <div class="text-sm text-gray-400 truncate">
+          {{ userType === 'student' ? 'Instructor: ' + (course.instructor?.name || 'Unknown') : 'Students: ' + 'New messages' }}
         </div>
       </div>
     </div>
-  
-    <div *ngIf="courses.length === 0" class="empty-state">
-      <p>{{ userType === 'student' ? 'You haven\'t enrolled in any courses yet.' : 'You haven\'t created any courses yet.' }}</p>
-    </div>
   </div>
+
+  <div *ngIf="courses.length === 0" class="flex items-center justify-center h-full p-4 text-center text-gray-400">
+    <p>{{ userType === 'student' ? 'You haven\'t enrolled in any courses yet.' : 'You haven\'t created any courses yet.' }}</p>
+  </div>
+</div>

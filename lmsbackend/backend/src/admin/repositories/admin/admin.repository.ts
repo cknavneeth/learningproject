@@ -152,7 +152,7 @@ export class AdminRepository implements IAdminRepository{
         const mostRecent = await this.paymentModel.findOne({ status: 'completed' })
         .sort({ createdAt: -1 })
         .lean();
-    console.log('Most recent payment in DB:', mostRecent);
+        console.log('Most recent payment in DB:', mostRecent);
 
         const pipeline=[
             {
@@ -224,7 +224,8 @@ export class AdminRepository implements IAdminRepository{
                     student:{
                         username:'$userDetails.username',
                         email:'$userDetails.email'
-                    }
+                    },
+                    
                 }
             },
             {

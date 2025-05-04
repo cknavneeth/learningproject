@@ -47,7 +47,7 @@ export class CommunityService {
           withCredentials: false
         });
 
-        // For instructors, set isInstructor flag directly
+        
         if (userType === 'instructor') {
           this.isInstructor = true;
         }

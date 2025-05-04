@@ -1,5 +1,6 @@
 interface Course {
   courseId: string;
+  courseName?:string;
   amount: number;
   status: string;
   _id: string;
