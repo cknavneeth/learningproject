@@ -1,18 +1,204 @@
 :host {
-    display: block;
-    width: 100%;
+  display: block;
+  width: 100%;
 }
 
+// Card animations and styling
 mat-card {
-    transition: transform 0.3s ease;
-
-    &:hover {
-        transform: translateY(-5px);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  background: rgba(31, 41, 55, 0.8) !important; // Dark background with transparency
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  margin-bottom: 1rem;
+  padding: 1rem !important; // Reduce padding
+  height: auto !important; // Auto height instead of fixed
+  
+  &:hover {
+    transform: translateY(-5px); // Reduced lift effect
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important; // Smaller shadow
+    border-color: rgba(99, 102, 241, 0.5);
+  }
+  
+  // Card entrance animations
+  @for $i from 1 through 4 {
+    &:nth-child(#{$i}) {
+      animation: fadeInUp 0.5s ease-out forwards;
+      animation-delay: #{$i * 0.1}s;
     }
+  }
+  
+  // Make sure content is compact
+  ::ng-deep .mat-mdc-card-content {
+    padding: 8px !important;
+  }
 }
 
+// Chart container - reduced height
 .chart-container {
-    position: relative;
-    height: 400px;
-    width: 100%;
+  position: relative;
+  height: 300px; // Reduced from 400px
+  width: 100%;
+  animation: fadeIn 0.8s ease-out 0.4s forwards;
+  opacity: 0;
 }
+
+// Icon containers
+.p-3 {
+  transition: all 0.3s ease;
+  padding: 0.5rem !important; // Reduced padding
+  
+  &:hover {
+    transform: scale(1.05) rotate(3deg); // Reduced effect
+  }
+  
+  &.bg-blue-100 {
+    background: rgba(59, 130, 246, 0.2) !important;
+  }
+  
+  &.bg-green-100 {
+    background: rgba(16, 185, 129, 0.2) !important;
+  }
+  
+  &.bg-yellow-100 {
+    background: rgba(245, 158, 11, 0.2) !important;
+  }
+}
+
+// Text styling - more compact
+.text-3xl {
+  font-weight: 700;
+  font-size: 1.5rem !important; // Smaller font
+  background: linear-gradient(90deg, #fff, #a5b4fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s infinite;
+  margin: 0.25rem 0 !important; // Reduced margin
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .p-6 {
+    padding: 0.75rem !important; // Even smaller padding on mobile
+  }
+  
+  .text-3xl {
+    font-size: 1.25rem !important; // Smaller font on mobile
+  }
+  
+  .chart-container {
+    height: 250px; // Smaller chart on mobile
+  }
+}
+
+// Dark mode chart customization
+:host ::ng-deep {
+  canvas {
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+  }
+  
+  // Chart tooltip styling
+  .chartjs-tooltip {
+    background: rgba(17, 24, 39, 0.9) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(75, 85, 99, 0.5) !important;
+    color: white !important;
+    padding: 10px !important;
+  }
+  
+  // Reduce card content padding
+  .mat-mdc-card-content {
+    padding: 8px !important;
+  }
+  
+  // Make sure grid layout is compact
+  .grid {
+    gap: 0.75rem !important;
+  }
+}
+
+// Animations - faster and more subtle
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px); // Reduced distance
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Pulse animation for icons - more subtle
+.fas {
+  animation: pulse 3s infinite; // Slower, more subtle pulse
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); // Reduced scale
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Gradient background for the entire dashboard
+.p-6:first-child {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 12px;
+  min-height: auto; // Remove fixed height
+  padding: 1rem !important; // Reduced padding
+}
+
+// Custom scrollbar - thinner
+::-webkit-scrollbar {
+  width: 6px; // Thinner scrollbar
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+  
+  &:hover {
+    background: #6366f1;
+  }
+}
+
+// Add compact spacing for all elements
+h1, h2, h3, h4, h5, h6, p {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+// Make sure grid items are compact
+.grid-cols-1, .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+  gap: 0.75rem !important;
+  }

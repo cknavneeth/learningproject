@@ -168,7 +168,7 @@ private handleCredentialResponse(response: any) {
             console.log('login successfull')
             this.message=response.message
             setTimeout(()=>{
-              const redirectPath=this.userType==='instructor'?'/instructor/home':'/student/home'
+              const redirectPath=this.userType==='instructor'?'/instructor/dashboard':'/student/home'
 
               this.router.navigate([redirectPath])
             },1000)
