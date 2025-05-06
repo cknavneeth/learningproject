@@ -12,9 +12,10 @@ import { CoursesModule } from './courses/courses.module';
 import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
 import { Course, CourseSchema } from './courses/course.schema';
 import { Payment, PaymentSchema } from 'src/payment/schema/payment.schema';
+import { ReviewsModule } from 'src/reviews/reviews.module';
 
 @Module({
-  imports:[MongooseModule.forFeature([{name:instructor.name,schema:instructorSchema},{name:Course.name,schema:CourseSchema},{name:Payment.name,schema:PaymentSchema}]),AuthenticationModule, CoursesModule,CloudinaryModule],
+  imports:[MongooseModule.forFeature([{name:instructor.name,schema:instructorSchema},{name:Course.name,schema:CourseSchema},{name:Payment.name,schema:PaymentSchema}]),AuthenticationModule, CoursesModule,CloudinaryModule,ReviewsModule],
   providers: [InstructorsService, InstructorRepository, CoursesService],
   controllers: [InstructorsController, CoursesController],
   exports:[InstructorsService,InstructorRepository]

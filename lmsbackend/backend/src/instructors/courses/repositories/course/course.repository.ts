@@ -4,10 +4,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Course, CourseDocument, CourseStatus } from '../../course.schema';
 import { Model, PipelineStage, Types } from 'mongoose';
 import { Payment, PaymentDocument } from 'src/payment/schema/payment.schema';
+import { CourseProgress, CourseProgressDocument } from 'src/mylearning/schema/course-progress.schema';
+import { combineLatest } from 'rxjs';
 
 @Injectable()
 export class CourseRepository implements ICourseRepository{
-    constructor(@InjectModel(Course.name) private courseModel:Model<CourseDocument>,@InjectModel(Payment.name) private paymentModal:Model<PaymentDocument>){}
+    constructor(@InjectModel(Course.name) private courseModel:Model<CourseDocument>,@InjectModel(Payment.name) private paymentModal:Model<PaymentDocument>,@InjectModel(CourseProgress.name) private progressModel:Model<CourseProgressDocument>){}
 
     async create(courseData:Partial<Course>):Promise<CourseDocument>{
 
@@ -195,5 +197,121 @@ export class CourseRepository implements ICourseRepository{
         };
     }
 
+
+    //get enrollement stats
+    async getEnrollmentStats(courseId:string):Promise<any>{
+        const courseObjectId=new Types.ObjectId(courseId)
+
+        const enrollments=await this.paymentModal.find({
+
+            'coursesDetails.courseId':courseObjectId,
+            status:'completed'
+        }).sort({createdAt:-1}).lean()
+
+
+        const progressData=await this.progressModel.find({
+            courseId:courseObjectId
+        }).lean()
+
+
+        let completionRate=0
+        if(progressData.length>0){
+            const completedCount=progressData.filter(p=>p.overallProgress>=90).length
+
+            completionRate=Math.round((completedCount/progressData.length)*100)
+        }
+
+
+        return {
+            totalEnrollments: enrollments.length,
+            completionRate,
+            lastEnrollment: enrollments.length > 0 ? enrollments[0].purchaseDate : null
+        }
+
+    }
+
+
+
+
+    async getCourseRevenue(courseId: string): Promise<any> {
+        const courseObjectId = new Types.ObjectId(courseId);
+        
+        // Aggregate revenue data
+        const revenueData = await this.paymentModal.aggregate([
+            {
+                $match: {
+                    'coursesDetails.courseId': courseObjectId,
+                    status: 'completed'
+                }
+            },
+            {
+                $unwind: '$coursesDetails'
+            },
+            {
+                $match: {
+                    'coursesDetails.courseId': courseObjectId
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: '$coursesDetails.amount' },
+                    transactions: { $sum: 1 }
+                }
+            }
+        ]);
+        
+        return {
+            totalRevenue: revenueData.length > 0 ? revenueData[0].totalRevenue : 0,
+            transactions: revenueData.length > 0 ? revenueData[0].transactions : 0
+        };
+    }
+
+
+    async getMonthlyEnrollmentData(courseId:string):Promise<any[]>{
+        const courseObjectId=new Types.ObjectId(courseId)
+
+        const currentYear=new Date().getFullYear()
+
+        const monthlyData=await this.paymentModal.aggregate([
+            {
+                $match:{
+                    'coursesDetails.courseId':courseObjectId,
+                    status:'completed',
+                    createdAt:{
+                        $gte:new Date(currentYear,0,1),
+                        $lte:new Date(currentYear,11,31)
+                    }
+                }
+            },
+            {
+                $unwind: '$coursesDetails'  
+            },
+            {
+                $match: {
+                    'coursesDetails.courseId': courseObjectId  
+                }
+            },
+            {
+                $group: {
+                    _id: { $month: '$createdAt' },
+                    count: { $sum: 1 },
+                    revenue: { $sum: '$coursesDetails.amount' }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ])
+
+        return Array.from({ length: 12 }, (_, i) => {
+            const monthData = monthlyData.find(data => data._id === i + 1) || { count: 0, revenue: 0 };
+            return {
+                month: new Date(currentYear, i).toLocaleString('default', { month: 'short' }),
+                enrollments: monthData.count || 0,
+                revenue: monthData.revenue || 0
+            };
+        });
+    }
 
 }

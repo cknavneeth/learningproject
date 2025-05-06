@@ -1,12 +1,17 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CourseRepository } from './repositories/course/course.repository';
 import { Course, CourseStatus } from './course.schema';
 import { Types } from 'mongoose';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
+import { REVIEW_REPOSITORY } from 'src/reviews/constants/review.constant';
+import { IReviewRepository } from 'src/reviews/repository/interfaces/review.repository.interface';
 
 @Injectable()
 export class CoursesService {
-    constructor(private readonly courseRepository:CourseRepository,private cloudinaryService:CloudinaryService){}
+    private readonly logger=new Logger(CoursesService.name)
+    constructor(private readonly courseRepository:CourseRepository,private cloudinaryService:CloudinaryService,
+        @Inject(REVIEW_REPOSITORY) private readonly reviewRepository:IReviewRepository
+    ){}
 
     async createCourse(courseData:Partial<Course>,instructorId:string){
         return this.courseRepository.create({
@@ -231,6 +236,56 @@ export class CoursesService {
 
         }
 
+    }
+
+
+    //get course details page for instructor
+    async getCourseDetailsForInstructor(courseId:string,instructorId:string){
+        try {
+            const course=await this.courseRepository.findById(courseId)
+
+            if(!course){
+                throw new NotFoundException('Course not found')
+            }
+
+            //verify 
+            if(course.instructor.toString()!==instructorId){
+                throw new UnauthorizedException('you do not have permission to view this course')
+            }
+
+            //get reviews for this course
+            const reviews=await this.reviewRepository.findByCourse(courseId)
+
+            //get enrollment statistics
+            const enrollmentStats=await this.courseRepository.getEnrollmentStats(courseId)
+
+            const revenueData = await this.courseRepository.getCourseRevenue(courseId);
+
+            const monthlyData=await this.courseRepository.getMonthlyEnrollmentData(courseId)
+
+            const enrollmentTrend = monthlyData.map(item => item.enrollments);
+            const revenueTrend = monthlyData.map(item => item.revenue);
+            const monthLabels = monthlyData.map(item => item.month);
+
+           return {
+            course,
+            stats: {
+                totalEnrollments: enrollmentStats.totalEnrollments || 0,
+                completionRate: enrollmentStats.completionRate || 0,
+                revenue: revenueData.totalRevenue || 0,
+                lastEnrollment: enrollmentStats.lastEnrollment || null,
+                enrollmentTrend,
+                revenueTrend,
+                monthLabels
+            },
+            reviews
+        };
+
+        } catch (error) {
+            this.logger.error(`Error fetching course details: ${error.message}`, error.stack);
+            throw error; this.logger.error(`Error fetching course details: ${error.message}`, error.stack);
+            throw error;
+        }
     }
 
 }

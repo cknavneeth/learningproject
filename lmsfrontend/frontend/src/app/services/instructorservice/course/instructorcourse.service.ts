@@ -65,4 +65,8 @@ export class InstructorcourseService {
      
   }
 
+
+  getCourseDetailsForInstructor(courseId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/details/${courseId}`);
+  }
 }

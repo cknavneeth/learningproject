@@ -49,6 +49,7 @@ import { AdminquizComponent } from './components/admin/adminquiz/adminquiz.compo
 import { StudentquizComponent } from './components/studentmain/studentquiz/studentquiz.component';
 import { InstructorcommunityComponent } from './components/insMaincomponent/instructorcommunity/instructorcommunity.component';
 import { StudentcommunityComponent } from './components/studentmain/studentcommunity/studentcommunity.component';
+import { CoursedetailComponent } from './components/insMaincomponent/coursedetail/coursedetail.component';
 
 export const routes: Routes = [
     {
@@ -244,6 +245,10 @@ export const routes: Routes = [
             {
                 path:'community',
                 component:InstructorcommunityComponent
+            },
+            {
+                path:'course/:id',
+                component:CoursedetailComponent
             }
         ]
     },

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, NotFoundException, Param, ParseIntPipe, Post,Put,Query,Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, NotFoundException, Param, ParseIntPipe, Post,Put,Query,Req,Request, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { Course } from './course.schema';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
@@ -184,7 +184,23 @@ export class CoursesController {
     }
 
 
-    //get enrolled courses
+    //get course detail page
+    @Get('details/:id')
+    @UseGuards(GuardGuard)
+    async getCourseDetailsForInstructor(@Param('id') id:string,@Req() req){
+        try {
+            const instructorId=req.user.InstructorId
+            return this.coursesService.getCourseDetailsForInstructor(id,instructorId)
+        } catch (error) {
+            if(error instanceof NotFoundException){
+                throw error
+            }
+            if(error instanceof UnauthorizedException){
+                throw error
+            }
+            throw new BadRequestException('Failed to fetch course Details')
+        }
+    }
    
 
 
