@@ -52,10 +52,13 @@
             
             <div class="space-y-4">
                 <div *ngFor="let section of courseData.sections; let i = index"
-                     class="p-4 rounded-lg transition-all duration-300"
+                     class="p-4 rounded-lg transition-all duration-300 cursor-pointer"
                      [ngClass]="{'bg-gray-700': i === currentSection,
-                                'bg-gray-750': i !== currentSection,
-                                'opacity-50': isLocked(i)}">
+                                'bg-gray-800': i !== currentSection,
+                                'opacity-50': isLocked(i),
+                                'hover:bg-gray-700': !isLocked(i)}"
+                     [id]="'section-' + i"
+                     (click)="selectSection(i)">
                     
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
@@ -67,7 +70,8 @@
                             </span>
                         </div>
                         <mat-icon *ngIf="isLocked(i)">lock</mat-icon>
-                        <mat-icon *ngIf="i < currentSection">check_circle</mat-icon>
+                        <mat-icon *ngIf="isSectionCompleted(i)" class="text-green-500">check_circle</mat-icon>
+                        <mat-icon *ngIf="i === currentSection && !isSectionCompleted(i)" class="text-blue-500">play_circle</mat-icon>
                     </div>
                 </div>
             </div>

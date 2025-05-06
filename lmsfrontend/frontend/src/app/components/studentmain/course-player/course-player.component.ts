@@ -205,6 +205,29 @@ export class CoursePlayerComponent {
       }
     });
   }
+
+
+
+  
+  selectSection(sectionIndex: number): void {
+    // Only allow selecting if the section is not locked
+    if (!this.isLocked(sectionIndex)) {
+      this.currentSection = sectionIndex;
+      
+      // If we have a video player reference, reset it for the new section
+      if (this.videoPlayer && this.videoPlayer.nativeElement) {
+        // Reset the video to start playing the new section
+        setTimeout(() => {
+          this.videoPlayer.nativeElement.load();
+          // Optionally auto-play
+          // this.videoPlayer.nativeElement.play();
+        }, 100);
+      }
+    } else {
+      this.snackBar.open('Complete previous sections first to unlock this content', 'Close', {duration: 3000});
+    }
+  }
+  
   
   
 }

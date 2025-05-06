@@ -21,10 +21,10 @@
               <p class="text-gray-400 text-sm">{{ quiz.questions?.length || 0 }} questions</p>
               <div class="mt-2 flex justify-between items-center">
                 <span class="text-xs text-gray-400">
-                  {{ quiz.isSubmitted ? 'Click to view results' : 'Click to attempt' }}
+                  {{ isQuizSubmitted(quiz._id) ? 'Click to view results' : 'Click to attempt' }}
                 </span>
                 <span class="px-2 py-1 text-xs rounded-full"
-                      [ngClass]="quiz.isSubmitted ? 
+                      [ngClass]="isQuizSubmitted(quiz._id)? 
                         'bg-green-800 text-green-100' : 
                         'bg-indigo-800 text-indigo-100'">
                         {{ isQuizSubmitted(quiz._id) ? 'Attempted' : 'Not attempted' }}

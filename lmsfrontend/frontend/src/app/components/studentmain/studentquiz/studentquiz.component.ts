@@ -74,9 +74,13 @@ export class StudentquizComponent implements OnInit{
 
 
   openQuizAttemptModal(quiz:any):void{
-    if(quiz.isSubmitted){
-      this.snackBar.open('You have already submitted this quiz','Close',{duration:3000,horizontalPosition:'right',verticalPosition:'top'})
-      return
+    if (this.isQuizSubmitted(quiz._id)) {
+      this.snackBar.open('You have already submitted this quiz', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top'
+      });
+      return;
     }
 
     const dialogRef = this.dialog.open(StudentquizattemptComponent, {
@@ -141,9 +145,18 @@ export class StudentquizComponent implements OnInit{
     }
     
   
-    return this.quizHistory.some(historyQuiz => 
-      historyQuiz.originalQuizId === quizId && historyQuiz.isSubmitted === true
-    );
+   // Debug the issue
+  console.log('Checking if quiz is submitted:', quizId);
+  console.log('Quiz history:', this.quizHistory);
+  
+  // Find the matching quiz in history
+  const matchingQuiz = this.quizHistory.find(historyQuiz => 
+    historyQuiz.originalQuizId === quizId
+  );
+  
+  console.log('Matching quiz found:', matchingQuiz);
+  
+  return !!matchingQuiz;
   }
   
 }
