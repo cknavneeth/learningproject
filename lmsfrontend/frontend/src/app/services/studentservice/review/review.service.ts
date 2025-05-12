@@ -31,5 +31,9 @@ export class ReviewService {
     return this.http.delete<Review>(`${this.apiUrl}/${reviewId}`);
   }
 
+
+  getUserReviewForCourse(courseId:string):Observable<any>{
+    return this.http.get<Review>(`${this.apiUrl}/course/${courseId}/user-review`)
+  }
   
 }

@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { IReviewRepository } from './interfaces/review.repository.interface';
 import { Review, ReviewDocument } from '../schema/review.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class ReviewRepository implements IReviewRepository{
+    private readonly logger=new Logger(ReviewRepository.name)
     constructor(@InjectModel(Review.name) private reviewModel:Model<ReviewDocument>){}
 
     async create(data:Partial<Review>):Promise<Review>{
@@ -41,5 +42,19 @@ export class ReviewRepository implements IReviewRepository{
             .populate('userId', 'username')
             .sort({ createdAt: -1 })
             .exec();
+    }
+
+
+
+    async findUserReviewForCourse(courseId: string, userId: string): Promise<Review|null> {
+        try {
+            return await this.reviewModel.findOne({
+                courseId:new Types.ObjectId(courseId),
+                userId:new Types.ObjectId(userId)
+            }).lean()
+        } catch (error) {
+            this.logger.error(`Error finding user review: ${error.message}`);
+            throw error;
+        }
     }
 }

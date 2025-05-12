@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { IReviewService } from './interfaces/review.service.interface';
 import { IReviewRepository } from '../repository/interfaces/review.repository.interface';
 import { REVIEW_REPOSITORY } from '../constants/review.constant';
@@ -10,6 +10,9 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ReviewService implements IReviewService{
+
+    private readonly logger=new Logger(ReviewService.name)
+
     constructor(@Inject(REVIEW_REPOSITORY) private readonly reviewRepository:IReviewRepository,
     @InjectModel(CourseProgress.name) private progressModel:Model<CourseProgressDocument>
 ){}
@@ -83,5 +86,20 @@ export class ReviewService implements IReviewService{
             throw new UnauthorizedException('You can only delete your own review')
         }
         return this.reviewRepository.delete(reviewId,userId)
+    }
+
+
+
+    async getUserReviewForCourse(courseId: string, userId: string): Promise<Review | null> {
+        try {
+            const review=await this.reviewRepository.findUserReviewForCourse(courseId,userId)
+            if(!review){
+                return null
+            }
+            return review
+        } catch (error) {
+            this.logger.error(`Error getting user review for course: ${error.message}`);
+            throw new InternalServerErrorException('Failed to get user review');
+        }
     }
 }

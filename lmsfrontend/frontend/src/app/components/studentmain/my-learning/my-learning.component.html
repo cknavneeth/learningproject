@@ -39,12 +39,13 @@
                 <!-- Action Buttons -->
                 <div class="flex space-x-2">
                   <!-- Review Button as Icon -->
-                  <button *ngIf="course.progress === 100 && !course.hasReviewed" 
-                          (click)="openReviewDialog(course._id)"
-                          matTooltip="Add Review"
-                          class="action-button bg-purple-600/90 hover:bg-purple-500 text-white">
-                    <mat-icon>rate_review</mat-icon>
-                  </button>
+                  <button *ngIf="course.progress === 100" 
+                  (click)="openReviewDialog(course._id)"
+                  matTooltip="{{ userReviews[course._id] ? 'Edit your review' : 'Add a review' }}"
+                  class="action-button"
+                  [ngClass]="userReviews[course._id] ? 'bg-amber-600/90 hover:bg-amber-500' : 'bg-purple-600/90 hover:bg-purple-500'">
+            <mat-icon>{{ userReviews[course._id] ? 'edit' : 'rate_review' }}</mat-icon>
+          </button>
                   
                   <!-- Continue Button as Icon -->
                   <button (click)="continueLearning(course._id)"

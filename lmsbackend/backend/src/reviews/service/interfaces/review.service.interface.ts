@@ -7,4 +7,5 @@ export interface IReviewService{
    updateReview(reviewId:string,userId:string,data:Partial<Review>):Promise<Review|null>
    deleteReview(reviewId:string,userId:string):Promise<Review|null>
    getReviewsByCourse(courseId: string): Promise<Review[]>;
+   getUserReviewForCourse(courseId:string,userId:string):Promise<Review|null>
 }

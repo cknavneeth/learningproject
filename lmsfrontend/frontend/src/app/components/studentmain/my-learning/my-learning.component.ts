@@ -36,6 +36,8 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
 
       courseReviews:{[courseId:string]:Review}={}
 
+      userReviews:{[courseId:string]:Review}={}
+
       constructor(
         private studentService:StudentcourseService,
         private router:Router,
@@ -83,6 +85,8 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
             this.totalItems = response.pagination.total;
             this.totalPages = response.pagination.totalPages;
 
+
+            this.loadUserReviewsForCourses()
 
             setTimeout(() => {
               this.updateCircularProgress();
@@ -158,27 +162,71 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
 
 
       openReviewDialog(courseId:string):void{
+        const existingReview=this.userReviews[courseId]
         const dialogRef=this.dialog.open(ReviewDialogComponent,{
           width:'500px',
-          data:{courseId}
+          data:{
+            courseId,
+            isEdit:!!existingReview,
+            review:existingReview
+          }
         })
 
         dialogRef.afterClosed().subscribe(result=>{
           if(result){
-            this.reviewService.createReview(courseId,result).subscribe(
-              Response=>{
-                this.snackBar.open('Review submitted successfully','Close',{duration:3000})
-                this.loadEnrolledCourses()
-              },
-              error=>{
-                this.snackBar.open('Failed to submit review','Close',{duration:3000})
-              }
-            )
-          }
-        })
+            if (existingReview) {
+              // Update existing review
+              this.reviewService.updateReview(existingReview._id, result).subscribe({
+                next: (response) => {
+                  this.snackBar.open('Review updated successfully', 'Close', {duration: 3000});
+                  // Update the local review data
+                  this.userReviews[courseId] = response;
+                  this.loadEnrolledCourses();
+                },
+                error: (error) => {
+                  this.snackBar.open('Failed to update review', 'Close', {duration: 3000});
+                }
+              });
+            }else {
+              // Create new review
+              this.reviewService.createReview(courseId, result).subscribe({
+                next: (response) => {
+                  this.snackBar.open('Review submitted successfully', 'Close', {duration: 3000});
+                  // Update the local review data
+                  this.userReviews[courseId] = response;
+                  this.loadEnrolledCourses();
+                },
+                error: (error) => {
+                  this.snackBar.open('Failed to submit review', 'Close', {duration: 3000});
+                }
+              });
+            }
+
+         }
+      })
       }
 
 
 //for editing reviews
+    loadUserReviewsForCourses():void{
+      if(!this.enrolledCourses||this.enrolledCourses.length===0){
+        return
+      }
+
+      this.enrolledCourses.forEach(course => {
+        this.reviewService.getUserReviewForCourse(course._id).subscribe({
+          next: (review) => {
+            if (review) {
+              console.log('ella reviewm kannallo',review)
+              this.userReviews[course._id] = review;
+            }
+          },
+          error: (error) => {
+            console.error(`Error loading user review for course ${course._id}:`, error);
+          }
+        });
+      });
+
+    }
      
 }

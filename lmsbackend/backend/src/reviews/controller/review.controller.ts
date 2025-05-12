@@ -53,5 +53,16 @@ export class ReviewController {
         const userId=req.user.userId
         return this.reviewService.deleteReview(reviewId,userId)
     }
+
+
+    @Get('course/:courseId/user-review')
+    @UseGuards(GuardGuard)
+    async getUserReviewForCourse(
+        @Param('courseId') courseId:string,
+        @Req() req
+    ){
+        const userId=req.user.userId
+        return this.reviewService.getUserReviewForCourse(courseId,userId)
+    }
 }
 
