@@ -1,6 +1,8 @@
-import { BadRequestException, Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Put, Query, Request, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Put, Query, Req, Request, UseGuards } from '@nestjs/common';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { UsersService } from './users.service';
+import { Roles } from 'src/decorators/roles.decarotor';
+import { Role } from 'src/common/enums/role.enum';
 // import { Request } from 'express';
 
 @Controller('auth/student')
@@ -71,4 +73,12 @@ export class UsersController {
     return this.usersService.getCourseById(courseId)
    }
 
+
+   @Get('wallet')
+   @Roles(Role.STUDENT)
+   @UseGuards(GuardGuard)
+   async getWalletBalance(@Req() req):Promise<{wallet:number}>{
+    const userId=req.user.userId
+    return this.usersService.getWalletBalance(userId)
+   }
 }

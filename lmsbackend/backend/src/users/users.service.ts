@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { user, userDocument } from './users.schema';
 import { Model } from 'mongoose';
@@ -156,5 +156,16 @@ export class UsersService {
      } catch (error) {
         throw new BadRequestException('Failed to fetch course')
      }
+   }
+
+
+
+   async getWalletBalance(userId:string):Promise<{wallet:number}>{
+    const user=await this.usermodel.findById(userId)
+    if(!user){
+        throw new NotFoundException('User not found')
+    }
+
+    return {wallet:user.wallet}
    }
 }

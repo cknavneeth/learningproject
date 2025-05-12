@@ -133,13 +133,20 @@ export class MylearningRepository implements IMyLearningRepository {
             course !== null
         );
 
+
+        validCourses.sort((a,b)=>{
+            const dateA = a.purchaseDate ? new Date(a.purchaseDate).getTime():0;
+            const dateB = b.purchaseDate ? new Date(b.purchaseDate).getTime():0;
+            return dateB - dateA;
+        })
+
         console.log('Final courses to return:', validCourses);
 
         return { 
             courses: validCourses,
             total 
         };
-
+        
     }
 
 

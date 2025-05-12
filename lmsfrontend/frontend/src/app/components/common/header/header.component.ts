@@ -6,6 +6,9 @@ import { CartService } from '../../../services/studentservice/cart/cart.service'
 import { Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { WishlistService } from '../../../services/studentservice/wishlist/wishlist.service';
+import { MatDialog } from '@angular/material/dialog';
+import { WalletmodalComponent } from '../../studentmain/walletmodal/walletmodal.component';
+import { WalletService } from '../../../services/studentservice/wallet/wallet.service';
 
 @Component({
   selector: 'app-header',
@@ -25,7 +28,9 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private ngZone: NgZone,
     private cartService:CartService,
-    private wishlistService:WishlistService
+    private wishlistService:WishlistService,
+    private dialog: MatDialog,
+    private walletService:WalletService
   ) {
 
     this.cartItemCount$=this.cartService.cartItems$
@@ -63,6 +68,28 @@ export class HeaderComponent implements OnInit {
 
   togglemenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+
+  openWalletModal(): void {
+    this.walletService.getWalletBalance().subscribe({
+      next: (response) => {
+        this.dialog.open(WalletmodalComponent, {
+          width: '400px',
+          data: { wallet: response.wallet },
+          panelClass: 'wallet-modal-container'
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching wallet balance:', error);
+        // Show a fallback with zero balance
+        this.dialog.open(WalletmodalComponent, {
+          width: '400px',
+          data: { wallet: 0 },
+          panelClass: 'wallet-modal-container'
+        });
+      }
+    });
   }
 }
 

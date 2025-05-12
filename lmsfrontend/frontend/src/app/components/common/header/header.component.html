@@ -10,6 +10,20 @@
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center space-x-10 font-inter">
 
+            <a (click)="openWalletModal()" 
+   class="text-gray-300 hover:text-white text-sm font-medium transition-all duration-300 relative group flex items-center space-x-2 cursor-pointer">
+    <div class="relative">
+        <mat-icon class="text-xl">account_balance_wallet</mat-icon>
+        <span class="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            ₹
+        </span>
+    </div>
+    <div class="relative">
+        <span class="relative z-10">Wallet</span>
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 group-hover:w-full transition-all duration-300"></span>
+    </div>
+</a>
+
             <a [routerLink]="['/student/quiz']" 
             class="text-gray-300 hover:text-white text-sm font-medium transition-all duration-300 relative group">
              <span class="relative z-10">Attend Quizz</span>

@@ -73,7 +73,27 @@
               </tbody>
             </table>
           </div>
-        
+
+
+
+          <!--for empty history-->
+          <div *ngIf="!isHistoryLoading && quizHistory.length === 0" 
+          class="flex flex-col items-center justify-center py-12 text-center">
+       <mat-icon class="text-6xl mb-4 text-gray-600 animate__animated animate__fadeIn">quiz</mat-icon>
+       <p class="text-xl mb-2 text-gray-300 animate__animated animate__fadeIn">No quiz history yet</p>
+       <p class="text-gray-400 mb-6 animate__animated animate__fadeIn">Complete your first quiz to see your results here</p>
+       <div class="animate__animated animate__fadeIn animate__delay-1s">
+         <button 
+           *ngIf="quizzes.length > 0"
+           (click)="scrollToQuizzes()"
+           class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center">
+           <mat-icon class="mr-2">arrow_upward</mat-icon>
+           Try a quiz now
+         </button>
+        </div>
+      </div>
+
+          <!--for empty history-->
         <div *ngIf="!isLoading && quizzes.length === 0" class="text-center py-8 text-gray-400">
           No quizzes available
         </div>

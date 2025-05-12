@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { StudentcourseService } from '../../../services/studentservice/course/studentcourse.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
@@ -11,14 +11,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReviewDialogComponent } from '../review-dialog/review-dialog.component';
 import { ReviewService } from '../../../services/studentservice/review/review.service';
 import { Review } from '../../../interfaces/review.interface';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-my-learning',
-  imports: [CommonModule, MatProgressSpinnerModule, MatPaginatorModule],
+  imports: [CommonModule, MatProgressSpinnerModule, MatPaginatorModule, MatIconModule, 
+    MatTooltipModule,
+    RouterModule],
   templateUrl: './my-learning.component.html',
   styleUrl: './my-learning.component.scss'
 })
-export class MyLearningComponent implements OnInit {
+export class MyLearningComponent implements OnInit ,AfterViewInit{
       enrolledCourses: EnrolledCourse[] = [];
       loading: boolean = false;
       error: string = '';
@@ -45,6 +49,28 @@ export class MyLearningComponent implements OnInit {
         // this.loadUserReviews()
       }
 
+
+
+      ngAfterViewInit(): void {
+        // Initialize circular progress after view is initialized
+        setTimeout(() => {
+          this.updateCircularProgress();
+        }, 500);
+      }
+    
+      // Update circular progress CSS variables
+      updateCircularProgress(): void {
+        const circles = document.querySelectorAll('.progress-circle');
+        circles.forEach(circle => {
+          const progress = circle.getAttribute('data-progress');
+          if (progress) {
+            (circle as HTMLElement).style.setProperty('--progress', progress);
+          }
+        });
+      }
+
+
+
       loadEnrolledCourses(): void {
         this.loading = true;
         this.studentService.getEnrolledCourses(this.currentPage, this.itemsPerPage).subscribe({
@@ -56,6 +82,11 @@ export class MyLearningComponent implements OnInit {
             this.loading = false;
             this.totalItems = response.pagination.total;
             this.totalPages = response.pagination.totalPages;
+
+
+            setTimeout(() => {
+              this.updateCircularProgress();
+            }, 100);
           },
           error: (error) => {
             this.error = 'failed to load enrolled courses';

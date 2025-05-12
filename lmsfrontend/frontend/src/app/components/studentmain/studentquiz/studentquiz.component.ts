@@ -159,4 +159,12 @@ export class StudentquizComponent implements OnInit{
   return !!matchingQuiz;
   }
   
+
+
+  scrollToQuizzes(): void {
+    const quizzesSection = document.querySelector('.available-quizzes');
+    if (quizzesSection) {
+      quizzesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 }
