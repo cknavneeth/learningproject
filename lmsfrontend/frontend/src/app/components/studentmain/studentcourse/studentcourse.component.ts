@@ -47,11 +47,11 @@ export class StudentcourseComponent implements OnInit{
     minPrice: null as number | null,
     maxPrice: null as number | null,
     languages: [] as string[],
-    levels: [] as string[]
+    categories: [] as string[]
   };
 
   selectedLanguage: string = '';
-  selectedLevel: string = '';
+  selectedCategory: string = '';
 
   constructor(private studentService:StudentcourseService,private snackBar:MatSnackBar,private router:Router,private categoryService:CategoryService){}
 
@@ -62,6 +62,8 @@ export class StudentcourseComponent implements OnInit{
         if (response && response.categories) {
           response.categories.forEach((category: any) => {
             this.categories.set(category._id, category.name);
+            console.log('category response ahda',response)
+            console.log('in maps',this.categories)
           });
         }
         // Load courses after categories are loaded
@@ -71,27 +73,41 @@ export class StudentcourseComponent implements OnInit{
     });
   }
 
-  loadCourses(){
-    this.loading=true
+  loadCourses() {
+    this.loading = true;
     
-      const params = {
-        page: this.currentPage,
-        limit: this.itemsPerPage,
-        ...(this.filters.minPrice !== null && { minPrice: this.filters.minPrice }),
-        ...(this.filters.maxPrice !== null && { maxPrice: this.filters.maxPrice }),
-        ...(this.filters.languages.length > 0 && { languages: this.filters.languages }),
-        ...(this.filters.levels.length > 0 && { levels: this.filters.levels })
-      };
-
-    this.studentService.getAllCourses(params).subscribe(
-      response=>{
-        console.log('couses ellam load aayi',response)
-        // this.courses=response.courses
-        // this.courses = Array.isArray(response) ? response : [];
-        // console.log('normal courses',this.courses)
-        // this.filteredCourses=[...this.courses]
-        // console.log('Filtered Courses:', this.filteredCourses); 
-        // this.loading=false
+    // Create a params object with all filters
+    const params: any = {
+      page: this.currentPage,
+      limit: this.itemsPerPage
+    };
+    
+    // Add price filters if set
+    if (this.filters.minPrice !== null) {
+      params.minPrice = this.filters.minPrice;
+    }
+    
+    if (this.filters.maxPrice !== null) {
+      params.maxPrice = this.filters.maxPrice;
+    }
+    
+    // Add language filter if set
+    if (this.filters.languages && this.filters.languages.length > 0) {
+      params.languages = this.filters.languages.join(',');
+    }
+    
+    // Add category filter if set - THIS IS THE IMPORTANT PART
+    if (this.filters.categories && this.filters.categories.length > 0) {
+      params.categories = this.filters.categories.join(',');
+      console.log('Setting categories param:', params.categories);
+    }
+    
+    console.log('Final params being sent to API:', params);
+    
+    // Call the service with the params
+    this.studentService.getAllCourses(params).subscribe({
+      next: (response) => {
+        console.log('API Response:', response);
         if (Array.isArray(response)) {
           this.courses = response;
           this.filteredCourses = response;
@@ -103,16 +119,14 @@ export class StudentcourseComponent implements OnInit{
           this.totalItems = response.total;
           this.totalPages = response.totalPages;
         }
-        
         this.loading = false;
-       
       },
-      error=>{
-        this.error='Failed to load courses'
-        this.loading=false
-        console.error('Error loading courses',error)
+      error: (error) => {
+        console.error('API Error:', error);
+        this.error = 'Failed to load courses';
+        this.loading = false;
       }
-    )
+    });
   }
 
 
@@ -184,8 +198,9 @@ export class StudentcourseComponent implements OnInit{
       minPrice: null,
       maxPrice: null,
       languages: [],
-      levels: []
+      categories: []
     };
+    this.searchTerm=''
     this.currentPage = 1; // Reset to first page
     this.loadCourses(); // Reload courses without filters
   }
@@ -197,19 +212,31 @@ export class StudentcourseComponent implements OnInit{
 
   onLanguageChange(event: any) {
     const value = event.target.value;
-    if (value) {
-      this.filters.languages = [value]; // Replace with single value
-      this.applyFilters();
-    }
+  if (value) {
+    this.filters.languages = [value]; // Replace with single value
+  } else {
+    this.filters.languages = []; // Clear if no value
   }
-
-  onLevelChange(event: any) {
-    const value = event.target.value;
-    if (value) {
-      this.filters.levels = [value]; // Replace with single value
-      this.applyFilters();
-    }
+  this.applyFilters();
   }
+// Add this method to handle category changes
+onCategoryChange(event: any) {
+  const value = event.target.value;
+  console.log('Selected category ID:', value);
+  
+  if (value) {
+    this.selectedCategory = value;
+    this.filters.categories = [value]; // Make sure this is an array with the selected value
+    console.log('Updated filters with category:', this.filters);
+  } else {
+    this.selectedCategory = '';
+    this.filters.categories = [];
+    console.log('Cleared category filters');
+  }
+  
+  this.currentPage = 1; // Reset to first page when filter changes
+  this.loadCourses(); // Call loadCourses directly to apply the filter
+}
 
 
   getCategoryName(categoryId: string): string {

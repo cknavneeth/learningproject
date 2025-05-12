@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IUserRepository } from '../user.repository.interface';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { user, userDocument } from 'src/users/users.schema';
 import { Course, CourseDocument, CourseStatus } from 'src/instructors/courses/course.schema';
 
@@ -35,7 +35,7 @@ export class UserRepository implements IUserRepository{
         minPrice?: number,
         maxPrice?: number,
         languages?: string[],
-        levels?: string[],
+        categories?: string[],
         page?: number,
         limit?: number
     }):Promise<CourseResponse>{
@@ -63,8 +63,9 @@ export class UserRepository implements IUserRepository{
         }
 
 
-        if (filters.levels && filters.levels.length > 0) {
-            query.level = { $in: filters.levels };
+        if (filters.categories && filters.categories.length > 0) {
+            const categoryIds=filters.categories.map(id=>new Types.ObjectId(id))
+            query.category={$in:categoryIds}
         }
 
 

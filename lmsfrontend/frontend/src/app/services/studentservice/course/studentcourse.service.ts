@@ -23,37 +23,21 @@ export class StudentcourseService {
 
 
   constructor(private http:HttpClient) { }
-
-  getAllCourses(filters:{
-    search?: string,
-        minPrice?: number,
-        maxPrice?: number,
-        languages?: string[],
-        levels?: string[],
-        page?: number,
-        limit?: number
-  }):Observable<CourseResponse>{
-    let params = new HttpParams();
-    if (filters.minPrice !== undefined) {
-      params = params.set('minPrice', filters.minPrice.toString());
-  }
-  if (filters.maxPrice !== undefined) {
-      params = params.set('maxPrice', filters.maxPrice.toString());
-  }
-  if (filters.languages?.length) {
-      params = params.set('languages', filters.languages.join(','));
-  }
-  if (filters.levels?.length) {
-      params = params.set('levels', filters.levels.join(','));
-  }
-  if (filters.page) {
-      params = params.set('page', filters.page.toString());
-  }
-  if (filters.limit) {
-      params = params.set('limit', filters.limit.toString());
-  }
-    console.log('Making API request to:', `${this.authStudentUrl}/courses`);
-    return this.http.get<CourseResponse>(`${this.authStudentUrl}/courses`,{params})
+  getAllCourses(params: any): Observable<CourseResponse> {
+    // Convert the params object to HttpParams
+    let httpParams = new HttpParams();
+    
+    // Add all parameters to HttpParams
+    Object.keys(params).forEach(key => {
+      if (params[key] !== undefined && params[key] !== null) {
+        httpParams = httpParams.set(key, params[key].toString());
+      }
+    });
+    
+    console.log('HTTP params being sent:', httpParams.toString());
+    
+    // Make the API call with the params
+    return this.http.get<CourseResponse>(`${this.authStudentUrl}/courses`, { params: httpParams });
   }
 
 

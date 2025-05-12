@@ -88,26 +88,29 @@
             </div>
 
             <!-- Level Filter -->
-            <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
-                <h3 class="text-gray-200 font-medium mb-2">Level</h3>
-                <div class="relative">
-                    <select [(ngModel)]="selectedLevel"
-                            (change)="onLevelChange($event)"
-                            class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-2 text-gray-200 text-sm
-                                   appearance-none cursor-pointer
-                                   focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                        <option value="" disabled selected>Select Level</option>
-                        <option value="Beginner">Beginner</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Advanced">Advanced</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+           <!-- Add this where you want the category filter to appear (alongside your other filters) -->
+<div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
+    <h3 class="text-gray-200 font-medium mb-2">Category</h3>
+    <div class="relative">
+      <select [(ngModel)]="selectedCategory" 
+              (change)="onCategoryChange($event)" 
+              class="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-2 text-gray-200 text-sm
+                     appearance-none cursor-pointer
+                     focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+        <option value="">All Categories</option>
+        <option *ngFor="let entry of categories | keyvalue" [value]="entry.key">
+          {{entry.value}}
+        </option>
+      </select>
+      <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  
 
             <!-- Clear Filters -->
             <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50 flex items-end">

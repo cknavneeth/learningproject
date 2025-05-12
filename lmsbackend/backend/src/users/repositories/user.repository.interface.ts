@@ -10,7 +10,7 @@ export interface IUserRepository{
         minPrice?: number,
         maxPrice?: number,
         languages?: string[],
-        levels?: string[],
+        categories?: string[],
         page?: number,
         limit?: number
     }):Promise<CourseResponse>
