@@ -4,6 +4,7 @@ import { REVIEW_SERVICE } from '../constants/review.constant';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { CreateReviewDto } from '../Dto/create-review.dto';
 import { UpdateReviewDto } from '../Dto/update-review.dto';
+import { InstructorReplyDto } from '../Dto/instructor-reply.dto';
 
 @Controller('review')
 export class ReviewController {
@@ -63,6 +64,18 @@ export class ReviewController {
     ){
         const userId=req.user.userId
         return this.reviewService.getUserReviewForCourse(courseId,userId)
+    }
+
+
+    @Post(':reviewId/instructor-reply')
+    @UseGuards(GuardGuard)
+    async addInstructorReply(
+        @Req() req,
+        @Param('reviewId') reviewId:string,
+        @Body() replyDto:InstructorReplyDto
+    ){
+        const instructorId=req.user.InstructorId
+        return this.reviewService.addInstructorReply(reviewId,instructorId,replyDto)
     }
 }
 

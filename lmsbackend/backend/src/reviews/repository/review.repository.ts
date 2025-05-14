@@ -57,4 +57,22 @@ export class ReviewRepository implements IReviewRepository{
             throw error;
         }
     }
+
+
+    async addInstructorReply(reviewId: string, instructorReply: string): Promise<Review | null> {
+        try {
+            const review=await this.reviewModel.findByIdAndUpdate(reviewId,
+                {
+                    instructorReply,
+                    hasInstructorReply:true,
+                    instructorReplyDate:new Date()
+                },
+                {new : true}
+            ).exec()
+
+            return review
+        } catch (error) {
+            throw error
+        }
+    }
 }

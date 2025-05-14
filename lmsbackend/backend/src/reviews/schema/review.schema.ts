@@ -25,6 +25,17 @@ export class Review{
 
     @Prop({default:false})
     isEdited:boolean
+
+    //new fields for instructor
+    @Prop({type:String,required:false})
+    instructorReply:string
+
+
+    @Prop({default:false})
+    hasInstructorReply:boolean
+
+    @Prop({type:Date,required:false})
+    instructorReplyDate:Date
 }
 
 export const ReviewSchema=SchemaFactory.createForClass(Review)

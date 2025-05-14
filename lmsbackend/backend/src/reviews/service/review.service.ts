@@ -1,4 +1,4 @@
-import { Inject, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { IReviewService } from './interfaces/review.service.interface';
 import { IReviewRepository } from '../repository/interfaces/review.repository.interface';
 import { REVIEW_REPOSITORY } from '../constants/review.constant';
@@ -7,6 +7,7 @@ import { UpdateReviewDto } from '../Dto/update-review.dto';
 import { CourseProgress, CourseProgressDocument } from 'src/mylearning/schema/course-progress.schema';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { InstructorReplyDto } from '../Dto/instructor-reply.dto';
 
 @Injectable()
 export class ReviewService implements IReviewService{
@@ -53,7 +54,11 @@ export class ReviewService implements IReviewService{
             createdAt: reviewObj.createdAt,
             updatedAt: reviewObj.updatedAt,
             isEdited: reviewObj.updatedAt && reviewObj.createdAt && 
-                     reviewObj.updatedAt.getTime() !== reviewObj.createdAt.getTime()
+                     reviewObj.updatedAt.getTime() !== reviewObj.createdAt.getTime(),
+            instructorReply:reviewObj.instructorReply,
+            hasInstructorReply:reviewObj.hasInstructorReply,
+            instructorReplyDate:reviewObj.instructorReplyDate
+
         };
     });
     }
@@ -100,6 +105,26 @@ export class ReviewService implements IReviewService{
         } catch (error) {
             this.logger.error(`Error getting user review for course: ${error.message}`);
             throw new InternalServerErrorException('Failed to get user review');
+        }
+    }
+
+
+
+
+    async addInstructorReply(reviewId:string,instructorId:string,replyDto:InstructorReplyDto):Promise<Review|null>{
+        try {
+            const review=await this.reviewRepository.findById(reviewId)
+            if(!review){
+                throw new NotFoundException('Review not found')
+            }
+
+            return this.reviewRepository.addInstructorReply(reviewId,replyDto.instructorReply)
+        } catch (error) {
+             this.logger.error(`Error adding instructor reply: ${error.message}`);
+             if (error instanceof NotFoundException) {
+                throw error;
+             }
+            throw new InternalServerErrorException('Failed to add instructor reply');
         }
     }
 }

@@ -1,0 +1,47 @@
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">{{ isEditMode ? 'Edit Reply' : 'Reply to Review' }}</h2>
+  
+  <!-- Review Information -->
+  <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+    <div class="flex items-center mb-2">
+      <div class="flex text-yellow-400">
+        <mat-icon *ngFor="let i of [1,2,3,4,5]" class="text-sm">
+          {{ i <= data.review.rating ? 'star' : 'star_border' }}
+        </mat-icon>
+      </div>
+      <span class="ml-2 text-gray-500">{{ data.review.rating }}/5</span>
+    </div>
+    <p class="text-gray-700">{{ data.review.comment }}</p>
+  </div>
+  
+  <form [formGroup]="replyForm" (ngSubmit)="onSubmit()">
+    <div class="mb-4">
+      <label class="block mb-2 font-medium">Your Reply</label>
+      <textarea 
+        formControlName="instructorReply"
+        rows="4"
+        class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Write your reply to this review (minimum 5 characters)..."></textarea>
+      <div *ngIf="replyForm.get('instructorReply')?.touched && replyForm.get('instructorReply')?.errors?.['required']" class="text-red-500 text-sm mt-1">
+        Reply is required
+      </div>
+      <div *ngIf="replyForm.get('instructorReply')?.touched && replyForm.get('instructorReply')?.errors?.['minlength']" class="text-red-500 text-sm mt-1">
+        Reply must be at least 5 characters
+      </div>
+    </div>
+    <div class="flex justify-end space-x-3">
+      <button 
+        type="button"
+        (click)="onCancel()"
+        class="px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors">
+        Cancel
+      </button>
+      <button 
+        type="submit"
+        [disabled]="replyForm.invalid"
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ isEditMode ? 'Update Reply' : 'Submit Reply' }}
+      </button>
+    </div>
+  </form>
+</div>

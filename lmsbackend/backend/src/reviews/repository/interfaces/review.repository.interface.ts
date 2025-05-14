@@ -8,4 +8,5 @@ export interface IReviewRepository{
     update(id:string,data:Partial<Review>):Promise<Review|null>
     delete(reviewId:string,userId:string):Promise<Review|null>
     findUserReviewForCourse(courseId:string,userId:string):Promise<Review|null>
+    addInstructorReply(reviewId:string,instructorReply:string):Promise<Review|null>
 }

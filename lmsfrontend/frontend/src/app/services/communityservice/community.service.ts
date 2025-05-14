@@ -303,8 +303,8 @@ export class CommunityService {
 }
 
 // Make the unreadCountsSubject accessible as a value
-getUnreadCountsValue(): Record<string, number> {
-  return this.unreadCountsSubject.value;
+ getUnreadCountsValue(): Record<string, number> {
+   return this.unreadCountsSubject.value;
 }
 
 }

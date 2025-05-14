@@ -8,6 +8,9 @@ export interface Review {
     createdAt: Date;
     updatedAt: Date;
     isEdited?: boolean;
+    instructorReply?: string;
+    hasInstructorReply?: boolean;
+    instructorReplyDate?: Date;
   }
 
 export interface CreateReviewDto{

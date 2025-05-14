@@ -10,6 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTable } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { Review } from '../../../interfaces/review.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { InstructorreplydialogComponent } from '../instructorreplydialog/instructorreplydialog.component';
+import { ReviewService } from '../../../services/studentservice/review/review.service';
 
 @Component({
   selector: 'app-coursedetail',
@@ -38,7 +42,9 @@ export class CoursedetailComponent {
     private route: ActivatedRoute,
     private router: Router,
     private courseService: InstructorcourseService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog:MatDialog,
+    private reviewService:ReviewService
   ) {}
 
 
@@ -158,5 +164,36 @@ export class CoursedetailComponent {
     }
   }
 
+
+
+  //add method to open reply dialog
+  openReplyDialog(review:Review):void{
+    const dialogRef=this.dialog.open(
+      InstructorreplydialogComponent,{
+        width:'500px',
+        data:{review}
+      }
+    )
+
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.reviewService.addInstructorReply(review._id, result.instructorReply).subscribe({
+          next: (updatedReview) => {
+            // Update the review in the list
+            const index = this.reviews.findIndex(r => r._id === review._id);
+            if (index !== -1) {
+              this.reviews[index] = updatedReview;
+            }
+            this.snackBar.open('Reply added successfully', 'Close', { duration: 3000 });
+          },
+           error: (error) => {
+            this.snackBar.open('Failed to add reply', 'Close', { duration: 3000 });
+            console.error('Error adding reply:', error);
+          }
+        });
+      }
+    });
+  }
   
 }
