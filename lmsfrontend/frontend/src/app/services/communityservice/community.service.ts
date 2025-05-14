@@ -18,6 +18,11 @@ export class CommunityService {
   private userId:string=''
 
 
+  //add unread count subject
+  private unreadCountsSubject=new BehaviorSubject<Record<string,number>>({})
+  private unreadCountsInterval:any
+
+
   constructor(
     private studentAuthService:AuthserviceService,
     private instructorAuthService:InstructorauthserviceService
@@ -54,6 +59,15 @@ export class CommunityService {
 
         this.socket.on('connect', () => {
           console.log(`Connected to community socket as ${userType}`);
+
+          //adding code for getting message count
+           this.socket.on('newMessage',(message:any)=>{
+            if(message.courseId&&message.courseId!==this.currentCourseId){
+              this.updateUnreadCount(message.courseId)
+            }
+           })
+           this.getUnreadCounts()
+          //adding code for getting message count
           resolve(true);
         });
 
@@ -127,6 +141,15 @@ export class CommunityService {
           }
           
           console.log(`Joined room successfully. isInstructor: ${this.isInstructor}, userId: ${this.userId}`);
+
+
+           // Clear unread count for this course
+          const currentCounts = this.unreadCountsSubject.value;
+          const updatedCounts = { ...currentCounts };
+          delete updatedCounts[courseId]; // Remove the count for this course
+          this.unreadCountsSubject.next(updatedCounts);
+
+          
           resolve(true);
         } else {
           const errorMsg = response?.message || 'Unknown error';
@@ -209,4 +232,79 @@ export class CommunityService {
   getUserId():string{
     return this.userId
   }
+
+
+  //get unreadcount from the server
+  getUnreadCounts(){
+    if(this.socket&&this.socket.connected){
+      this.socket.emit('getUnreadCounts',{},(response:any)=>{
+        if(response&&response.success){
+          this.unreadCountsSubject.next(response.unreadCounts||{})
+        }
+      })
+    }
+  }
+
+  private updateUnreadCount(courseId:string){
+    const currentCounts=this.unreadCountsSubject.value
+    const currentCount=currentCounts[courseId]||0
+
+    const updatedCounts={
+      ...currentCounts,
+      [courseId]:currentCount+1
+    }
+
+    this.unreadCountsSubject.next(updatedCounts)
+  }
+
+
+    getUnreadCountsObservable(): Observable<Record<string, number>> {
+    return this.unreadCountsSubject.asObservable();
+  }
+
+
+
+    getTotalUnreadCount(): Observable<number> {
+    return new Observable<number>(observer => {
+      this.unreadCountsSubject.subscribe(counts => {
+        const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+        observer.next(total);
+      });
+    });
+  }
+
+
+   initUnreadCounts() {
+    // Clear any existing interval
+    this.clearUnreadCountsInterval();
+    
+    // Get initial unread counts
+    this.getUnreadCounts();
+    
+    // Set up interval to refresh unread counts every 30 seconds
+    this.unreadCountsInterval = setInterval(() => {
+      this.getUnreadCounts();
+    }, 30000);
+  }
+
+   clearUnreadCountsInterval() {
+    if (this.unreadCountsInterval) {
+      clearInterval(this.unreadCountsInterval);
+      this.unreadCountsInterval = null;
+    }
+  }
+
+
+
+
+
+  updateUnreadCounts(counts: Record<string, number>): void {
+  this.unreadCountsSubject.next(counts);
+}
+
+// Make the unreadCountsSubject accessible as a value
+getUnreadCountsValue(): Record<string, number> {
+  return this.unreadCountsSubject.value;
+}
+
 }

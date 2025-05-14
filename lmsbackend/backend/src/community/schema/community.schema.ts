@@ -44,6 +44,9 @@ export class Community{
     @Prop({type:Types.ObjectId,required:true,ref:'instructor'})
     instructorId:Types.ObjectId
 
+    @Prop({type:Map, of:Number, default:()=>new Map()})
+    userLastReadCounts:Map<string, number>
+
 }
 
 export const CommunitySchema=SchemaFactory.createForClass(Community)

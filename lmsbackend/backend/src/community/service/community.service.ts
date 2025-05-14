@@ -152,4 +152,69 @@ export class CommunityService implements ICommunityService{
             throw error 
         }
       }
+
+
+
+      //new method to get unread message count for a user
+      async getUnreadMessageCount(courseId:string,userId:string):Promise<number>{
+        this.logger.log(`Getting unread message count for course:${courseId},user:${userId}`)
+
+        const community=await this.getCommunity(courseId)
+
+        const totalMessages=await this.getMessageCount(courseId)
+
+        //get the last read count for this user
+        const userLastRead=community.userLastReadCounts?.get(userId)||0
+
+        return Math.max(0,totalMessages-userLastRead)
+      }
+
+      //new method to mark messages as read for a  user
+      async markMessageAsRead(courseId: string, userId: string): Promise<void> {
+          this.logger.log(`Marking messages as read for course: ${courseId}, user:${userId}`)
+
+          const community=await this.getCommunity(courseId)
+
+          const totalMessages=await this.getMessageCount(courseId)
+
+          if(!community.userLastReadCounts){
+            community.userLastReadCounts=new Map<string,number>()
+          }
+
+          community.userLastReadCounts.set(userId,totalMessages)
+          await community.save()
+
+          this.logger.log(`Updated last read count for user ${userId} to ${totalMessages}`);
+      }
+
+
+
+      //new method to get all unread message counts for a user
+
+      async getUnreadMessageCountsForUser(userId:string):Promise<Record<string,number>>{
+        this.logger.log(`getting all unread messae counts for use: ${userId}`)
+
+        //find all communities
+        const communities=await this.communityModel.find().exec()
+
+        const result:Record<string,number>={}
+
+
+        //for eacch community ,get the unread count
+
+        for (const community of communities){
+          const courseId=community.courseId.toString()
+          const totalMessages=await this.getMessageCount(courseId)
+          const userLastRead=community.userLastReadCounts?.get(userId)||0
+
+          const unreadCount=Math.max(0,totalMessages-userLastRead)
+
+          if(unreadCount>0){
+            result[courseId]=unreadCount
+          }
+        }
+
+          return result
+      }
+     
 }

@@ -160,6 +160,11 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
       client.join(courseId)
       this.logger.log(`User ${clientData.userId} joined room for course ${courseId}`)
 
+
+      //mark messages as read when joining the room
+      await this.communityService.markMessageAsRead(courseId,userId)
+      this.logger.log(`Marked messages as read for user ${userId} in course ${courseId}`);
+
       const messages=await this.communityService.getMessages(courseId)
 
       return {
@@ -218,7 +223,7 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
 
       const message=await this.communityService.addTextMessage(courseId,userId,username,content)
 
-       this.server.to(courseId).emit('newMessage',message)
+       this.server.to(courseId).emit('newMessage',message,courseId)
 
       return {success:true,message}
     } catch (error) {
@@ -249,7 +254,7 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
 
         const message=await this.communityService.addImageMessage(courseId,userId,username,imageBuffer)
 
-        this.server.to(courseId).emit('newMessage',message)
+        this.server.to(courseId).emit('newMessage',message,courseId)
 
         return {success:true,message}
 
@@ -289,6 +294,37 @@ export class CommunityGateway  implements OnGatewayConnection,OnGatewayDisconnec
         this.logger.error(`Error deleting message: ${error.message}`)
         return {success:false,message:'Failed to delete message'}
     }
+  }
+
+
+
+
+  //add new handler for getting unread counts
+  @SubscribeMessage('getUnreadCounts')
+  async handleGetUnreadCounts(
+    @ConnectedSocket() client : Socket
+  ){
+      try {
+        const clientData=this.connectedClients.get(client.id)
+
+        if(!clientData){
+           this.logger.error(`Client not authenticated: ${client.id}`);
+           return { success: false, message: 'Client not authenticated' };
+        }
+
+        const {userId}=clientData
+
+        this.logger.log(`Getting unread counts for user: ${userId}`);
+
+        const unreadCounts=await this.communityService.getUnreadMessageCountsForUser(userId)
+
+         this.logger.log(`Unread counts for user ${userId}: ${JSON.stringify(unreadCounts)}`);
+
+         return {success:true,unreadCounts}
+      } catch (error) {
+         this.logger.error(`Error getting unread counts: ${error.message}`);
+         return { success: false, message: 'Failed to get unread counts' };
+      }
   }
 
 

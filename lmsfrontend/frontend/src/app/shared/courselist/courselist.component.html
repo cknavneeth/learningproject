@@ -21,6 +21,13 @@
           {{ userType === 'student' ? 'Instructor: ' + (course.instructor?.name || 'Unknown') : 'Students: ' + 'New messages' }}
         </div>
       </div>
+
+
+        <div *ngIf="getUnreadCount(course._id) > 0" 
+           class="flex-shrink-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center ml-2">
+        {{ getUnreadCount(course._id) }}
+      </div>
+
     </div>
   </div>
 

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CourselistComponent } from '../../../shared/courselist/courselist.component';
 import { CommunitychatComponent } from '../../../shared/communitychat/communitychat.component';
 import { MatIconModule } from '@angular/material/icon';
+import { CommunityService } from '../../../services/communityservice/community.service';
 
 @Component({
   selector: 'app-instructorcommunity',
@@ -19,10 +20,13 @@ export class InstructorcommunityComponent implements OnInit{
   loading:boolean=true
   error:string=''
 
-  constructor(private instructorCourseService:InstructorcourseService,private snackBar:MatSnackBar){}
+  constructor(private instructorCourseService:InstructorcourseService,private snackBar:MatSnackBar,private communityService:CommunityService){}
 
   ngOnInit():void{
     this.loadInstructorCourses()
+
+    //initialize unread counts
+    this.communityService.initUnreadCounts()
   }
 
   loadInstructorCourses():void{
@@ -52,4 +56,8 @@ export class InstructorcommunityComponent implements OnInit{
   }
 
 
+   ngOnDestroy(): void {
+    // Clean up
+    this.communityService.clearUnreadCountsInterval();
+  }
 }

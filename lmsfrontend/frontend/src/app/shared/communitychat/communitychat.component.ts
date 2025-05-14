@@ -67,6 +67,19 @@ export class CommunitychatComponent implements OnInit,OnDestroy,AfterViewChecked
       ngOnInit(){
         console.log('community chat component initialized with courseId:', this.courseId, 'usertype:', this.userType);
         this.initializeChatRoom();
+
+
+         // When the chat is open, make sure to clear unread counts for this course
+  if (this.courseId) {
+    const currentCounts = this.communityService.getUnreadCountsObservable().subscribe(currentCounts=>{
+          if (currentCounts && currentCounts[this.courseId]) {
+      const updatedCounts = { ...currentCounts };
+      delete updatedCounts[this.courseId];
+      this.communityService.updateUnreadCounts(updatedCounts);
+    }
+    })
+   
+  }
       }
 
       private async initializeChatRoom(): Promise<void> {
