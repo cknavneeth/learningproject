@@ -93,7 +93,24 @@
                  </span>
                </div>
                <p class="text-gray-300">{{ review.comment }}</p>
+
+
+
+                   <!--instructor reply section-->
+             <div *ngIf="review.hasInstructorReply" class="mt-3 pl-4 border-l-2 border-blue-500">
+      <div class="flex items-center mb-1">
+        <mat-icon class="text-blue-400 mr-2 text-sm">reply</mat-icon>
+        <span class="text-blue-400 font-medium">Instructor Reply</span>
+        <span class="text-gray-500 text-xs ml-2">{{ review.instructorReplyDate | date }}</span>
+      </div>
+      <p class="text-gray-400">{{ review.instructorReply }}</p>
+    </div>
              </div>
+
+
+
+         
+
              
              <!-- No Reviews Message -->
              <div *ngIf="!reviews || reviews.length === 0" class="text-gray-400 text-center py-4">
