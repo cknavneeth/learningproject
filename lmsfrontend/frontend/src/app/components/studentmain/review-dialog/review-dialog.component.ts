@@ -6,6 +6,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Review } from '../../../interfaces/review.interface';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
@@ -14,7 +15,8 @@ import { Review } from '../../../interfaces/review.interface';
     CommonModule,
     MatButtonModule,
     MatSliderModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule
   ],
   templateUrl: './review-dialog.component.html',
   styleUrl: './review-dialog.component.scss'
@@ -65,4 +67,9 @@ export class ReviewDialogComponent implements OnInit{
         rating: event.value
       });
     }
+
+    
+  setRating(rating: number): void {
+     this.reviewForm.get('rating')?.setValue(rating.toString());
+  }
 }
