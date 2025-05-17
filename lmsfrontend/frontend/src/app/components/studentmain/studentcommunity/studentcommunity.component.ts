@@ -39,11 +39,13 @@ export class StudentcommunityComponent implements OnInit{
       response=>{
         this.enrolledCourses=response.courses||[]
         this.loading=false
+        console.log('enrolled courses for student',this.enrolledCourses)
 
         //select the first course by default if available
         if(this.enrolledCourses.length>0){
           this.selectedCourseId=this.enrolledCourses[0]._id
         }
+        console.log('selected course id',this.selectedCourseId)
       },
       error=>{
         this.error='Failed to load enrolled courses'
@@ -70,4 +72,12 @@ export class StudentcommunityComponent implements OnInit{
     // Clean up
     this.communityService.clearUnreadCountsInterval();
   }
+
+
+  // Add this method to the StudentcommunityComponent class
+getSelectedCourseName(): string {
+  const selectedCourse = this.enrolledCourses.find(course => course._id === this.selectedCourseId);
+  return selectedCourse?.title || 'Course';
+}
+
 }

@@ -9,6 +9,12 @@ export interface IDashboardStats{
         month:string;
         revenue:number;
         purchases:number;
+    }[];
+    trendingCourses:{
+        _id:string;
+        title:string;
+        purchases:number;
+        revenue:number
     }[]
 }
 

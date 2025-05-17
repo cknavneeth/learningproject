@@ -12,7 +12,13 @@
   </div>
 
   <div *ngIf="!loading && !error" class="flex flex-col md:flex-row h-full overflow-hidden">
+    <!-- Course List Sidebar -->
     <div class="w-full md:w-72 h-full md:h-full md:flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-700">
+      <!-- Header for Course List -->
+      <div class="bg-gray-800 p-4 border-b border-gray-700">
+        <h2 class="text-white text-lg font-medium">My Courses</h2>
+      </div>
+      
       <app-courselist 
         [courses]="enrolledCourses" 
         [selectedCourseId]="selectedCourseId"
@@ -21,12 +27,27 @@
       </app-courselist>
     </div>
 
+    <!-- Chat Area -->
     <div class="flex-1 h-full overflow-hidden">
-      <app-communitychat 
-        *ngIf="selectedCourseId" 
-        [courseId]="selectedCourseId"
-        userType="student">
-      </app-communitychat>
+      <!-- Header for Chat -->
+      <div *ngIf="selectedCourseId" class="bg-gray-800 p-4 border-b border-gray-700 flex items-center justify-between">
+        <div class="flex items-center">
+          <h2 class="text-white text-lg font-medium">
+             {{ getSelectedCourseName() }} Community
+          </h2>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs">Student</span>
+        </div>
+      </div>
+      
+      <!-- Chat Component - Don't wrap in flex-1 class -->
+      <div *ngIf="selectedCourseId" class="h-[calc(100%-64px)] overflow-hidden">
+        <app-communitychat 
+          [courseId]="selectedCourseId"
+          userType="student">
+        </app-communitychat>
+      </div>
 
       <div *ngIf="!selectedCourseId" class="flex items-center justify-center h-full bg-gray-900 text-gray-400 text-center p-4">
         <p>Select a course to join its community</p>

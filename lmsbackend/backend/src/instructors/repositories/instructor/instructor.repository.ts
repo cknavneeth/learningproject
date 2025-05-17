@@ -132,11 +132,53 @@ export class InstructorRepository implements IInstructorRepository{
         ])
 
 
+        //gonna do trending courses data(course with most purchases)
+        const trendingCoursesData=await this.paymentModel.aggregate([
+            {
+                $match:{
+                    status:'completed',
+                    'coursesDetails.courseId':{$in:courseIds}
+                }
+            },
+            {
+                $unwind:'$coursesDetails'
+            },
+            {
+                $match:{
+                    'coursesDetails.courseId':{$in:courseIds}
+                }
+            },
+            {
+                $group:{
+                    _id:'$coursesDetails.courseId',
+                    purchases:{$sum:1},
+                    revenue:{$sum:'$coursesDetails.amount'}
+                }
+            },
+            {
+                $sort:{purchases:-1}
+            }
+        ])
+
+        const trendingCourses = await Promise.all(
+        trendingCoursesData.map(async (item) => {
+            const course = await this.courseModel.findById(item._id);
+            return {
+                _id: item._id.toString(),
+                title: course ? course.title : 'Unknown Course',
+                purchases: Number(item.purchases),
+                revenue: Number(item.revenue)
+            };
+        })
+    );
+
+
         return {
             totalCourses:courses.length,
             totalStudents:totalStats[0]?.uniqueStudents.length||0,
             totalEarnings:totalStats[0]?.totalEarnings||0,
-            monthlySalesData
+            monthlySalesData,
+            trendingCourses
         }
 
 
