@@ -35,6 +35,7 @@ export class ReviewService {
   getUserReviewForCourse(courseId:string):Observable<any>{
     return this.http.get<Review>(`${this.apiUrl}/course/${courseId}/user-review`)
   }
+  
 
    addInstructorReply(reviewId: string, instructorReply: string): Observable<Review> {
     return this.http.post<Review>(`${this.apiUrl}/${reviewId}/instructor-reply`, { instructorReply });

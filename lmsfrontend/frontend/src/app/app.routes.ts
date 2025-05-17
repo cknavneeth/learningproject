@@ -50,6 +50,8 @@ import { StudentquizComponent } from './components/studentmain/studentquiz/stude
 import { InstructorcommunityComponent } from './components/insMaincomponent/instructorcommunity/instructorcommunity.component';
 import { StudentcommunityComponent } from './components/studentmain/studentcommunity/studentcommunity.component';
 import { CoursedetailComponent } from './components/insMaincomponent/coursedetail/coursedetail.component';
+import {MyaboutComponent} from './components/studentmain/myabout/myabout.component';
+
 
 export const routes: Routes = [
     {
@@ -160,6 +162,11 @@ export const routes: Routes = [
             {
                 path:'community',
                 component:StudentcommunityComponent
+            },
+            {
+                path:'about',
+                component:MyaboutComponent
+                
             }
 
            
