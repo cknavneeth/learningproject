@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 interface ProfileResponse {
   username: string;
@@ -14,7 +15,8 @@ interface ProfileResponse {
 })
 export class ProfileserviceService {
 
-  private apiurl='http://localhost:5000/auth/student';
+  // private apiurl='http://localhost:5000/auth/student';
+  private apiurl=`${environment.apiUrl}/auth/student`
 
   constructor(private http:HttpClient) { }
 

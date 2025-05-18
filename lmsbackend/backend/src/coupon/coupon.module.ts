@@ -31,6 +31,6 @@ import { StudentCouponService } from './service/student-coupon.service';
         CouponRepository,
         StudentCouponService
     ],
-    exports:[COUPON_SERVICE,COUPON_REPOSITORY]
+    exports:[COUPON_SERVICE,COUPON_REPOSITORY,STUDENT_COUPON_SERVICE]
 })
 export class CouponModule {}

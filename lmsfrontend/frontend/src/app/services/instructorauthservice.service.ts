@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, tap } from 'rxjs';
 import { TokenserviceService } from './tokenservice.service';
 import { authResponse, OtpVerificationData, UserCredentials } from '../interfaces/auth.interface';
+import { environment } from '../../environments/environment';
 
 interface LoginResponse{
   accesstoken:string;
@@ -15,7 +16,8 @@ interface LoginResponse{
 })
 export class InstructorauthserviceService {
 
-  private apiurl='http://localhost:5000/auth/instructor'
+  // private apiurl='http://localhost:5000/auth/instructor'
+  private apiurl=`${environment.apiUrl}/auth/instructor`
 
   constructor(private http:HttpClient,private tokenservice:TokenserviceService) { }
 

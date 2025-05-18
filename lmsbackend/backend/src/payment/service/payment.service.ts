@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { IPaymentService } from './interfaces/payment.service.interface';
 import Razorpay from 'razorpay'; 
 import * as crypto from 'crypto';
@@ -12,6 +12,10 @@ import { Types } from 'mongoose';
 
 @Injectable()
 export class PaymentService implements IPaymentService{
+
+    private readonly logger=new Logger(PaymentService.name)
+
+
     private razorpay:Razorpay
 
     constructor(@Inject(PAYMENT_REPOSITORY) private readonly paymentRepository:IPaymentRepository,private configService:ConfigService){
@@ -136,10 +140,13 @@ export class PaymentService implements IPaymentService{
             // 2. Update payment status
             const payment = await this.paymentRepository.updatePaymentStatus(
                 razorpay_order_id,
-                'completed'
+                'completed',
+                razorpay_payment_id
             );
 
             if (!payment) {
+
+                this.logger.log('payment update avathond puthiyath indakam')
                 // If update failed, create new payment record with userId from original payment
                 const paymentDetails = await this.razorpay.payments.fetch(razorpay_payment_id);
                 const newPayment = await this.paymentRepository.create({
@@ -149,7 +156,8 @@ export class PaymentService implements IPaymentService{
                     currency: paymentDetails.currency,
                     status: 'completed',
                     userId: originalPayment.userId,
-                    coursesDetails: originalPayment.coursesDetails// Also include courses if they exist
+                    coursesDetails: originalPayment.coursesDetails
+                
                 });
                 return newPayment;
             }

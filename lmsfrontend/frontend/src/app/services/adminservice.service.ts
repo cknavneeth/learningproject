@@ -7,6 +7,7 @@ import { TokenserviceService } from './tokenservice.service';
 import { Router } from '@angular/router';
 import { SalesHistory } from '../interfaces/saleshistory.interface';
 import { DashboardStats } from '../interfaces/dashboard.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class AdminserviceService {
 
   constructor(private http:HttpClient,private tokenService:TokenserviceService,private router:Router) { }
 
-  private apiurl='http://localhost:5000/auth/admin';
+  // private apiurl='http://localhost:5000/auth/admin';
+  private apiurl=`${environment.apiUrl}/auth/admin`
 
   adminloginform(adminData:any):Observable<AdminLoginResponse>{
     return this.http.post<AdminLoginResponse>(`${this.apiurl}/login`,adminData)

@@ -1,13 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CouponService {
 
-  private apiUrl='http://localhost:5000/admin/coupon'
+  // private apiUrl='http://localhost:5000/admin/coupon'
+  private apiUrl=`${environment.apiUrl}/admin/coupon`
 
   constructor(private http:HttpClient) { }
 

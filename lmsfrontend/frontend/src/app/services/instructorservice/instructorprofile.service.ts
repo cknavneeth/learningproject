@@ -1,13 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InstructorprofileService {
 
-  private apiurl='http://localhost:5000/auth/instructor';
+  // private apiurl='http://localhost:5000/auth/instructor';
+  private apiurl=`${environment.apiUrl}/auth/instructor`
 
   constructor(private http:HttpClient) { }
 

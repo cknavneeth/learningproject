@@ -3,6 +3,7 @@ import { ICouponResponse, IStudentCouponService } from './interfaces/student-cou
 import { COUPON_REPOSITORY } from '../constants/constant';
 import { ICouponRepository } from '../repository/interfaces/coupon.repository.interface';
 import { CouponType } from '../schema/coupon.schema';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class StudentCouponService implements IStudentCouponService{
@@ -48,6 +49,8 @@ export class StudentCouponService implements IStudentCouponService{
              throw new BadRequestException('Coupon usage limit is reached')
         }
 
+        
+
         let discount:number
 
         if(coupon.type===CouponType.PERCENTAGE){
@@ -65,5 +68,26 @@ export class StudentCouponService implements IStudentCouponService{
         discount,
         message:'Coupon is valid'
        }
+    }
+
+
+    async updateCouponUsage(couponId:string,userId:string):Promise<void>{
+        if(!Types.ObjectId.isValid(couponId)){
+            throw new BadRequestException('Invalid coupon ID')
+        }
+
+        const coupon=await this.couponRepository.findById(couponId)
+
+        if(!coupon){
+            throw new NotFoundException('coupon not found')
+        }
+
+        coupon.currentUses+=1
+
+        if(!coupon.usedBy.includes(userId)){
+            coupon.usedBy.push(userId)
+        }
+
+        await coupon.save()
     }
 }

@@ -5,6 +5,7 @@ import { Course, CourseResponse } from '../../../interfaces/course.interface';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UpdateProgressRequest } from '../../../interfaces/mylearning.interface';
+import { environment } from '../../../../environments/environment';
 
 
 
@@ -16,7 +17,8 @@ import { UpdateProgressRequest } from '../../../interfaces/mylearning.interface'
 export class StudentcourseService {
 
   // private apiUrl = 'http://localhost:5000/auth/student';
-  private baseUrl = 'http://localhost:5000';
+  // private baseUrl = 'http://localhost:5000';
+  private baseUrl=environment.apiUrl
   private authStudentUrl = `${this.baseUrl}/auth/student`; // For UsersController endpoints
   private learningUrl = `${this.baseUrl}/auth/student/learning`; 
 

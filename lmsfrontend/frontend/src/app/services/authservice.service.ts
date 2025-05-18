@@ -3,13 +3,15 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, tap } from 'rxjs';
 import { TokenserviceService } from './tokenservice.service';
 import { authResponse, forgotpasswordResponse, otpResponse, OtpVerificationData, RegisterData, resetpasswordResponse, UserCredentials } from '../interfaces/auth.interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthserviceService {
 
-  private apiurl='http://localhost:5000/auth/student';
+  // private apiurl='http://localhost:5000/auth/student';
+  private apiurl=`${environment.apiUrl}/auth/student`
 
   constructor(private http:HttpClient,private tokenservice:TokenserviceService) { }
 

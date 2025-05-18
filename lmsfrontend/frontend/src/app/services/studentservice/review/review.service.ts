@@ -2,13 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateReviewDto, Review, UpdateReviewDto } from '../../../interfaces/review.interface';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
 
-  private apiUrl='http://localhost:5000/review'
+  // private apiUrl='http://localhost:5000/review'
+  private apiUrl=`${environment.apiUrl}/review`
 
   constructor(private http:HttpClient){}
 

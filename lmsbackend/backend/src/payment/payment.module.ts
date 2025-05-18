@@ -9,6 +9,7 @@ import { AuthenticationModule } from 'src/authentication/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { user, userSchema } from 'src/users/users.schema';
+import { CouponModule } from 'src/coupon/coupon.module';
 
 @Module({
     imports:[
@@ -22,7 +23,8 @@ import { user, userSchema } from 'src/users/users.schema';
                 signOptions: { expiresIn: '15m' },
             }),
         }),
-        ConfigModule
+        ConfigModule,
+        CouponModule
     ],
     controllers:[PaymentController],
     providers:[

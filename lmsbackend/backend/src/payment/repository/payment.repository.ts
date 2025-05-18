@@ -15,10 +15,13 @@ export class paymentRepository implements IPaymentRepository{
         return payment.save()
     }
 
-    async updatePaymentStatus(paymentId:string,status:string):Promise<PaymentDocument|null>{
+    async updatePaymentStatus(orderId:string,status:string,paymentId:string):Promise<PaymentDocument|null>{
         return this.paymentModel.findOneAndUpdate(
-            {paymentId},
-            {status},
+            {orderId},
+            {$set:{
+                status,
+                paymentId
+            }},
             {new:true}
         )
         .exec()

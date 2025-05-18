@@ -143,7 +143,7 @@ export class MyaboutComponent implements OnInit {
     }
   },
    {
-    name: 'Aisha Kapoor',
+    name: 'emiliana',
     role: 'Lead Designer',
     bio: 'UI/UX enthusiast committed to creating intuitive learning interfaces.',
     image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',

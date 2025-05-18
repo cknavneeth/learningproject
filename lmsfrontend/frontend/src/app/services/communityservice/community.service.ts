@@ -3,13 +3,15 @@ import { AuthserviceService } from '../authservice.service';
 import { InstructorauthserviceService } from '../instructorauthservice.service';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommunityService {
 
-  private apiUrl='http://localhost:5000'
+  // private apiUrl='http://localhost:5000'
+  private apiUrl=environment.apiUrl
 
   private socket!:Socket
   private messagesSubject=new BehaviorSubject<any[]>([])
