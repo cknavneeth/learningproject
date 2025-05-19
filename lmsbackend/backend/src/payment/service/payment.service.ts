@@ -72,6 +72,7 @@ export class PaymentService implements IPaymentService{
                         status:'active'
                     })) ,// Add items to track what's being purchased
                     userId:new Types.ObjectId(userId) // Add userId if available in DTO
+                    
                 });
                 console.log('Payment record created:', payment);
             } catch (dbError) {
