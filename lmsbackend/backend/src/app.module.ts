@@ -53,7 +53,7 @@ import { CommunityModule } from './community/community.module';
 
 console.log(process.env.MONGO_URI)
 @Module({
-  imports: [ConfigModule.forRoot({isGlobal:true}), MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/Learningmanagement'),AuthModule, UsersModule, InstructorsModule, AdminModule, InstructorauthModule,AdminauthModule,
+  imports: [ConfigModule.forRoot({isGlobal:true}), MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb+srv://learningmanagement110:Xwu9nR0w60bopzfH@cluster0.wyzwkkd.mongodb.net/Learningmanagement?retryWrites=true&w=majority'),AuthModule, UsersModule, InstructorsModule, AdminModule, InstructorauthModule,AdminauthModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
