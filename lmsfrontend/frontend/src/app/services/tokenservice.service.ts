@@ -21,6 +21,7 @@ export class TokenserviceService {
   }
 
   public removeStudentToken():void{
+    console.log('REMOVING STUDENT TOKEN - Stack trace:', new Error().stack);
     alert('removing student token')
     localStorage.removeItem(this.Student_token_key)
   } 
