@@ -21,6 +21,7 @@ export class TokenserviceService {
   }
 
   public removeStudentToken():void{
+    alert('removing student token')
     localStorage.removeItem(this.Student_token_key)
   } 
 
