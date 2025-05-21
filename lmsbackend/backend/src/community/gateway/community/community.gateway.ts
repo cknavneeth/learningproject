@@ -26,7 +26,7 @@ interface DeleteMessageDto{
 
 @WebSocketGateway({
   cors:{
-    origin:'http://localhost:4200',
+    origin:['http://localhost:4200','https://navaneethck.online'],
     credentials:false
   },
   namespace:'community'
