@@ -46,13 +46,26 @@ export class CommunityService {
           return;
         }
         
+        // this.socket = io(`${this.apiUrl}/community`, {
+        //   auth: {
+        //     token,
+        //     userType
+        //   },
+        //   withCredentials: false
+        // });
+
+
         this.socket = io(`${this.apiUrl}/community`, {
-          auth: {
-            token,
-            userType
-          },
-          withCredentials: false
-        });
+        path: '/socket.io',    
+  auth: {
+    token,
+    userType
+  },
+  withCredentials: false,
+  transports: ['websocket', 'polling'],
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000
+});
 
         
         if (userType === 'instructor') {
