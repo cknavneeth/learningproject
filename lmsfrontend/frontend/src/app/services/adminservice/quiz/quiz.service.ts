@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { Quiz, QuizDeleteResponse, QuizGenerateResponse, QuizQuestion, QuizSubmitResponse } from '../../../interfaces/quiz.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +14,15 @@ export class QuizService {
 
   constructor(private http: HttpClient) { }
 
-  generateQuiz(topic:string):Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}/generate`,{topic})
+  generateQuiz(topic:string):Observable<QuizGenerateResponse>{
+    return this.http.post<QuizGenerateResponse>(`${this.apiUrl}/generate`,{topic})
   }
 
-  getAllQuizzes():Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/history`)
+  getAllQuizzes():Observable<Quiz[]>{
+    return this.http.get<Quiz[]>(`${this.apiUrl}/history`)
   }
 
-  submitQuiz(quizId:string,answers:number[],questions:any[]):Observable<any>{
+  submitQuiz(quizId:string,answers:number[],questions:QuizQuestion[]):Observable<QuizSubmitResponse>{
 
     const topic=this.getTopicFromQuiz(questions)
 
@@ -32,7 +33,7 @@ export class QuizService {
       questions
     });
     
-    return this.http.post<any>(`${this.apiUrl}/submit`,{
+    return this.http.post<QuizSubmitResponse>(`${this.apiUrl}/submit`,{
       quizId,
       topic,
       answers,
@@ -42,8 +43,8 @@ export class QuizService {
 
 
 
-  getQuizHistory():Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/userHistory`)
+  getQuizHistory():Observable<Quiz[]>{
+    return this.http.get<Quiz[]>(`${this.apiUrl}/userHistory`)
   }
 
   private getTopicFromQuiz(questions: any[]): string {
@@ -71,7 +72,7 @@ export class QuizService {
 
 
 
-  deleteQuiz(quizId:string):Observable<any>{
-    return this.http.delete<any>(`${this.apiUrl}/${quizId}`)
+  deleteQuiz(quizId:string):Observable<QuizDeleteResponse>{
+    return this.http.delete<QuizDeleteResponse>(`${this.apiUrl}/${quizId}`)
   }
 }

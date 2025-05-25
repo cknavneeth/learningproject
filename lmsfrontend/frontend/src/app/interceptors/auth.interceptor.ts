@@ -40,6 +40,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authreq).pipe(
     catchError(error => {
       if (error.status === 401 && !error.error?.isBlocked) {
+        
         console.log('Attempting token refresh...');
         const authservice = req.url.includes('/instructor/') ? instructorauthservice : studentauthservice
         

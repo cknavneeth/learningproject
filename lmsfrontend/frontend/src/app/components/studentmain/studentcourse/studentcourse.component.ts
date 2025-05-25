@@ -10,6 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
 import { CategoryService } from '../../../services/instructorservice/category/category.service';
+import { ReviewService } from '../../../services/studentservice/review/review.service';
+import { Review } from '../../../interfaces/review.interface';
 
 @Component({
   selector: 'app-studentcourse',
@@ -52,10 +54,16 @@ export class StudentcourseComponent implements OnInit{
 
   selectedLanguage: string = '';
   selectedCategory: string = '';
+  enrolledCourseIds:Set<string>=new Set()
+  courseRatings:{[courseId:string]:number}={}
 
-  constructor(private studentService:StudentcourseService,private snackBar:MatSnackBar,private router:Router,private categoryService:CategoryService){}
+  constructor(private studentService:StudentcourseService,private snackBar:MatSnackBar,private router:Router,private categoryService:CategoryService,private reviewService:ReviewService){}
 
   ngOnInit():void{
+
+    //first load enrolled courses to check the status
+    this.loadEnrolledCourses()
+
     this.categoryService.getAllCategories().subscribe({
       next: (response) => {
         console.log(response)
@@ -113,11 +121,15 @@ export class StudentcourseComponent implements OnInit{
           this.filteredCourses = response;
           this.totalItems = response.length;
           this.totalPages = Math.ceil(response.length / this.itemsPerPage);
+
+          this.loadCourseRatings(this.courses)
         } else if (response.courses) {
           this.courses = response.courses;
           this.filteredCourses = response.courses;
           this.totalItems = response.total;
           this.totalPages = response.totalPages;
+
+          this.loadCourseRatings(this.courses)
         }
         this.loading = false;
       },
@@ -241,6 +253,68 @@ onCategoryChange(event: any) {
 
   getCategoryName(categoryId: string): string {
     return this.categories.get(categoryId) || categoryId;
+  }
+
+
+
+  loadEnrolledCourses(){
+    this.studentService.getEnrolledCourses().subscribe({
+      next:(response)=>{
+        if(response&&response.courses){
+          this.enrolledCourseIds=new Set(response.courses.map((course:any)=>course._id))
+          console.log('Enrolled courses loaded:',this.enrolledCourseIds)
+        }
+      },
+      error:(error)=>{
+          console.log('Error loading enrolled courses',error)
+        }
+    })
+     
+  }
+
+
+  isEnrolled(courseId:string):boolean{
+    return this.enrolledCourseIds.has(courseId)
+  }
+
+
+
+  //for review
+   loadCourseRatings(courses: any[]) {
+    courses.forEach(course => {
+      this.reviewService.getReviewsByCourse(course._id).subscribe({
+        next: (reviews: Review[]) => {
+          if (reviews && reviews.length > 0) {
+            const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+            this.courseRatings[course._id] = Math.round((sum / reviews.length) * 10) / 10;
+          } else {
+            this.courseRatings[course._id] = 0;
+          }
+        },
+        error: (error) => {
+          console.error(`Error loading reviews for course ${course._id}:`, error);
+          this.courseRatings[course._id] = 0;
+        }
+      });
+    });
+  }
+
+
+  getCourseRating(courseId: string): number {
+    return this.courseRatings[courseId] || 0;
+  }
+  
+  // Add method to generate star array for template
+  getStars(rating: number): number[] {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    return [
+      ...Array(fullStars).fill(1),
+      ...(hasHalfStar ? [0.5] : []),
+      ...Array(emptyStars).fill(0)
+    ];
   }
 
 

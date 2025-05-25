@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IDashboardStats, IInstructorRepository } from '../instructor.repository.interface';
 import { userDocument } from 'src/users/users.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,6 +9,8 @@ import { Payment, PaymentDocument } from 'src/payment/schema/payment.schema';
 
 @Injectable()
 export class InstructorRepository implements IInstructorRepository{
+
+    private logger=new Logger(InstructorRepository.name)
 
     constructor(@InjectModel(instructor.name) private instructorModel:Model<instructorDocument>,
                 @InjectModel(Course.name) private courseModel:Model<CourseDocument>,
@@ -173,12 +175,72 @@ export class InstructorRepository implements IInstructorRepository{
     );
 
 
+    //including top performing student 
+    const enrolledStudents=await this.paymentModel.aggregate([
+        {
+             $match:{
+                status:'completed',
+                'coursesDetails.courseId':{$in:courseIds}
+             }
+        },
+        {
+            $unwind:'$coursesDetails'
+        },
+        {
+            $match:{
+                'coursesDetails.courseId':{
+                    $in:courseIds
+                }
+            }
+        },
+        {
+            $group:{
+                _id:'$userId',
+                totalSpent:{$sum:'$coursesDetails.amount'},
+                coursesEnrolled:{$addToSet:'$coursesDetails.courseId'},
+                lastPurchase:{$max:'$createdAt'}
+            }
+        },
+        {
+            $sort:{totalSpent:-1}
+        },
+        {
+            $limit:10
+        },
+        {
+            $lookup:{
+                from:'users',
+                localField:'_id',
+                foreignField:'_id',
+                as:'userDetails'
+            }
+        },
+        {
+            $unwind:'$userDetails'
+        },
+        {
+            $project: {
+                _id: 1,
+                name: '$userDetails.username',
+                email: '$userDetails.email',
+                profileImage: '$userDetails.profileImage',
+                totalSpent: 1,
+                coursesCount: { $size: '$coursesEnrolled' },
+                lastPurchase: 1
+            }
+        }
+    ])
+
+
+    this.logger.log('enrolledstudents in backend',enrolledStudents)
+
         return {
             totalCourses:courses.length,
             totalStudents:totalStats[0]?.uniqueStudents.length||0,
             totalEarnings:totalStats[0]?.totalEarnings||0,
             monthlySalesData,
-            trendingCourses
+            trendingCourses,
+            topPerformingStudents:enrolledStudents
         }
 
 

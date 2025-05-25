@@ -37,6 +37,7 @@ export class CoursePaymentDetail{
     cancellationStatus?: CancellationStatus;
 
 
+
 }
 
 @Schema({timestamps:true})

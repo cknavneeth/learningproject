@@ -15,6 +15,15 @@ export interface IDashboardStats{
         title:string;
         purchases:number;
         revenue:number
+    }[],
+    topPerformingStudents:{
+        _id:string,
+        name:string,
+        email:string,
+        profileImage?:string,
+        totalSpent:number,
+        coursesCount:number,
+        lastPurchase:Date
     }[]
 }
 

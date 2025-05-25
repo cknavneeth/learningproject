@@ -20,6 +20,8 @@ export class InstructorDashboardComponent implements OnInit{
 
     trendingCoursesChart:any
 
+    topStudentsChart:any
+
     constructor(private dashboardService:DashboardService){}
 
     ngOnInit(){
@@ -34,6 +36,7 @@ export class InstructorDashboardComponent implements OnInit{
           this.stats=data
           this.initializeChart()
           this.initializeTrendingCoursesChart()
+          this.initializeTopStudentsChart()
         },
         error:(error)=>{
           console.error('error loading dashboard stats',error)
@@ -148,5 +151,96 @@ export class InstructorDashboardComponent implements OnInit{
     }
 
 
+
+    initializeTopStudentsChart(){
+        if (!this.stats || !this.stats.topPerformingStudents || this.stats.topPerformingStudents.length === 0) {
+          console.log('toop performer empty anallo')
+            return;
+        }
+
+        console.log('top performing students',this.stats.topPerformingStudents)
+
+        const ctx = document.getElementById('topStudentsChart') as HTMLCanvasElement;
+        if (!ctx) return;
+
+        // Sort students by total spent in descending order and take top 10
+        const topStudents = [...this.stats.topPerformingStudents]
+            .sort((a, b) => b.totalSpent - a.totalSpent)
+            .slice(0, 10);
+
+
+            const labels = topStudents.map(student => student.name);
+        const spentData = topStudents.map(student => student.totalSpent);
+        const coursesData = topStudents.map(student => student.coursesCount);
+
+
+        
+        this.topStudentsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Total Spent (₹)',
+                        data: spentData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgb(75, 192, 192)',
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    },
+                     {
+                        label: 'Courses Enrolled',
+                        data: coursesData,
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                        borderColor: 'rgb(153, 102, 255)',
+                        borderWidth: 1,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal bar chart
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Students'
+                        }
+                    },
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount Spent (₹)'
+                        }
+                    },
+                     y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Courses Count'
+                        }
+                    }
+                },
+                 plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Top Performing Students'
+                    }
+                }
+            }
+        });
+    
+        
+    }
 
 }

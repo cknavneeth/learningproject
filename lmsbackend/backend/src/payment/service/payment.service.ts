@@ -186,6 +186,8 @@ export class PaymentService implements IPaymentService{
             throw new BadRequestException('No payment record found for this course')
          }
 
+         
+
          console.log('CourseDetails:', payment.coursesDetails.map(detail => ({
             courseId: detail.courseId.toString(),
             status: detail.status
