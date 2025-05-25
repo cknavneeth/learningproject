@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { Course, CourseCreateRequest } from '../../../interfaces/course.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class InstructorcourseService {
      return this.http.post(`${this.apiUrl}/upload-thumbnail`,formData)
   }
 
-  createCourse(courseData:any,isDraft:boolean):Observable<any>{
+  createCourse(courseData:CourseCreateRequest,isDraft:boolean):Observable<any>{
     return this.http.post(`${this.apiUrl}`,{...courseData,isDraft})
   }
 

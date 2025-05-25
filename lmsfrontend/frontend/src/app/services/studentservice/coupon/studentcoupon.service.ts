@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { CouponResponse, ValidateCouponResponse } from '../../../interfaces/coupon.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,12 @@ export class StudentcouponService {
 
   constructor(private http:HttpClient) { }
 
-  getAvailableCoupons(totalAmount:number):Observable<any>{
-    return this.http.get(`${this.apiUrl}/available?amount=${totalAmount}`)
+  getAvailableCoupons(totalAmount:number):Observable<CouponResponse>{
+    return this.http.get<CouponResponse>(`${this.apiUrl}/available?amount=${totalAmount}`)
   }
 
 
-  validateCoupon(code:string,amount:number):Observable<any>{
-    return this.http.post(`${this.apiUrl}/validate`,{code,amount})
+  validateCoupon(code:string,amount:number):Observable<ValidateCouponResponse>{
+    return this.http.post<ValidateCouponResponse>(`${this.apiUrl}/validate`,{code,amount})
   }
 }

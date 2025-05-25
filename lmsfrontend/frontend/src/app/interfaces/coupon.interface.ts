@@ -49,3 +49,10 @@ export interface CouponUpdateDto{
     description?:string
     isActive?:boolean
 }
+
+
+export interface ValidateCouponResponse{
+    valid:boolean
+    discount?:number
+    message?:string
+}
