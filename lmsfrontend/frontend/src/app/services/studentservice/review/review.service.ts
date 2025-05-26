@@ -14,17 +14,17 @@ export class ReviewService {
 
   constructor(private http:HttpClient){}
 
-  createReview(courseId:string,review:CreateReviewDto):Observable<any>{
+  createReview(courseId:string,review:CreateReviewDto):Observable<Review>{
     return this.http.post<Review>(`${this.apiUrl}/course/${courseId}`,review)
   }
 
 
-  getReviewsByCourse(courseId:string):Observable<any>{
+  getReviewsByCourse(courseId:string):Observable<Review[]>{
     return this.http.get<Review[]>(`${this.apiUrl}/course/${courseId}`)
   }
 
 
-  updateReview(reviewId:string,review:UpdateReviewDto):Observable<any>{
+  updateReview(reviewId:string,review:UpdateReviewDto):Observable<Review>{
     return this.http.put<Review>(`${this.apiUrl}/${reviewId}`,review)
 
   }
@@ -34,7 +34,7 @@ export class ReviewService {
   }
 
 
-  getUserReviewForCourse(courseId:string):Observable<any>{
+  getUserReviewForCourse(courseId:string):Observable<Review>{
     return this.http.get<Review>(`${this.apiUrl}/course/${courseId}/user-review`)
   }
   

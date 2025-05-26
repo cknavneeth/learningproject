@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { WishlistResponse } from '../../../interfaces/wishlist.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,21 +23,21 @@ export class WishlistService {
    }
 
 
-   getWishlist():Observable<any>{
-    return this.http.get(`${this.apiUrl}`)
+   getWishlist():Observable<WishlistResponse>{
+    return this.http.get<WishlistResponse>(`${this.apiUrl}`)
    }
 
-   addToWishlist(courseId:string):Observable<any>{
-    return this.http.post(`${this.apiUrl}/add`,{courseId})
+   addToWishlist(courseId:string):Observable<WishlistResponse>{
+    return this.http.post<WishlistResponse>(`${this.apiUrl}/add`,{courseId})
     .pipe(
       tap(wishlist=>{
         this.updateWishlistCount(wishlist)
       })
     )
-   }
+   } 
 
-   removeFromWishlist(courseId:string):Observable<any>{
-    return this.http.delete(`${this.apiUrl}/remove`,{body:{courseId}})
+   removeFromWishlist(courseId:string):Observable<WishlistResponse>{
+    return this.http.delete<WishlistResponse>(`${this.apiUrl}/remove`,{body:{courseId}})
     .pipe(
       tap(wishlist=>{
         this.updateWishlistCount(wishlist)

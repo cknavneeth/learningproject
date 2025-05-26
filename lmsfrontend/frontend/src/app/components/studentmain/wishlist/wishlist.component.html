@@ -9,12 +9,19 @@
                     ({{wishlistItems.length}} courses)
                 </span>
             </h1>
+            
             <button *ngIf="!loading && !error && wishlistItems.length > 0"
-                    mat-raised-button color="primary" 
-                    [routerLink]="['/student/courses']"
-                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                Browse More Courses
-            </button>
+        mat-raised-button 
+        [routerLink]="['/student/courses']"
+        class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700
+               text-white font-medium px-6 py-2 rounded-lg shadow-md
+               hover:shadow-lg hover:scale-105 transform 
+               transition-all duration-300 ease-in-out
+               flex items-center">
+    <span>Browse More Courses</span>
+    <mat-icon class="ml-2">explore</mat-icon>
+</button>
+
         </div>
 
         <!-- Loading State -->
@@ -80,21 +87,29 @@
                         
                         <div class="flex space-x-2">
                             <!-- Remove from Wishlist -->
-                            <button mat-icon-button color="warn" 
-                                    (click)="removeFromWishlist(course._id, course.title)"
-                                    matTooltip="Remove from wishlist"
-                                    class="hover:scale-110 transition-transform duration-300">
-                                <mat-icon>favorite</mat-icon>
-                            </button>
+                            <button mat-icon-button 
+        (click)="removeFromWishlist(course._id, course.title)"
+        matTooltip="Remove from wishlist"
+        class="text-red-500 hover:text-red-400 hover:scale-110 transition-all duration-300 relative group">
+    <mat-icon class="text-current">favorite</mat-icon>
+    <span class="absolute inset-0 bg-red-500/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"></span>
+</button>
                             
                             <!-- Add to Cart -->
-                            <button mat-raised-button color="primary"
-                                    [disabled]="addingToCart"
-                                    (click)="addToCart(course._id)"
-                                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                                <mat-icon class="mr-2">shopping_cart</mat-icon>
-                                {{ addingToCart ? 'Adding...' : 'Add to Cart' }}
-                            </button>
+                            <!-- Add to Cart -->
+<button mat-raised-button
+        [disabled]="addingToCart"
+        (click)="addToCart(course._id)"
+        class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700
+               text-white font-medium px-4 py-1.5 rounded-lg shadow-md
+               hover:shadow-lg hover:scale-105 transform 
+               transition-all duration-300 ease-in-out
+               disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+    <mat-icon class="mr-1.5 text-lg">shopping_cart</mat-icon>
+    <span class="text-sm">{{ addingToCart ? 'Adding...' : 'Add to Cart' }}</span>
+</button>
+
+
                         </div>
 
 
