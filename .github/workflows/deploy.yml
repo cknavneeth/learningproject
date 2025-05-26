@@ -2,68 +2,62 @@ name: LMS CI/CD Pipeline
 
 on:
   push:
-    branches: [main] 
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
 
-    # 🧱 Frontend Build
-    - name: Install & Build Angular Frontend
-      working-directory: ./lmsfrontend/frontend
-      run: |
-        npm install
-        npx ng build --configuration=production
+      # 🧱 Frontend Build
+      - name: Install & Build Angular Frontend
+        working-directory: ./lmsfrontend/frontend
+        run: |
+          npm install
+          npx ng build --configuration=production
 
-        echo "Frontend build completed. Checking output:"
-        ls -la dist/
-        ls -la dist/frontend/ || echo "No frontend directory"
-        ls -la dist/frontend/browser/ || echo "No browser directory"
+          echo "Frontend build completed. Checking output:"
+          ls -la dist/
+          ls -la dist/frontend/ || echo "No frontend directory"
+          ls -la dist/frontend/browser/ || echo "No browser directory"
 
-    # ⚙️ Backend Build
-    - name: Install & Build Node Backend
-      working-directory: ./lmsbackend/backend
-      run: |
-        npm install
-        npm run build
+      # ⚙️ Backend Build
+      - name: Install & Build Node Backend
+        working-directory: ./lmsbackend/backend
+        run: |
+          npm install
+          npm run build
 
-        echo "Backend build completed. Checking output:"
-        ls -la dist/
+          echo "Backend build completed. Checking output:"
+          ls -la dist/
 
+        #debug check
+      - name: Debug - Check directory structure
+        run: |
+          echo "Current working directory: $(pwd)"
+          echo "Root directory structure:"
+          ls -la
+          echo "Frontend directory structure:"
+          ls -la lmsfrontend/frontend/ || echo "Directory not found"
+          echo "Frontend dist directory:"
+          find lmsfrontend/frontend/dist -type d | sort || echo "No dist directory found"
+          echo "Backend directory structure:"
+          ls -la lmsbackend/backend/ || echo "Directory not found"
+          echo "Backend dist directory:"
+          find lmsbackend/backend/dist -type d | sort || echo "No dist directory found"
 
-
-      #debug check
-    - name: Debug - Check directory structure
-      run: |
-        echo "Current working directory: $(pwd)"
-        echo "Root directory structure:"
-        ls -la
-        echo "Frontend directory structure:"
-        ls -la lmsfrontend/frontend/ || echo "Directory not found"
-        echo "Frontend dist directory:"
-        find lmsfrontend/frontend/dist -type d | sort || echo "No dist directory found"
-        echo "Backend directory structure:"
-        ls -la lmsbackend/backend/ || echo "Directory not found"
-        echo "Backend dist directory:"
-        find lmsbackend/backend/dist -type d | sort || echo "No dist directory found"
-
-
-
-
-
-    # 🚀 Deploy to GCP via SSH
-    - name: Deploy Frontend via SSH
-      uses: appleboy/scp-action@v0.1.4
-      with:
+      # 🚀 Deploy to GCP via SSH
+      - name: Deploy Frontend via SSH
+        uses: appleboy/scp-action@v0.1.4
+        with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -71,10 +65,10 @@ jobs:
           target: "/home/${{ secrets.SSH_USER }}/lms-temp/frontend"
           overwrite: true
 
-      # Deploy Backend to server in separate folder
-    - name: Deploy Backend via SSH
-      uses: appleboy/scp-action@v0.1.4
-      with:
+        # Deploy Backend to server in separate folder
+      - name: Deploy Backend via SSH
+        uses: appleboy/scp-action@v0.1.4
+        with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -82,13 +76,10 @@ jobs:
           target: "/home/${{ secrets.SSH_USER }}/lms-temp/backend"
           overwrite: true
 
-
-
-          
-    #ssh into server and move files into their final location
-    - name: SSH into GCP and move files
-      uses: appleboy/ssh-action@v1.0.0
-      with:
+      #ssh into server and move files into their final location
+      - name: SSH into GCP and move files
+        uses: appleboy/ssh-action@v1.0.0
+        with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -101,7 +92,7 @@ jobs:
             sudo mkdir -p /var/www/html/browser
             sudo cp -r ~/lms-temp/frontend/* /var/www/html/browser/
 
-           
+
                
 
             echo "Deploying backend files..."
