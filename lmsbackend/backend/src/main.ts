@@ -26,7 +26,7 @@ async function bootstrap() {
 
   console.log('Server running on port:', process.env.PORT);
 
-  
+  console.log('checking for latest changes')
 
   // await app.listen(process.env.PORT ?? 5000);
   await app.listen(process.env.PORT??5000,'0.0.0.0',()=>{
