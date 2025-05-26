@@ -131,7 +131,7 @@ export class MyaboutComponent implements OnInit {
       }
     },
     {
-    name: 'Angelina Jose',
+    name: 'Saniya',
     role: 'Head of Strategic Partnerships',
     bio: 'Award-winning actor and business strategist focused on expanding educational outreach.',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',

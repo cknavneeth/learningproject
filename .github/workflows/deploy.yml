@@ -39,7 +39,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: |
-          lmsfrontend/frontend/dist/
+          lmsfrontend/frontend/dist/frontend/browser
           lmsbackend/backend/dist/
         target: /home/${{ secrets.SSH_USER }}/lms-temp
 
@@ -52,7 +52,7 @@ jobs:
         script: |
           # Move frontend to /var/www/html/browser
           sudo rm -rf /var/www/html/browser
-          sudo mv ~/lms-temp/lmsfrontend/frontend/dist /var/www/html/browser
+          sudo mv ~/lms-temp/lmsfrontend/frontend/dist/frontend/browser /var/www/html/browser
 
           # Move backend to pm2 app location
           pm2 stop lms-backend
