@@ -9,7 +9,7 @@
                     ({{wishlistItems.length}} courses)
                 </span>
             </h1>
-            
+
             <button *ngIf="!loading && !error && wishlistItems.length > 0"
         mat-raised-button 
         [routerLink]="['/student/courses']"
