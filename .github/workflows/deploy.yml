@@ -42,6 +42,7 @@ jobs:
           lmsfrontend/frontend/dist/frontend/browser
           lmsbackend/backend/dist/
         target: /home/${{ secrets.SSH_USER }}/lms-temp
+        overwrite: true
 
     - name: SSH into GCP and move files
       uses: appleboy/ssh-action@v1.0.0
@@ -55,7 +56,7 @@ jobs:
           sudo mv ~/lms-temp/lmsfrontend/frontend/dist/frontend/browser /var/www/html/browser
 
           # Move backend to pm2 app location
-          pm2 stop lms-backend
-          sudo rm -rf ~/lms-backend/dist
-          sudo mv ~/lms-temp/lmsbackend/backend/dist ~/lms-backend/dist
-          pm2 start lms-backend
+          pm2 stop backend
+          sudo rm -rf ~/learningproject/lmsbackend/backend/dist
+          sudo mv ~/lms-temp/lmsbackend/backend/dist ~/learningproject/lmsbackend/backend/dist
+          pm2 start backend
