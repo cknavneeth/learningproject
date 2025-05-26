@@ -24,12 +24,41 @@ jobs:
         npm install
         npx ng build --configuration=production
 
+        echo "Frontend build completed. Checking output:"
+        ls -la dist/
+        ls -la dist/frontend/ || echo "No frontend directory"
+        ls -la dist/frontend/browser/ || echo "No browser directory"
+
     # ⚙️ Backend Build
     - name: Install & Build Node Backend
       working-directory: ./lmsbackend/backend
       run: |
         npm install
         npm run build
+
+        echo "Backend build completed. Checking output:"
+        ls -la dist/
+
+
+
+      #debug check
+    - name: Debug - Check directory structure
+      run: |
+        echo "Current working directory: $(pwd)"
+        echo "Root directory structure:"
+        ls -la
+        echo "Frontend directory structure:"
+        ls -la lmsfrontend/frontend/ || echo "Directory not found"
+        echo "Frontend dist directory:"
+        find lmsfrontend/frontend/dist -type d | sort || echo "No dist directory found"
+        echo "Backend directory structure:"
+        ls -la lmsbackend/backend/ || echo "Directory not found"
+        echo "Backend dist directory:"
+        find lmsbackend/backend/dist -type d | sort || echo "No dist directory found"
+
+
+
+
 
     # 🚀 Deploy to GCP via SSH
     - name: Deploy via SSH
@@ -51,12 +80,21 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
+          echo "Checking transferred files:"
+          ls -la ~/lms-temp/
+          ls -la ~/lms-temp/lmsfrontend/frontend/dist/ || echo "Frontend dist not found"
+          ls -la ~/lms-temp/lmsbackend/backend/dist/ || echo "Backend dist not found"
+        
+
+
           # Move frontend to /var/www/html/browser
           sudo rm -rf /var/www/html/browser
-          sudo mv ~/lms-temp/lmsfrontend/frontend/dist/frontend/browser /var/www/html/browser
+          sudo mkdir /var/www/html/browser
+          sudo cp -r ~/lms-temp/lmsfrontend/frontend/dist/frontend/browser /var/www/html/browser
 
           # Move backend to pm2 app location
           pm2 stop backend
           sudo rm -rf ~/learningproject/lmsbackend/backend/dist
-          sudo mv ~/lms-temp/lmsbackend/backend/dist ~/learningproject/lmsbackend/backend/dist
+          sudo mkdir -p ~/learningproject/lmsbackend/backend/dist
+          sudo cp -r ~/lms-temp/lmsbackend/backend/dist ~/learningproject/lmsbackend/backend/dist
           pm2 start backend

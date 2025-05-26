@@ -132,7 +132,7 @@ export class MyaboutComponent implements OnInit {
     },
     {
     name: 'Saniya',
-    role: 'Chief of Strategic Partnerships',
+    role: 'Chief of Strategic Partnership and sell',
     bio: 'Award-winning actor and business strategist focused on expanding educational outreach.',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
     social: {
@@ -145,7 +145,7 @@ export class MyaboutComponent implements OnInit {
    {
     name: 'emiliana',
     role: 'Lead Designer',
-    bio: 'UI/UX enthusiast committed to creating intuitive learning interfaces.',
+    bio: 'UI/UX enthusiast committed to creating intuitive Learning interfaces.',
     image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
     social: {
       linkedin: 'https://linkedin.com',
