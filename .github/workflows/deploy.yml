@@ -22,7 +22,7 @@ jobs:
       working-directory: ./lmsfrontend/frontend
       run: |
         npm install
-        npm run build --configuration production
+        ng build --configuration=production
 
     # ⚙️ Backend Build
     - name: Install & Build Node Backend
