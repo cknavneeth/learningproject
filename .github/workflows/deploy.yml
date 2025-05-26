@@ -15,14 +15,14 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: '18'
+        node-version: '20'
 
     # 🧱 Frontend Build
     - name: Install & Build Angular Frontend
       working-directory: ./lmsfrontend/frontend
       run: |
         npm install
-        ng build --configuration=production
+        npx ng build --configuration=production
 
     # ⚙️ Backend Build
     - name: Install & Build Node Backend
