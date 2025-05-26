@@ -154,6 +154,18 @@ export class MyaboutComponent implements OnInit {
       dribbble: 'https://dribbble.com'
     }
   },
+  {
+    name: 'emiliana kathrina',
+    role: 'Lead Designer',
+    bio: 'UI/UX enthusiast committed to creating intuitive Learning interfaces.',
+    image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+    social: {
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+      github: null,
+      dribbble: 'https://dribbble.com'
+    }
+  },
   ]
   ngOnInit(): void {
       
