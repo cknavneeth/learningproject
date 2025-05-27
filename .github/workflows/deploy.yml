@@ -92,13 +92,17 @@ jobs:
             sudo rm -rf /var/www/html/browser
             sudo mkdir -p /var/www/html/browser
 
-            sudo cp -r /home/navaneethck03/lms-temp/frontend/lmsfrontend/frontend/dist/frontend/browser/* /var/www/html/browser/
+            sudo cp -rv ~/lms-temp/frontend/lmsfrontend/frontend/dist/frontend/browser/* /var/www/html/browser/
 
             sudo chown -R www-data:www-data /var/www/html/browser
             sudo chmod -R 755 /var/www/html/browser
 
+            sudo nginx -t
+            sudo nginx -s reload
+
             echo "Deployment completed. Listing /var/www/html/browser contents:"
             ls -la /var/www/html/browser/
+            
 
             echo "Deploying backend files..."
             pm2 stop all || true
