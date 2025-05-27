@@ -90,7 +90,7 @@ jobs:
             echo "Deploying frontend files..."
             sudo rm -rf /var/www/html/browser
             sudo mkdir -p /var/www/html/browser
-            sudo cp -r ~/lms-temp/frontend/* /var/www/html/browser/
+            sudo cp -r ~/lms-temp/frontend/lmsfrontend/frontend/dist/frontend/browser/* /var/www/html/browser/
 
 
                
