@@ -74,4 +74,6 @@ export class WalletmodalComponent implements OnInit{
       panelClass:'transactions-modal-container'
     })
   }
+
+
 }
