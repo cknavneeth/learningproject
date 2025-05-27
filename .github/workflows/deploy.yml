@@ -101,8 +101,7 @@ jobs:
             sudo nginx -s reload
 
             echo "Deployment completed. Listing /var/www/html/browser contents:"
-            ls -la /var/www/html/browser/
-            
+
 
             echo "Deploying backend files..."
             pm2 stop all || true
