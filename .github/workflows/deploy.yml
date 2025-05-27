@@ -93,8 +93,6 @@ jobs:
             sudo cp -r ~/lms-temp/frontend/lmsfrontend/frontend/dist/frontend/browser/* /var/www/html/browser/
 
 
-               
-
             echo "Deploying backend files..."
             pm2 stop all || true
             rm -rf ~/learningproject/lmsbackend/backend/dist
