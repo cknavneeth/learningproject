@@ -87,4 +87,12 @@ export class UsersController {
     const userId=req.user.userId
     return this.usersService.getWalletBalance(userId)
    }
+
+
+   @Get('transactions')
+   @UseGuards(GuardGuard)
+   async getTransactions(@Request() req){
+    const userId=req.user.userId
+    return this.usersService.getRecentTransactions(userId)
+   }
 }

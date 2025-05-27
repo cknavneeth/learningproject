@@ -168,4 +168,13 @@ export class UsersService {
 
     return {wallet:user.wallet}
    }
+
+   async getRecentTransactions(userId:string,limit:number=5):Promise<any[]>{
+    const user=await this.usermodel.findById(userId)
+    if(!user){
+        throw new NotFoundException('User not found')
+    }
+
+     return user.transactions.sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime()).slice(0,limit)
+   }
 }

@@ -7,6 +7,27 @@ export enum UserRole {
     STUDENT = 'student'
 }
 
+export enum TransactionType{
+    CREDIT='credit',
+    DEBIT='debit'
+}
+
+@Schema()
+export class WalletTransaction{
+    @Prop({required:true,enum:TransactionType})
+    type:TransactionType
+
+    @Prop({required:true})
+    amount:number
+
+    @Prop({required:true,default:Date.now})
+    date:Date
+
+    @Prop()
+    description:string
+}
+
+
 @Schema()
 export class user{
     _id: Types.ObjectId;
@@ -52,7 +73,8 @@ export class user{
     @Prop({default:0})
     wallet:number
 
-
+    @Prop({type:[WalletTransaction],default:[]})
+    transactions:WalletTransaction[]
 }
 
 export const userSchema=SchemaFactory.createForClass(user)

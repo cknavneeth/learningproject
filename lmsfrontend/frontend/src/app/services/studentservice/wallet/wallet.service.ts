@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { TransactionsResponse } from '../../../interfaces/wallet.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,5 +16,10 @@ export class WalletService {
 
   getWalletBalance():Observable<{wallet:number}>{
     return this.http.get<{wallet:number}>(`${this.apiUrl}/wallet`)
+  }
+
+
+  getRecentTransactions():Observable<TransactionsResponse>{
+    return this.http.get<TransactionsResponse>(`${this.apiUrl}/transactions`)
   }
 }

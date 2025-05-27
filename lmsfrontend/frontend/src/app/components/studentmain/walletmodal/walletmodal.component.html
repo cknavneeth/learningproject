@@ -21,3 +21,25 @@
           </div>
         </div>
       </div>
+
+
+     <div class="transactions-preview mt-6">
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Recent Transactions</h3>
+      <button 
+        (click)="openTransactionsModal()" 
+        class="ml-2 text-sm text-green-500 hover:text-green-600 font-medium flex items-center"
+      >
+        View All
+        <mat-icon class="text-base ml-1">arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center py-6">
+      <div class="spinner"></div>
+    </div>
+    
+    <div *ngIf="!isLoading && transactions.length === 0" class="text-center py-6 text-gray-500">
+      No transactions yet
+    </div>
+    

@@ -1,0 +1,39 @@
+<div class="transactions-modal">
+  <!-- Header Section -->
+  <div class="modal-header">
+    <h2 class="text-2xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
+      Transaction History
+    </h2>
+    <button mat-icon-button (click)="close()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Transactions List -->
+  <div class="transactions-section">
+    <div *ngIf="isLoading" class="flex justify-center py-6">
+      <div class="spinner"></div>
+    </div>
+    
+    <div *ngIf="!isLoading && data.transactions.length === 0" class="text-center py-6 text-gray-500">
+      No transactions yet
+    </div>
+    
+    <div *ngIf="!isLoading && data.transactions.length > 0" class="transactions-list">
+      <div *ngFor="let transaction of data.transactions" class="transaction-item">
+        <div class="flex items-center">
+          <div [ngClass]="getTransactionClass(transaction.type)" class="transaction-icon">
+            <mat-icon>{{ getTransactionIcon(transaction.type) }}</mat-icon>
+          </div>
+          <div class="transaction-details">
+            <p class="transaction-description">{{ transaction.description }}</p>
+            <p class="transaction-date">{{ transaction.date | date:'medium' }}</p>
+          </div>
+        </div>
+        <div [ngClass]="getTransactionClass(transaction.type)" class="transaction-amount">
+          {{ transaction.type === 'credit' ? '+' : '-' }}₹{{ transaction.amount }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

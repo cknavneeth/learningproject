@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { admin, admindocument } from './admin.schema';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { user, userDocument } from 'src/users/users.schema';
+import { TransactionType, user, userDocument } from 'src/users/users.schema';
 import { instructor, instructorDocument } from 'src/instructors/instructor.schema';
 import { AdminRepository } from './repositories/admin/admin.repository';
 import { EmailService } from 'src/shared/email/email.service';
@@ -318,6 +318,12 @@ export class AdminService {
 
 
         student.wallet+=refundAmount
+        student.transactions.push({
+            type:TransactionType.CREDIT,
+            amount:refundAmount,
+            date:new Date(),
+            description:`Refund for order ${orderId}`
+        })
         await student.save()
 
         try {
