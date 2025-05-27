@@ -96,10 +96,11 @@ jobs:
                
 
             echo "Deploying backend files..."
-            pm2 stop backend || true
-            sudo rm -rf ~/learningproject/lmsbackend/backend/dist
-            sudo mkdir -p ~/learningproject/lmsbackend/backend/dist
-            sudo cp -r ~/lms-temp/backend/* ~/learningproject/lmsbackend/backend/dist/
-            pm2 start backend
+            pm2 stop all || true
+            rm -rf ~/learningproject/lmsbackend/backend/dist
+            mkdir -p ~/learningproject/lmsbackend/backend/dist
+            cp -r ~/lms-temp/backend/lmsbackend/backend/dist/* ~/learningproject/lmsbackend/backend/dist/
+            pm2 flush
+            pm2 restart all
 
             echo "Deployment completed successfully!"
