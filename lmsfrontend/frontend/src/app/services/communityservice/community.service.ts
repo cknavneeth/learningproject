@@ -11,7 +11,8 @@ import { environment } from '../../../environments/environment';
 export class CommunityService {
 
   // private apiUrl='http://localhost:5000'
-  private apiUrl=environment.apiUrl
+  // private apiUrl=environment.apiUrl
+  private socketUrl=environment.socketUrl
 
   private socket!:Socket
   private messagesSubject=new BehaviorSubject<any[]>([])
@@ -55,7 +56,7 @@ export class CommunityService {
         // });
 
 
-        this.socket = io(`${this.apiUrl}/community`, {
+        this.socket = io(`${this.socketUrl}/community`, {
         path: '/socket.io',    
   auth: {
     token,
