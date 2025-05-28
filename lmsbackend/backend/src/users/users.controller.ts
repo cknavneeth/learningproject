@@ -95,4 +95,6 @@ export class UsersController {
     const userId=req.user.userId
     return this.usersService.getRecentTransactions(userId)
    }
+
+   //full user controllers
 }
