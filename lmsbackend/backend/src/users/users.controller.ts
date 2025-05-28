@@ -96,5 +96,5 @@ export class UsersController {
     return this.usersService.getRecentTransactions(userId)
    }
 
-   //full user controllers
+   //this user controller is enough right
 }
