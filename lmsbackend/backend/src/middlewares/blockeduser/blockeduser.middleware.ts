@@ -29,6 +29,7 @@ export class BlockeduserMiddleware implements NestMiddleware {
           if(req.url.includes('/student')){
             const user=await this.userService.findByEmail(decoded.email)
             if(user?.isBlocked){
+              console.log('student block check')
               return res.status(HttpStatusCode.UNAUTHORIZED).json({
                 message:'Your account has been blocked',
                 isBlocked:true,

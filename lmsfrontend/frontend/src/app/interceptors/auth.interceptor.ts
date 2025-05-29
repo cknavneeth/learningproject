@@ -51,7 +51,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               // If no new access token, logout
               if (req.url.includes('/student')) {
                 tokenservice.removeStudentToken()
+
                 router.navigate(['/student/login'])
+
               } else {
                 tokenservice.removeInstructorToken()
                 router.navigate(['/instructor/instructorlogin'])

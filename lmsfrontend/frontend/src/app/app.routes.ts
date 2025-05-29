@@ -51,6 +51,7 @@ import { InstructorcommunityComponent } from './components/insMaincomponent/inst
 import { StudentcommunityComponent } from './components/studentmain/studentcommunity/studentcommunity.component';
 import { CoursedetailComponent } from './components/insMaincomponent/coursedetail/coursedetail.component';
 import {MyaboutComponent} from './components/studentmain/myabout/myabout.component';
+import { NotfoundComponent } from './components/common/notfound/notfound.component';
 
 
 export const routes: Routes = [
@@ -64,7 +65,6 @@ export const routes: Routes = [
             }
         ]
     },
-
     {
         path:'resetpassword/:token',
         component:ResetpasswordComponent,
@@ -167,8 +167,8 @@ export const routes: Routes = [
                 path:'about',
                 component:MyaboutComponent
                 
-            }
-
+            },
+            
            
         ]
     },
@@ -256,7 +256,8 @@ export const routes: Routes = [
             {
                 path:'course/:id',
                 component:CoursedetailComponent
-            }
+            },
+            
         ]
     },
     {
@@ -312,5 +313,12 @@ export const routes: Routes = [
             }
            
         ]
+    },
+    {
+        path:'**',
+        component:NotfoundComponent
     }
+    
+    
+    
 ];

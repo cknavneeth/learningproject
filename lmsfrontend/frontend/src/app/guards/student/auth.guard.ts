@@ -14,6 +14,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     console.log('accessgranted')
     return true;
   } else {
+    console.log("hihhhh")
     router.navigate(['/student/login']);
     return false; 
    

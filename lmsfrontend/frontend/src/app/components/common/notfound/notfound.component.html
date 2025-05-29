@@ -1,0 +1,45 @@
+
+
+
+<div *ngIf="isStudentTrue">
+
+   <div class="min-h-screen bg-gray-900 text-white flex flex-col justify-center items-center p-6">
+  <div class="text-center">
+    <h1 class="text-7xl font-extrabold text-red-500 mb-4">404</h1>
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">Page Not Found</h2>
+    <p class="text-gray-400 mb-8 text-lg max-w-md mx-auto">
+      Sorry, the page you’re looking for doesn’t exist or has been moved.
+    </p>
+   <button [routerLink]="['/']" class="inline-flex items-center px-5 py-2.5 border border-gray-300 bg-white text-gray-800 text-sm font-medium rounded-md hover:bg-gray-100 hover:border-gray-400 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">Go Back Home</button>
+  </div>
+</div>
+</div>
+
+
+<div *ngIf="isInstructorTrue">
+    <div class="min-h-screen bg-gray-900 text-white flex flex-col justify-center items-center p-6">
+  <div class="text-center">
+    <h1 class="text-7xl font-extrabold text-red-500 mb-4">404</h1>
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">Page Not Found</h2>
+    <p class="text-gray-400 mb-8 text-lg max-w-md mx-auto">
+      Sorry, the page you’re looking for doesn’t exist or has been moved.
+    </p>
+   <button [routerLink]="['/instructor/dashboard']" class="inline-flex items-center px-5 py-2.5 border border-gray-300 bg-white text-gray-800 text-sm font-medium rounded-md hover:bg-gray-100 hover:border-gray-400 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">Go Dashboard</button>
+  </div>
+</div>
+</div>
+
+
+<div *ngIf="isAdminTrue">
+      <div class="min-h-screen bg-gray-900 text-white flex flex-col justify-center items-center p-6">
+  <div class="text-center">
+    <h1 class="text-7xl font-extrabold text-red-500 mb-4">404</h1>
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">Page Not Found</h2>
+    <p class="text-gray-400 mb-8 text-lg max-w-md mx-auto">
+      Sorry, the page you’re looking for doesn’t exist or has been moved.
+    </p>
+   <button [routerLink]="['/admin/dashboard']" class="inline-flex items-center px-5 py-2.5 border border-gray-300 bg-white text-gray-800 text-sm font-medium rounded-md hover:bg-gray-100 hover:border-gray-400 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">Go Admin Dashboard</button>
+  </div>
+</div>
+
+</div>

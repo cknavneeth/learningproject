@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { WishlistResponse } from '../../../interfaces/wishlist.interface';
+import { TokenserviceService } from '../../tokenservice.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class WishlistService {
   private wishlistItemsSubject=new BehaviorSubject<number>(0)
   wishlistItems$=this.wishlistItemsSubject.asObservable()
   
-  constructor(private http:HttpClient) {
+  constructor(private http:HttpClient,private tokenservice:TokenserviceService) {
+    if(this.tokenservice.getStudentToken())
     this.getWishlist().subscribe(
       wishlist=>this.updateWishlistCount(wishlist)
     )

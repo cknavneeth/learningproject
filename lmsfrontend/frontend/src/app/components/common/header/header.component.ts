@@ -55,13 +55,13 @@ export class HeaderComponent implements OnInit {
   private checkAuthStatus(): void {
     const access = this.service.getAccessToken();
     this.isAuthenticated = !!access;
+    // this.router.navigate(['/'])
   }
 
   logout() {
     this.service.logoutthestudent().subscribe(
       response => {
         this.isAuthenticated = false;
-        this.router.navigate(['/student/login']);
       }
     );
   }

@@ -14,6 +14,10 @@ export const blockedinterceptorInterceptor: HttpInterceptorFn = (req, next) => {
   const studentauthservice=inject(AuthserviceService)
   const instructorauthservice=inject(InstructorauthserviceService)
 
+   if (req.url.includes('/auth/student/refreshtoken') || req.url.includes('/auth/instructor/refreshtoken')) {
+    return next(req);
+  }
+
 
   if(req.url.includes('/auth/admin')){
     return next(req)

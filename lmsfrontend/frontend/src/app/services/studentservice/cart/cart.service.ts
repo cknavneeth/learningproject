@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Cart, CartResponse } from '../../../interfaces/cart.interface';
+import { TokenserviceService } from '../../tokenservice.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class CartService {
   private cartItemsSubject=new BehaviorSubject<number>(0)
   cartItems$=this.cartItemsSubject.asObservable()
 
-  constructor(private http:HttpClient) {
+  constructor(private http:HttpClient,private tokenservice:TokenserviceService) {
+    if(this.tokenservice.getStudentToken())
     this.getCart().subscribe(
       cart=>this.updateCartCount(cart)
     )
