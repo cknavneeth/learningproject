@@ -139,3 +139,41 @@ input {
 .toggle-btn:hover {
     background: #0056b3;
 }
+
+
+
+
+.student-link-wrapper {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.student-link {
+  color: #7d7d81; /* soft violet */
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.student-link::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2px;
+  background: #a18fff;
+  transition: width 0.3s;
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+}
+
+.student-link:hover {
+  color: #c4b5fd; /* lighter violet on hover */
+}
+
+.student-link:hover::after {
+  width: 100%;
+}
+

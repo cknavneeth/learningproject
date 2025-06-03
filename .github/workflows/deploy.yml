@@ -61,11 +61,13 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "lmsfrontend/frontend/dist/frontend/browser/*"
+          source: "lmsfrontend/frontend/dist/frontend/browser"
+          #here in sourse i changed the last slash and star only ok
           target: "/home/${{ secrets.SSH_USER }}/lms-temp/frontend"
           overwrite: true
 
         # Deploy Backend to server in separate folder
+        #here what iam doing is creating a new folder for backend inside lms-temp like called lmsbackend and backend
       - name: Deploy Backend via SSH
         uses: appleboy/scp-action@v0.1.4
         with:

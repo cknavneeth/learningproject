@@ -62,9 +62,11 @@ export class HeaderComponent implements OnInit {
     this.service.logoutthestudent().subscribe(
       response => {
         this.isAuthenticated = false;
+        this.router.navigate(['/student/login'])
       }
     );
   }
+
 
   togglemenu() {
     this.menuOpen = !this.menuOpen;
@@ -72,8 +74,8 @@ export class HeaderComponent implements OnInit {
 
 
   openWalletModal(): void {
-    this.walletService.getWalletBalance().subscribe({
-      next: (response) => {
+     this.walletService.getWalletBalance().subscribe({
+       next: (response) => {
         this.dialog.open(WalletmodalComponent, {
           width: '400px',
           data: { wallet: response.wallet },
@@ -82,15 +84,16 @@ export class HeaderComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching wallet balance:', error);
-        // Show a fallback with zero balance
-        this.dialog.open(WalletmodalComponent, {
-          width: '400px',
-          data: { wallet: 0 },
+         this.dialog.open(WalletmodalComponent, {
+           width: '400px',
+           data: { wallet: 0 },
           panelClass: 'wallet-modal-container'
         });
       }
     });
   }
+
+
 }
 
 
