@@ -35,8 +35,12 @@ export class CartController {
             return cart
         } catch (error) {
             console.log('failed to add in cart')
-            if (error.message === 'Course already in cart') {
+            console.log('i also wnna see the error',error)
+            if (error.message === 'Item already in cart'){
                 throw new BadRequestException('Course already in cart');
+            }
+            if(error.message==='You are blocked from performing this action'){
+                throw new BadRequestException('You are blocked from performing this action')
             }
             throw new NotFoundException('Failed to add to cart')
         }

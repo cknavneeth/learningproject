@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { NextFunction, Request, Response } from 'express';
 import { InstructorsService } from 'src/instructors/instructors.service';
 import { HttpStatusCode } from 'src/shared/status-code.enum';
+import { UserRepository } from 'src/users/repositories/user/user.repository';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -10,12 +11,14 @@ export class BlockeduserMiddleware implements NestMiddleware {
     constructor(
       private readonly jwtService: JwtService,
       private readonly userService: UsersService,
+      private readonly userRepository:UserRepository,
       private readonly instructorService: InstructorsService,
     ){}
 
     async use(req:Request,res:Response,next:NextFunction){
         try {
           const authHeader=req.headers.authorization
+          console.log('check for authheader',authHeader)
           if(!authHeader){
             return next()
           }
@@ -27,7 +30,7 @@ export class BlockeduserMiddleware implements NestMiddleware {
           console.log('decoded',decoded)
 
           if(req.url.includes('/student')){
-            const user=await this.userService.findByEmail(decoded.email)
+            const user=await this.userRepository.findById(decoded.userId)
             if(user?.isBlocked){
               console.log('student block check')
               return res.status(HttpStatusCode.UNAUTHORIZED).json({

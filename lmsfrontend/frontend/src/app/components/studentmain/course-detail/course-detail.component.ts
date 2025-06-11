@@ -87,10 +87,27 @@ export class CourseDetailComponent {
         })
       },
         error=>{
-          console.log('error entha cartil',error.error.message,error)
-          const errorMessage = error.error?.message === 'Course already in cart' 
-          ? 'This course is already in your cart' 
-          : 'Failed to add course to cart';
+        this.addingToCart = false;
+      const backendMessage = error.error?.message;
+      console.log('backendMessage',error.error?.message)
+      
+      let errorMessage = 'Failed to add course to cart';
+
+      // Check for specific error messages
+      switch (backendMessage) {
+        case 'Course already in cart':
+          errorMessage = 'This course is already in your cart';
+          break;
+
+        case 'You are blocked from performing this action':
+          errorMessage = 'You are blocked from using the platform';
+          break;
+
+      }
+
+
+
+
           this.snackBar.open(errorMessage,'Close',{
             duration:3000,
             horizontalPosition:'right',

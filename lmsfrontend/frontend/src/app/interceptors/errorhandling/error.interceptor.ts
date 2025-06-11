@@ -36,7 +36,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
               if(req.url.includes('/student')){
                 router.navigate(['/student/login'])
-              }else{
+              }else if(req.url.includes('/instructor')){
                 router.navigate(['/instructor/instructorlogin'])
               }
             }

@@ -9,7 +9,7 @@ export class TokenserviceService {
   private instructor_token_key='instructoraccesstoken'
   private ADMIN_TOKEN_KEY='adminToken'
 
-  constructor() { }
+  constructor() {}
 
 
   public setStudentToken(token:string){
@@ -34,6 +34,7 @@ export class TokenserviceService {
   }
 
   public removeInstructorToken(){
+    console.log('why removing instructor token here',new Error().stack)
     localStorage.removeItem(this.instructor_token_key)
   }
 
@@ -56,5 +57,13 @@ export class TokenserviceService {
   public setAdminToken(token: string): void {
     this.removeAdminToken();
     localStorage.setItem(this.ADMIN_TOKEN_KEY, token);
+  }
+
+
+   public getCurrentUserType(): 'student' | 'instructor' | 'admin' | null {
+    if (this.getStudentToken()) return 'student';
+    if (this.getInstructorToken()) return 'instructor';
+    if (this.getAdminToken()) return 'admin';
+    return null;
   }
 }

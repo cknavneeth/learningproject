@@ -8,12 +8,15 @@ import { CartController } from './cart.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthenticationModule } from '../authentication/auth.module';
+import { user, userSchema } from 'src/users/users.schema';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Cart.name, schema: CartSchema },
-      { name: Course.name, schema: CourseSchema }
+      { name: Course.name, schema: CourseSchema },
+      {name:user.name,schema:userSchema}
     ]),
     AuthenticationModule,
     JwtModule.registerAsync({
@@ -24,7 +27,8 @@ import { AuthenticationModule } from '../authentication/auth.module';
         signOptions: { expiresIn: '15m' },
       }),
     }),
-    ConfigModule
+    ConfigModule,
+    UsersModule
   ],
   controllers:[CartController],
   providers:[CartService,CartRepository],

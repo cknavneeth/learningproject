@@ -9,6 +9,7 @@ import { CoursesModule } from 'src/instructors/courses/courses.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthenticationModule } from 'src/authentication/auth.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { AuthenticationModule } from 'src/authentication/auth.module';
         signOptions: { expiresIn: '15m' },
       }),
     }),
-    ConfigModule
+    ConfigModule,
+    UsersModule
 ],
  controllers:[WishlistController],
   providers: [WishlistService,WishlistRepository],

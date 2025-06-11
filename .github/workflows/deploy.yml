@@ -61,7 +61,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "lmsfrontend/frontend/dist/frontend/browser"
+          source: "lmsfrontend/frontend/dist/frontend/browser/*"
           #here in sourse i changed the last slash and star only ok
           target: "/home/${{ secrets.SSH_USER }}/lms-temp/frontend"
           overwrite: true

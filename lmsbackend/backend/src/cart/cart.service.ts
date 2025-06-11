@@ -1,15 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { CartRepository } from './repositories/cart/cart.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from 'src/instructors/courses/course.schema';
 import { Model, Types } from 'mongoose';
 import { MESSAGES } from 'src/common/constants/messages.constants';
+import { UserRepository } from 'src/users/repositories/user/user.repository';
 
 @Injectable()
 export class CartService {
 
     constructor(private readonly cartRepository:CartRepository,
-        @InjectModel(Course.name) private courseModel: Model<Course>
+        @InjectModel(Course.name) private courseModel: Model<Course>,private readonly userRepository:UserRepository
     ){}
 
     async getCart(userId:string){
@@ -22,6 +23,20 @@ export class CartService {
 
 
     async addToCart(userId:string,courseId:string){
+
+        const user=await this.userRepository.findById(userId)
+        if(user){
+            if(user.isBlocked){
+                console.log('nee block aay')
+                throw new ForbiddenException({
+                    status:403,
+                    message:'You are blocked from performing this action'
+                })
+            }
+        }
+
+
+
         console.log('CartService.addToCart - Start', { userId, courseId });
         const course=await this.courseModel.findById(courseId)
         if(!course){

@@ -28,8 +28,11 @@ export class WishlistController {
             return await this.wishlistService.addToWishlist(userId,body.courseId)
 
         } catch (error) {
-            if (error.message === 'Course already in wishlist') {
+            if (error.message === 'Item already in wishlist') {
                 throw new BadRequestException('Course already in wishlist');
+            }
+            if(error.message==='You are blocked'){
+                throw new BadRequestException('You are blocked from using this platform')
             }
             throw new BadRequestException('Failed to add to wishlist');
         }

@@ -27,16 +27,22 @@ export const blockedinterceptorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError(error=>{
       console.log('blocked user interceptor error',error)
 
-      if(error.status===HttpStatusCode.UNAUTHORIZED&&error.error?.isBlocked===true){
+        const userType = tokenservice.getCurrentUserType(); // 'student' or 'instructor'
+  console.log('Current user type:', userType)
+      if(error.error?.message==='Your account has been Blocked'){
         console.log('user blocked detected')
 
-        if(req.url.includes('/student')){
+        const userType=tokenservice.getCurrentUserType()
+        console.log('usertype usertype usertype',userType)
+
+        if(userType==='student'){
           console.log('handling blocked student')
           tokenservice.removeStudentToken()
           studentauthservice.logoutthestudent().subscribe()
           router.navigate(['/student/login'])
         }
-       else if(req.url.includes('/instructor')){
+
+       else if(userType==='instructor'){
         console.log('handling blocked instructor')
         tokenservice.removeInstructorToken()
         instructorauthservice.logoutinstructor().subscribe()
