@@ -74,7 +74,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "lmsbackend/backend/dist/**"
+          source: "lmsbackend/backend/dist/"
           target: "/home/${{ secrets.SSH_USER }}/lms-temp/backend"
           overwrite: true
 
@@ -109,10 +109,7 @@ jobs:
             pm2 stop all || true
             rm -rf ~/learningproject/lmsbackend/backend/dist
             mkdir -p ~/learningproject/lmsbackend/backend/dist
-
-            cp -r ~/lms-temp/backend/* ~/learningproject/lmsbackend/backend/dist/
-
-
+            cp -r ~/lms-temp/backend/lmsbackend/backend/dist/* ~/learningproject/lmsbackend/backend/dist/
             pm2 flush
             pm2 restart all
 
