@@ -24,11 +24,6 @@ jobs:
           npm install
           npx ng build --configuration=production
 
-          echo "Frontend build completed. Checking output:"
-          ls -la dist/
-          ls -la dist/frontend/ || echo "No frontend directory"
-          ls -la dist/frontend/browser/ || echo "No browser directory"
-
       # ⚙️ Backend Build
       - name: Install & Build Node Backend
         working-directory: ./lmsbackend/backend
@@ -36,25 +31,7 @@ jobs:
           npm install
           npm run build
 
-          echo "Backend build completed. Checking output:"
-          ls -la dist/
-
-        #debug check
-      - name: Debug - Check directory structure
-        run: |
-          echo "Current working directory: $(pwd)"
-          echo "Root directory structure:"
-          ls -la
-          echo "Frontend directory structure:"
-          ls -la lmsfrontend/frontend/ || echo "Directory not found"
-          echo "Frontend dist directory:"
-          find lmsfrontend/frontend/dist -type d | sort || echo "No dist directory found"
-          echo "Backend directory structure:"
-          ls -la lmsbackend/backend/ || echo "Directory not found"
-          echo "Backend dist directory:"
-          find lmsbackend/backend/dist -type d | sort || echo "No dist directory found"
-
-      # 🚀 Deploy to GCP via SSH
+      # 🚀 Deploy Frontend via SSH
       - name: Deploy Frontend via SSH
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -62,55 +39,41 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "lmsfrontend/frontend/dist/frontend/browser/*"
-          #here in sourse i changed the last slash and star only ok
           target: "/home/${{ secrets.SSH_USER }}/lms-temp/frontend"
           overwrite: true
 
-        # Deploy Backend to server in separate folder
-        #here what iam doing is creating a new folder for backend inside lms-temp like called lmsbackend and backend
+      # 🚀 Deploy Backend via SSH
       - name: Deploy Backend via SSH
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "lmsbackend/backend/dist/"
+          source: "lmsbackend/backend/dist/*"  # ✅ Only copy the dist content
           target: "/home/${{ secrets.SSH_USER }}/lms-temp/backend"
           overwrite: true
 
-      #ssh into server and move files into their final location
-      - name: SSH into GCP and move files
+      # 🔧 SSH into server and move files
+      - name: SSH into server and move files
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "Listing files in temp directory:"
-            ls -la /home/navaneethck03/lms-temp/
-
-            echo "Deploying frontend files..."
-
+            echo "Deploying frontend..."
             sudo rm -rf /var/www/html/browser
             sudo mkdir -p /var/www/html/browser
-
-            sudo cp -rv ~/lms-temp/frontend/lmsfrontend/frontend/dist/frontend/browser/* /var/www/html/browser/
-
+            sudo cp -rv ~/lms-temp/frontend/* /var/www/html/browser/
             sudo chown -R www-data:www-data /var/www/html/browser
             sudo chmod -R 755 /var/www/html/browser
-
             sudo nginx -t
             sudo nginx -s reload
 
-            echo "Deployment completed. Listing /var/www/html/browser contents:"
-
-
-            echo "Deploying backend files..."
-            pm2 stop all || true
+            echo "Deploying backend..."
+            pm2 stop backend || true
             rm -rf ~/learningproject/lmsbackend/backend/dist
             mkdir -p ~/learningproject/lmsbackend/backend/dist
-            cp -r ~/lms-temp/backend/lmsbackend/backend/dist/* ~/learningproject/lmsbackend/backend/dist/
+            cp -r ~/lms-temp/backend/* ~/learningproject/lmsbackend/backend/dist/
             pm2 flush
-            pm2 restart all
-
-            echo "Deployment completed successfully!"
+            pm2 start ~/learningproject/lmsbackend/backend/dist/main.js --name backend
