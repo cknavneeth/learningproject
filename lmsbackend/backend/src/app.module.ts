@@ -49,6 +49,7 @@ import { QuizModule } from './quiz/quiz.module';
 import { CommunityService } from './community/service/community.service';
 import { CommunityGateway } from './community/gateway/community/community.gateway';
 import { CommunityModule } from './community/community.module';
+import { VerifymiddlewareMiddleware } from './middlewares/verify/verifymiddleware/verifymiddleware.middleware';
 
 
 console.log(process.env.MONGO_URI)
@@ -100,6 +101,28 @@ export class AppModule implements NestModule{
 
         '/auth/admin/login'
       )
-      .forRoutes({ path: 'student/*', method: RequestMethod.ALL })
+      .forRoutes({ path: '*', method: RequestMethod.ALL }),
+
+      consumer.apply(VerifymiddlewareMiddleware)
+      .exclude(
+           '/auth/student/login',
+           '/auth/student/register',
+           '/auth/student/sendotp',
+           '/auth/student/verifyotp',
+           '/auth/student/refreshtoken',
+
+          
+           '/auth/instructor/inslogin',
+           '/auth/instructor/instructorRegister',
+           '/auth/instructor/sendotp',
+           '/auth/instructor/verifyotp',
+           '/auth/instructor/getinsAccess',
+
+           '/auth/admin/login',
+           '/auth/admin/dashboard/stats'
+      )
+      .forRoutes({path:'*',method:RequestMethod.ALL})
   }
+
+
 }

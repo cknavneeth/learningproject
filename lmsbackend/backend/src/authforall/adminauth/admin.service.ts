@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { AdminService as MainAdminService } from '../../admin/admin.service';
 import { JwtService } from '@nestjs/jwt';
@@ -7,6 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 export class AdminService {
 
     constructor(private readonly adminService:MainAdminService,private readonly jwtService:JwtService){}
+
+    private logger=new Logger()
 
     async adminLogin(email:string,password:string){
         let admin=await this.adminService.findbyEmail(email)
@@ -24,7 +26,10 @@ export class AdminService {
     }
 
     generateadmintoken(payload:object){
-        const expiresIn=process.env.JWT_ADMIN_MAX_AGE||'2hr'
+        const expiresIn=process.env.JWT_ADMIN_MAX_AGE
+
+        this.logger.log('admin expiration',expiresIn)
+
         let newtoken=this.jwtService.sign(payload, { expiresIn })
         return newtoken
     }

@@ -1,5 +1,6 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { strict } from 'assert';
 import { NextFunction, Request, Response } from 'express';
 import { InstructorsService } from 'src/instructors/instructors.service';
 import { HttpStatusCode } from 'src/shared/status-code.enum';
@@ -33,22 +34,26 @@ export class BlockeduserMiddleware implements NestMiddleware {
             const user=await this.userRepository.findById(decoded.userId)
             if(user?.isBlocked){
               console.log('student block check')
-              return res.status(HttpStatusCode.UNAUTHORIZED).json({
+              res.clearCookie('refreshToken',{httpOnly:true,secure:true,sameSite:'strict'})
+              return res.status(HttpStatusCode.FORBIDDEN).json({
                 message:'Your account has been blocked',
                 isBlocked:true,
-                statusCode:401
+                statusCode:403
               })
             }
+            
           }else if(req.url.includes('/instructor')){
             const instructor=await this.instructorService.findByEmail(decoded.emailaddress)
             if(instructor?.isBlocked){
-              return res.status(HttpStatusCode.UNAUTHORIZED).json({
+               res.clearCookie('instructor_refreshToken',{httpOnly:true,secure:true,sameSite:'strict'})
+              return res.status(HttpStatusCode.FORBIDDEN).json({
                 message:'Your account has been blocked',
                 isBlocked:true,
-                statusCode:401
+                statusCode:403
               })
             }
           }
+
 
           next()
         } catch (error) {
@@ -60,7 +65,5 @@ export class BlockeduserMiddleware implements NestMiddleware {
           })
         }
     }
-
-
-  }
+}
 

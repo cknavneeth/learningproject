@@ -9,7 +9,7 @@ export const instructorguardGuard: CanActivateFn = (route, state) => {
   const tokenService=inject(TokenserviceService)
 
   const accesstoken=tokenService.getInstructorToken()
-
+  console.log('iam router guard but there is no token for instructor')
   if(accesstoken){
     return true
   }else{

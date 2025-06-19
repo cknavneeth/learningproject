@@ -157,7 +157,6 @@ export class MylearningRepository implements IMyLearningRepository {
     courseId:courseId
   })
 
-
         const payment=await this.paymentModel.findOne({
             userId:new Types.ObjectId(userId),
             'coursesDetails.courseId':new Types.ObjectId(courseId),

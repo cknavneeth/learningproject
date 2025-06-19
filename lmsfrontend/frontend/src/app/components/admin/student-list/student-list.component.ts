@@ -83,7 +83,8 @@ export class StudentListComponent implements OnInit {
       
         this.authservice.toggleBlockStatus(student._id).subscribe(
           ()=>{
-            this.fetchallstudents()
+            // this.fetchallstudents()
+            student.isBlocked=!student.isBlocked
           },
           (error:any)=>{
               console.log('error occured while blocking/unblocking')

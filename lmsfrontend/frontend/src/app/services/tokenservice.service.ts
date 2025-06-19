@@ -61,9 +61,9 @@ export class TokenserviceService {
 
 
    public getCurrentUserType(): 'student' | 'instructor' | 'admin' | null {
-    if (this.getStudentToken()) return 'student';
-    if (this.getInstructorToken()) return 'instructor';
-    if (this.getAdminToken()) return 'admin';
-    return null;
-  }
+     if(this.getStudentToken())return 'student'
+     if(this.getInstructorToken())return 'instructor'
+     if(this.getAdminToken())return 'admin'
+     return null
+   }
 }
