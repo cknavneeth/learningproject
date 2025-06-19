@@ -95,7 +95,9 @@ jobs:
             pm2 stop lms-backend || true
             rm -rf ~/learningproject/lmsbackend/backend/dist
             mkdir -p ~/learningproject/lmsbackend/backend/dist
-            cp -r ~/lms-temp/backend/lmsbackend/backend/dist/ ~/learningproject/lmsbackend/backend/dist/
+            cp -r ~/lms-temp/backend/lmsbackend/backend/dist/* ~/learningproject/lmsbackend/backend/dist/
+            cd 
+            cp /home/ubuntu/.env /home/ubuntu/learningproject/lmsbackend/backend/dist/
             cd ~/learningproject/lmsbackend/backend/dist
             pm2 flush
             if ! pm2 list | grep -q lms-backend; then
