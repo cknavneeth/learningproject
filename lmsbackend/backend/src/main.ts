@@ -13,7 +13,7 @@ async function bootstrap() {
   app.use(cookieParser())
 
   app.enableCors({
-    origin: ['https://navaneethck.online','http://localhost:4200'],
+    origin: ['https://navaneethck.online','https://www.navaneethck.online','http://localhost:4200'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, 
   });
