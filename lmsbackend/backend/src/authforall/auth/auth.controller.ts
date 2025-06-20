@@ -5,11 +5,17 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Certificate } from 'crypto';
 import * as multer from 'multer';
 import { strict } from 'assert';
+import { access } from 'fs';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRedis } from '@nestjs-modules/ioredis';
+import Redis from 'ioredis';
 
 @Controller('auth/student')
 export class AuthController {
 
-    constructor(private readonly authservice:AuthService){}
+    constructor(private readonly authservice:AuthService,private jwtService:JwtService,
+      @InjectRedis() private redis:Redis
+    ){}
 
     @Post('register')
     async register(@Body() body:{username:string,email:string,password:string}){
@@ -73,6 +79,29 @@ export class AuthController {
 
     @Post('logout')
     async logoutstudent(@Req() req:Request,@Res() res:Response){
+
+      //gonna do redis blacklisting
+      const accessToken=req.headers.authorization?.split(' ')[1]
+      const refreshToken=req.cookies['refreshToken']
+
+      if(accessToken){
+         const decoded=this.jwtService.decode(accessToken) as any
+         const exp=decoded.exp
+         const ttl=exp-Math.floor(Date.now()/1000) 
+
+         await this.redis.set(`blacklist:${accessToken}`, 'true', 'EX', ttl);
+      }
+
+
+      if(refreshToken){
+        const decodedRefresh=this.jwtService.decode(refreshToken) as any
+        const exp=decodedRefresh.exp
+        const ttl=exp-Math.floor(Date.now()/1000)
+
+        await this.redis.set(`blacklist:${refreshToken}`,'true','EX',ttl)
+      }
+
+
         res.clearCookie('refreshToken',{httpOnly:true,secure:true,sameSite:'strict'})
         return res.status(200).json({message:'Logged out successfully'})
     }

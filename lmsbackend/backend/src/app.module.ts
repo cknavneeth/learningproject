@@ -50,6 +50,8 @@ import { CommunityService } from './community/service/community.service';
 import { CommunityGateway } from './community/gateway/community/community.gateway';
 import { CommunityModule } from './community/community.module';
 import { VerifymiddlewareMiddleware } from './middlewares/verify/verifymiddleware/verifymiddleware.middleware';
+import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
+import { url } from 'inspector';
 
 
 console.log(process.env.MONGO_URI)
@@ -64,6 +66,14 @@ console.log(process.env.MONGO_URI)
         signOptions: { expiresIn: `${configService.get('JWT_MAX_AGE')}` },
       }),
     }),
+  RedisModule.forRootAsync({
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: async (configService: ConfigService): Promise<RedisModuleOptions> => ({
+    type: 'single', 
+    url: configService.get<string>('REDIS_URL'),
+  }),
+}),
     CloudinaryModule,
     CartModule,
     WishlistModule,

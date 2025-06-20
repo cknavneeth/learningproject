@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable, Res, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, Logger, Res, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as nodemailer from 'nodemailer';
 import { Subject } from 'rxjs';
@@ -24,6 +24,8 @@ import { OAuth2Client } from 'google-auth-library';
 
 @Injectable()
 export class AuthService {
+
+    private logger=new Logger()
 
     private googleClient:OAuth2Client
 
@@ -277,6 +279,8 @@ export class AuthService {
        })
 
        const payload=ticket.getPayload()
+
+       this
 
        if(!payload || !payload.email){
           throw new BadRequestException('Invalid google Token')

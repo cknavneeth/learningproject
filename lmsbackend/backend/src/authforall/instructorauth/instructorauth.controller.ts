@@ -4,11 +4,16 @@ import { BadRequestException, Body, Get, Post, Req, Res, UnauthorizedException, 
 import {Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
+import Redis from 'ioredis';
+import { InjectRedis } from '@nestjs-modules/ioredis';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth/instructor')
 export class InstructorauthController {
 
-    constructor(private readonly authservice:InstructorauthService,private readonly cloudinary:CloudinaryService){}
+    constructor(private readonly authservice:InstructorauthService,private readonly cloudinary:CloudinaryService,private jwtService:JwtService,
+      @InjectRedis() private redis:Redis
+    ){}
 
     
 
@@ -87,7 +92,31 @@ export class InstructorauthController {
 
     @Post('logout')
     async logoutinstructor(@Req() req:Request,@Res() res:Response){
-      res.clearCookie('instructor_refreshToken',{httpOnly:true,secure:true,sameSite:'strict'})
+      //gonna blacklist using redis
+      const accessToken=req.headers.authorization?.split(' ')[1]
+
+      const refreshToken=req.cookies['instructor_refreshToken']
+
+      if(accessToken){
+        const decoded=this.jwtService.decode(accessToken) as any
+        const exp=decoded.exp
+       
+        const ttl=exp-Math.floor(Date.now()/1000)
+
+        await this.redis.set(`blacklist:${accessToken}`,'true', 'EX',ttl)
+
+      }
+
+
+      if(refreshToken){
+        const decoded=this.jwtService.decode(refreshToken) as any
+        const exp=decoded.exp
+        const ttl=exp-Math.floor(Date.now()/1000)
+
+        await this.redis.set(`blacklist:${refreshToken}`,'true', 'EX',ttl)
+      }
+
+       res.clearCookie('instructor_refreshToken',{httpOnly:true,secure:true,sameSite:'strict'})
       return res.status(200).json({message:'Logged out successfully'})
     } 
 
