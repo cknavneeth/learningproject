@@ -175,9 +175,9 @@ export class CoursesService {
 
 
 
-    async getCoursesForInstructor(instructorId:string,page:number,limit:number){
+    async getCoursesForInstructor(instructorId:string,page:number,limit:number,searchTerm:string){
         try {
-            const {courses,total}=await this.courseRepository.findByInstructorWithPagination(instructorId,page,limit)
+            const {courses,total}=await this.courseRepository.findByInstructorWithPagination(instructorId,page,limit,searchTerm)
            console.log('courses veno monu',courses)
             return {
                 status: 'success',
@@ -199,9 +199,11 @@ export class CoursesService {
 
 
 
-    async getEnrolledStudents(instructorId:string,page:number,limit:number){
+    async getEnrolledStudents(instructorId:string,page:number,limit:number,searchTerm:string){
         try {
-            const result=await this.courseRepository.getEnrolledStudents(new Types.ObjectId(instructorId),page,limit)
+            const result=await this.courseRepository.getEnrolledStudents(new Types.ObjectId(instructorId),page,limit,searchTerm)
+
+            this.logger.log('enrolled student result',result)
 
             const totalStudents=result.total
 

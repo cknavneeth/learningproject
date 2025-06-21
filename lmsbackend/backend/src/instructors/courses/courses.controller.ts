@@ -143,6 +143,7 @@ export class CoursesController {
     @Get('enrolled-students')
     @UseGuards(GuardGuard)
     async getEnrolledStudents(@Request() req,
+    @Query('searchTerm') searchTerm:string,
     @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,
     @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number)
    {
@@ -150,7 +151,7 @@ export class CoursesController {
     try {
          const instructorId=req.user.InstructorId
 
-         const result=await this.coursesService.getEnrolledStudents(instructorId,page,limit)
+         const result=await this.coursesService.getEnrolledStudents(instructorId,page,limit,searchTerm)
          return result
     } catch (error) {
         throw new BadRequestException('Failed to fetch enrolled students')
@@ -171,12 +172,13 @@ export class CoursesController {
     @Get()
     @UseGuards(GuardGuard)
     async getMyCourses(@Request() req,
+    @Query('searchTerm') searchTerm:string,
     @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,
     @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number
     ){
         try {
             const instructorId=req.user.InstructorId
-            const result=await this.coursesService.getCoursesForInstructor(instructorId,page,limit)
+            const result=await this.coursesService.getCoursesForInstructor(instructorId,page,limit,searchTerm)
             return result
         } catch (error) {
             throw new BadRequestException('Failed to fetch courses')

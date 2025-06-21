@@ -91,7 +91,9 @@ jobs:
             sudo nginx -s reload
             echo "Frontend deployment completed. Listing /var/www/html/browser contents:"
             ls -la /var/www/html/browser
+
             echo "Deploying backend files..."
+            
             pm2 stop lms-backend || true
             rm -rf ~/learningproject/lmsbackend/backend/dist
             mkdir -p ~/learningproject/lmsbackend/backend/dist

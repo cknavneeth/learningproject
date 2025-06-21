@@ -13,6 +13,19 @@
         Total Students: {{ totalStudents }}
       </p>
     </div>
+
+
+    <!--searching for the student-->
+    <div class="mb-6">
+  <input
+    [(ngModel)]="searchTerm"
+    (input)="onSearchChange()"
+    type="text"
+    placeholder="Search by name or email"
+    class="w-full sm:w-1/3 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+  />
+</div>
+
   
     <!-- Loading State -->
     <div *ngIf="loading" class="flex justify-center items-center py-16">

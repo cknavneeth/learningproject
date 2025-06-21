@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ICourseRepository } from '../course.repository.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course, CourseDocument, CourseStatus } from '../../course.schema';
@@ -10,7 +10,8 @@ import { combineLatest } from 'rxjs';
 @Injectable()
 export class CourseRepository implements ICourseRepository{
     constructor(@InjectModel(Course.name) private courseModel:Model<CourseDocument>,@InjectModel(Payment.name) private paymentModal:Model<PaymentDocument>,@InjectModel(CourseProgress.name) private progressModel:Model<CourseProgressDocument>){}
-
+    
+    private logger=new Logger()
     async create(courseData:Partial<Course>):Promise<CourseDocument>{
 
         
@@ -54,27 +55,52 @@ export class CourseRepository implements ICourseRepository{
         return this.courseModel.findByIdAndDelete(courseId)
     }
 
-    async findByInstructorWithPagination(instructorId:string,page:number=1,limit:number=10):Promise<{courses:CourseDocument[],total:number}>{
+    async findByInstructorWithPagination(instructorId:string,page:number=1,limit:number=10,searchTerm:string):Promise<{courses:CourseDocument[],total:number}>{
         const skip=(page-1)*limit
 
+        
+        const instructorObjectId=new Types.ObjectId(instructorId)
+
+        const query:any={
+            instructor:instructorObjectId
+        }
+
+        if(searchTerm&&searchTerm.trim()!==''){
+            const regex=new RegExp(searchTerm.trim(),'i')
+            query.$or=[
+                {title:{$regex:regex}},
+                {description:{$regex:regex}},
+                {category:{$regex:regex}}
+            ]
+        }
+
+        this.logger.log(query)
+
         const [courses,total]=await Promise.all([
-            this.courseModel.find({instructor:new Types.ObjectId(instructorId)})
+            this.courseModel
+            // .find({instructor:new Types.ObjectId(instructorId)})
+            .find(query)
             .populate('instructor','name emailAddress isApproved')
             .sort({createdAt:-1})
             .skip(skip)
             .limit(limit)
             .exec(),
+            // this.courseModel.countDocuments({instructor:new Types.ObjectId(instructorId)}).exec()
             this.courseModel.countDocuments({instructor:new Types.ObjectId(instructorId)}).exec()
         ])
+
+
+
 
         return {courses,total}
     }
 
 
 
-    async getEnrolledStudents(instructorId: Types.ObjectId, page: number, limit: number): Promise<{ students: any[]; total: number }> {
-        const skip = (page - 1) * limit;
+    async getEnrolledStudents(instructorId: Types.ObjectId, page: number, limit: number, SearchTerm:string): Promise<{ students: any[]; total: number }> {
 
+        const skip = (page - 1) * limit;
+        
         const instructorCourses = await this.courseModel.find({ instructor: instructorId }).select('_id').lean();
         const courseIds = instructorCourses.map(course => course._id);
         
@@ -134,6 +160,24 @@ export class CourseRepository implements ICourseRepository{
                     preserveNullAndEmptyArrays: false
                 }
             },
+
+
+
+            {
+                $match:{
+                  $or:[
+                       {'userDetails.name':{$regex:SearchTerm,$options:'i'}},
+                       {'userDetails.email':{$regex:SearchTerm,$options:'i'}}
+                   ]
+                }
+                
+               
+            },
+
+
+
+
+
             {
                 $lookup: {
                     from: 'courses',
@@ -158,7 +202,7 @@ export class CourseRepository implements ICourseRepository{
                 }
             },
             {
-                $skip: skip
+                $skip: skip  
             },
             {
                 $limit: limit

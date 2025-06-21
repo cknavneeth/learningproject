@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 type CourseStatus='pending_review' | 'published' | 'rejected'
 interface StatusClasses{
@@ -15,7 +16,7 @@ interface StatusClasses{
 
 @Component({
   selector: 'app-my-courses',
-  imports: [CommonModule, MatPaginatorModule,RouterModule],
+  imports: [CommonModule, MatPaginatorModule,RouterModule,FormsModule],
   templateUrl: './my-courses.component.html',
   styleUrl: './my-courses.component.scss'
 })
@@ -28,6 +29,8 @@ export class MyCoursesComponent {
      itemsPerPage=6
      totalItems=0
      totalPages=0
+
+     searchTerm:string=''
 
      private readonly statusClasses: StatusClasses = {
       'pending_review': 'bg-yellow-100 text-yellow-800',
@@ -46,7 +49,8 @@ export class MyCoursesComponent {
 
      loadCourses():void{
       this.loading=true
-      this.instructorService.getCourses(this.currentPage,this.itemsPerPage).subscribe(
+      this.instructorService.getCourses(this.currentPage,this.itemsPerPage,this.searchTerm).subscribe(
+        
         response=>{
           if (response && response.data) {
             this.courses = response.data.courses;
@@ -77,5 +81,8 @@ export class MyCoursesComponent {
       return this.statusClasses[status] || 'bg-gray-100 text-gray-800';
     }
 
-
+    onSearchChange(){
+      this.currentPage=1
+      this.loadCourses()
+    }
 }

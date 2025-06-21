@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { InstructorcourseService } from '../../../services/instructorservice/course/instructorcourse.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-instructorstudents',
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './instructorstudents.component.html',
   styleUrl: './instructorstudents.component.scss'
 })
@@ -17,6 +18,8 @@ export class InstructorstudentsComponent implements OnInit{
   totalPages:number=0
   totalStudents:number=0
   limit:number=10
+
+  searchTerm:string=''
   constructor(private instructorService:InstructorcourseService){}
 
   ngOnInit():void{
@@ -27,7 +30,7 @@ export class InstructorstudentsComponent implements OnInit{
     this.loading=true
     this.error=null
 
-    this.instructorService.getEnrolledStudents(page,this.limit).subscribe({
+    this.instructorService.getEnrolledStudents(page,this.limit,this.searchTerm).subscribe({
       next:(response)=>{
         console.log('Full response:', response.data);
         console.log('Number of students:', response.data.students.length);
@@ -72,5 +75,10 @@ export class InstructorstudentsComponent implements OnInit{
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
     return date.toLocaleDateString();
+  }
+
+  onSearchChange(){
+    this.currentPage=1
+    this.loadStudents()
   }
 }

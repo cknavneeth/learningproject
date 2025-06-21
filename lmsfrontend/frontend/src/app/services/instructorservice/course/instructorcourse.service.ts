@@ -58,13 +58,13 @@ export class InstructorcourseService {
     return this.http.delete(`${this.apiUrl}/draft/${draftId}`)
   }
 
-  getCourses(page:number=1,limit:number=10):Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}`,{params:new HttpParams().set('page',page.toString()).set('limit',limit.toString())})
+  getCourses(page:number=1,limit:number=10,searchTerm:string=''):Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}`,{params:new HttpParams().set('page',page.toString()).set('limit',limit.toString()).set('searchTerm',searchTerm??'')})
   }
 
 
-  getEnrolledStudents(page:number=1,limit:number=10):Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/enrolled-students`,{params:{page:page.toString(),limit:limit.toString()}})
+  getEnrolledStudents(page:number=1,limit:number=10,searchTerm:string=''):Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}/enrolled-students`,{params:{page:page.toString(),limit:limit.toString(),searchTerm}})
      
   }
 
