@@ -4,11 +4,11 @@ import { IStudentCouponService } from '../service/interfaces/student-coupon.inte
 
 @Controller('student/coupons')
 export class StudentCouponController {
-    constructor(@Inject(STUDENT_COUPON_SERVICE) private readonly studentCouponService:IStudentCouponService){}
+    constructor(@Inject(STUDENT_COUPON_SERVICE) private readonly _studentCouponService:IStudentCouponService){}
 
     @Get('available')
     async getAvailableCoupons(@Query('amount') amount:number){
-        return this.studentCouponService.getAvailableCoupons(amount)
+        return this._studentCouponService.getAvailableCoupons(amount)
     }
 
     @Post('validate')
@@ -16,6 +16,6 @@ export class StudentCouponController {
           @Body() data:{code:string; amount:number}
     ){
 
-        return this.studentCouponService.validateCoupon(data.code,data.amount)
+        return this._studentCouponService.validateCoupon(data.code,data.amount)
     }
 }

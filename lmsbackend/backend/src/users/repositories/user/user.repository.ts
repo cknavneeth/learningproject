@@ -37,7 +37,8 @@ export class UserRepository implements IUserRepository{
         languages?: string[],
         categories?: string[],
         page?: number,
-        limit?: number
+        limit?: number,
+        searchTerm?:string
     }):Promise<CourseResponse>{
  
 
@@ -68,6 +69,10 @@ export class UserRepository implements IUserRepository{
             query.category={$in:categoryIds}
         }
 
+        if(filters.searchTerm){
+            query.title={$regex:filters.searchTerm,$options:'i'}
+        }
+
 
         const page = filters.page || 1;
         const limit = filters.limit || 10;
@@ -79,6 +84,8 @@ export class UserRepository implements IUserRepository{
         // .populate('instructor', 'name profileImage')
         // .select('title description thumbnailUrl price duration level category instructor')
         // .exec();
+
+       
 
         // return allCourses
         const [courses, total] = await Promise.all([

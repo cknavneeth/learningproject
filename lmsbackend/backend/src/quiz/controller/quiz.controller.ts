@@ -10,7 +10,7 @@ export class QuizController {
     private logger=new Logger(QuizController.name)
 
     constructor(
-        @Inject(QUIZ_SERVICE) private readonly quizService:IQuizService,
+        @Inject(QUIZ_SERVICE) private readonly _quizService:IQuizService,
     ){}
 
 
@@ -18,7 +18,7 @@ export class QuizController {
     async generateQuiz(@Body() body:{topic:string}){
         console.log('topic',body.topic)
         try {
-            const result=await this.quizService.generateQuestions(body.topic)
+            const result=await this._quizService.generateQuestions(body.topic)
             return result
         } catch (error) {
             this.logger.log('error',error)
@@ -43,7 +43,7 @@ export class QuizController {
         const userId=req.user.userId
 
         this.logger.log(`Attempting to submit quiz with ID: ${body.quizId}, userId: ${userId}, topic: ${body.topic}`);
-        const result=await this.quizService.submitQuiz(
+        const result=await this._quizService.submitQuiz(
             body.quizId,
             userId,
             body.topic,
@@ -61,7 +61,7 @@ export class QuizController {
 
         try {
             const userId=req.user.userId
-            const result=await this.quizService.getQuizHistory(userId)
+            const result=await this._quizService.getQuizHistory(userId)
             return result
         } catch (error) {
             
@@ -74,7 +74,7 @@ export class QuizController {
     @Get('history')
     async loadQuiz(){
         try {
-            const result=await this.quizService.loadQuiz()
+            const result=await this._quizService.loadQuiz()
             return result
         } catch (error) {
             this.logger.log('error',error)
@@ -86,7 +86,7 @@ export class QuizController {
     @Delete(':quizId')
     async deleteQuiz(@Param('quizId') quizId:string){
         try {
-            const result=await this.quizService.deleteQuiz(quizId)
+            const result=await this._quizService.deleteQuiz(quizId)
             return {success:true,message:'Quiz deleted successfully'}
         } catch (error) {
             this.logger.error('Error deleting quiz',error)

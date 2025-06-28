@@ -155,17 +155,18 @@ export class MyaboutComponent implements OnInit {
     }
   },
   {
-    name: 'emiliana kathrinamma',
-    role: 'Lead Designer',
-    bio: 'UI/UX enthusiast committed to creating intuitive Learning interfaces.',
-    image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-    social: {
-      linkedin: 'https://linkedin.com',
-      twitter: null,
-      github: null,
-      dribbble: 'https://dribbble.com'
-    }
-  },
+  name: 'Sreya',
+  role: 'Chief of Strategic Partnership and Selling',
+  bio: 'Award-winning actor and business strategist focused on expanding educational outreach.',
+  image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+  social: {
+    linkedin: 'https://linkedin.com/in/mohanlal',
+    twitter: 'https://twitter.com/mohanlal',
+    github: null,
+    dribbble: null
+  }
+}
+
   ]
   ngOnInit(): void {
       

@@ -6,7 +6,7 @@ import { CERTIFICATE_SERVICE } from '../constants/constant';
 @Controller('certificate')
 export class CertificateController {
 
-    constructor(@Inject(CERTIFICATE_SERVICE) private readonly certificateService:ICertificateService){}
+    constructor(@Inject(CERTIFICATE_SERVICE) private readonly _certificateService:ICertificateService){}
 
     @Get()
     @UseGuards(GuardGuard)
@@ -16,7 +16,7 @@ export class CertificateController {
         @Query('limit') limit:number
     ){
         const userId=req.user.userId
-        return this.certificateService.getUserCertificates(userId,page,limit)
+        return this._certificateService.getUserCertificates(userId,page,limit)
     }
 
 
@@ -26,7 +26,7 @@ export class CertificateController {
         courseId:string
     }){
         const userId=req.user.userId
-        return this.certificateService.generateCertificate(userId,body.courseId,new Date())
+        return this._certificateService.generateCertificate(userId,body.courseId,new Date())
     }
 
 
@@ -34,6 +34,7 @@ export class CertificateController {
     @UseGuards(GuardGuard)
     async getCertificateById(@Req() req:any,@Param('certificateId') certificateId:string ){
         const userId=req.user.userId
-        return this.certificateService.getCertificateById(certificateId)
+        return this._certificateService.getCertificateById(certificateId)
     }
+    
 }

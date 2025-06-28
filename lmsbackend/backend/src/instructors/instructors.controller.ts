@@ -5,28 +5,28 @@ import { InstructorsService } from './instructors.service';
 @Controller('auth/instructor')
 export class InstructorsController {
 
-    constructor(private readonly instructorservice:InstructorsService){}
+    constructor(private readonly _instructorservice:InstructorsService){}
     
    @Get('profile')
    @UseGuards(GuardGuard)
    async getInstructorProfile(@Request() req){
     console.log('backendile request vannating')
       const instructorId=req.user.InstructorId
-      return this.instructorservice.getProfile(instructorId)
+      return this._instructorservice.getProfile(instructorId)
    }
 
    @Put('profile')
    @UseGuards(GuardGuard)
    async updateInstructorProfile(@Request() req,@Body() profileData:{username:string,phone?:string,bio?:string}){
     const instructorId=req.user.InstructorId
-    return this.instructorservice.updateProfile(instructorId,profileData)
+    return this._instructorservice.updateProfile(instructorId,profileData)
    }
 
    @Put('changepassword')
    @UseGuards(GuardGuard)
    async updateInstructorPassword(@Request() req,@Body() passwordData:{currentPassword:string,newPassword:string}){
     const instructorId=req.user.InstructorId
-    return this.instructorservice.resetPassword(instructorId,passwordData)
+    return this._instructorservice.resetPassword(instructorId,passwordData)
    }
 
 
@@ -35,7 +35,7 @@ export class InstructorsController {
    async reapplyAsInstructor(@Req() req:any){
       console.log('reapply request received')
       const instructorId=req.user.InstructorId
-      return this.instructorservice.reapplyAsInstructor(instructorId)
+      return this._instructorservice.reapplyAsInstructor(instructorId)
    }
 
 
@@ -44,7 +44,7 @@ export class InstructorsController {
    @UseGuards(GuardGuard)
    async getDashboardStats(@Request() req){
     const instructorId=req.user.InstructorId
-    return this.instructorservice.getDashboardStats(instructorId)
+    return this._instructorservice.getDashboardStats(instructorId)
    }
 
 }

@@ -5,14 +5,14 @@ import { GuardGuard } from 'src/authentication/guard/guard.guard';
 @Controller('auth/student/cart')
 export class CartController {
 
-    constructor(private readonly cartService:CartService){}
+    constructor(private readonly _cartService:CartService){}
 
     @Get()
     @UseGuards(GuardGuard)
     async getCart(@Request() req){
         try {
             const userId=req.user.userId
-            const cart=await this.cartService.getCart(userId)
+            const cart=await this._cartService.getCart(userId)
             return cart
         } catch (error) {
             
@@ -31,7 +31,7 @@ export class CartController {
         });
         try {
             const userId=req.user.userId
-            const cart=await this.cartService.addToCart(userId,body.courseId)
+            const cart=await this._cartService.addToCart(userId,body.courseId)
             return cart
         } catch (error) {
             console.log('failed to add in cart')
@@ -51,7 +51,7 @@ export class CartController {
     async removeFromCart(@Request() req,@Body() body:{courseId:string}){
         try {
             const userId=req.user.userId
-            const cart=await this.cartService.removeFromCart(userId,body.courseId)
+            const cart=await this._cartService.removeFromCart(userId,body.courseId)
             return cart
         } catch (error) {
             console.log('failed to remove from cart')
@@ -65,7 +65,7 @@ export class CartController {
     async clearCart(@Request() req){
         try {
             const userId=req.user.userId
-            const cart=await this.cartService.clearCart(userId)
+            const cart=await this._cartService.clearCart(userId)
             if(!cart){
                 throw new NotFoundException('Cart not found')
             }

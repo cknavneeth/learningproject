@@ -109,6 +109,11 @@ export class StudentcourseComponent implements OnInit{
       params.categories = this.filters.categories.join(',');
       console.log('Setting categories param:', params.categories);
     }
+
+
+    if(this.searchTerm){
+           params.searchTerm=this.searchTerm
+    }
     
     console.log('Final params being sent to API:', params);
     
@@ -143,18 +148,18 @@ export class StudentcourseComponent implements OnInit{
 
 
   //gonna have search
-  onSearch(){
-    if(!this.searchTerm.trim()){
-      this.filteredCourses=[...this.courses]
-      return
-    }
-    const searchTermLower=this.searchTerm.toLowerCase()
-    this.filteredCourses=this.courses.filter(course=>{
-      return  course.title.toLowerCase().includes(searchTermLower)||
-      course.instructor?.name.toLowerCase().includes(searchTermLower)||
-      course.category.toLowerCase().includes(searchTermLower)
-    })
-  }
+  // onSearch(){
+  //   if(!this.searchTerm.trim()){
+  //     this.filteredCourses=[...this.courses]
+  //     return
+  //   }
+  //   const searchTermLower=this.searchTerm.toLowerCase()
+  //   this.filteredCourses=this.courses.filter(course=>{
+  //     return  course.title.toLowerCase().includes(searchTermLower)||
+  //     course.instructor?.name.toLowerCase().includes(searchTermLower)||
+  //     course.category.toLowerCase().includes(searchTermLower)
+  //   })
+  // }
 
 
   enrollCourse(courseId:string){
@@ -315,6 +320,16 @@ onCategoryChange(event: any) {
       ...(hasHalfStar ? [0.5] : []),
       ...Array(emptyStars).fill(0)
     ];
+  }
+
+
+  onSearch(){
+     if(!this.searchTerm){
+       this.filteredCourses=[...this.courses]
+       return 
+     }
+     this.currentPage=1
+     this.loadCourses()
   }
 
 

@@ -17,11 +17,11 @@ export class CertificateService implements ICertificateService{
 
 
     constructor(
-        @Inject(CERTIFICATE_REPOSITORY) private readonly certificateRepository:ICertificateRepository,
-        private readonly cloudinaryService:CloudinaryService,
-        private readonly courseRepository:CourseRepository,
-        private readonly userRepository:UserRepository,
-        private readonly instructorRepository:InstructorRepository
+        @Inject(CERTIFICATE_REPOSITORY) private readonly _certificateRepository:ICertificateRepository,
+        private readonly _cloudinaryService:CloudinaryService,
+        private readonly _courseRepository:CourseRepository,
+        private readonly _userRepository:UserRepository,
+        private readonly _instructorRepository:InstructorRepository
     ){}
 
 
@@ -245,26 +245,26 @@ export class CertificateService implements ICertificateService{
         const courseObjectId=new Types.ObjectId(courseId)
         
         //check if certificate already exists
-        const existingCertificate=await this.certificateRepository.findByUserAndCourse(userId,courseObjectId)
+        const existingCertificate=await this._certificateRepository.findByUserAndCourse(userId,courseObjectId)
 
         if(existingCertificate){
             return existingCertificate
         }
 
         //fetching course and user details for showingg in certificate
-        const course=await this.courseRepository.findById(courseId)
+        const course=await this._courseRepository.findById(courseId)
         if(!course){
             throw new Error('Course not found')
         }
 
-        const user=await this.userRepository.findById(userId.toString())
+        const user=await this._userRepository.findById(userId.toString())
 
         if(!user){
             throw new NotFoundException('User not found')
         }
 
         //finding instructor for certificate
-        const instructor=await this.instructorRepository.findById(course.instructor.toString())
+        const instructor=await this._instructorRepository.findById(course.instructor.toString())
 
         if(!instructor){
             throw new NotFoundException('Instructor not found')
@@ -291,11 +291,11 @@ export class CertificateService implements ICertificateService{
         };
 
 
-        const certificateUrl=await this.cloudinaryService.UploadedFile(file)
+        const certificateUrl=await this._cloudinaryService.UploadedFile(file)
 
         
 
-        return this.certificateRepository.create({
+        return this._certificateRepository.create({
             userId,
             courseId:courseObjectId,
             courseName:course.title,
@@ -317,7 +317,7 @@ export class CertificateService implements ICertificateService{
         }
     }>{
 
-        const  result=await this.certificateRepository.findByUser(userId,page,limit)
+        const  result=await this._certificateRepository.findByUser(userId,page,limit)
 
         return {
             certificates:result.certificates,
@@ -333,7 +333,7 @@ export class CertificateService implements ICertificateService{
 
 
     async getCertificateById(id:string):Promise<Certificate>{
-        const certificate=await this.certificateRepository.findById(id)
+        const certificate=await this._certificateRepository.findById(id)
 
         if(!certificate){
             throw new NotFoundException('Certificate not found')

@@ -3,7 +3,7 @@ import { TopInstructor, TopSellingCourse } from "src/common/interfaces/dashboard
 import { CourseDocument } from "src/instructors/courses/course.schema";
 import { Payment, PaymentDocument } from "src/payment/schema/payment.schema";
 
-interface AggregatedSale {
+export interface AggregatedSale {
     _id: Types.ObjectId;
     orderId: string;
     status: string;

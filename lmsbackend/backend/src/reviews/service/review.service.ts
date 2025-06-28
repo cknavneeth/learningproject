@@ -14,13 +14,13 @@ export class ReviewService implements IReviewService{
 
     private readonly logger=new Logger(ReviewService.name)
 
-    constructor(@Inject(REVIEW_REPOSITORY) private readonly reviewRepository:IReviewRepository,
+    constructor(@Inject(REVIEW_REPOSITORY) private readonly _reviewRepository:IReviewRepository,
     @InjectModel(CourseProgress.name) private progressModel:Model<CourseProgressDocument>
 ){}
 
     async createReview(userId:string,courseId:string,createReviewDto):Promise<Review>{
 
-          const existingReview=await this.reviewRepository.findByUserAndCourse(userId,courseId)
+          const existingReview=await this._reviewRepository.findByUserAndCourse(userId,courseId)
           if(existingReview){
             throw new Error('User has already reviewed this course')
           }
@@ -31,7 +31,7 @@ export class ReviewService implements IReviewService{
             
           )
 
-          return this.reviewRepository.create({
+          return this._reviewRepository.create({
             userId,
             courseId,
             ...createReviewDto
@@ -40,7 +40,7 @@ export class ReviewService implements IReviewService{
 
 
     async getReviewsByCourse(courseId:string):Promise<Review[]>{
-       const reviews=await this.reviewRepository.findByCourse(courseId)
+       const reviews=await this._reviewRepository.findByCourse(courseId)
 
        return reviews.map(review => {
         const reviewObj = review as any;  
@@ -65,7 +65,7 @@ export class ReviewService implements IReviewService{
 
 
     async updateReview(reviewId:string,userId:string,updateReviewDto:UpdateReviewDto):Promise<Review|null>{
-        const review=await this.reviewRepository.findById(reviewId)
+        const review=await this._reviewRepository.findById(reviewId)
 
         if(!review){
             throw new Error('Review not found')
@@ -75,7 +75,7 @@ export class ReviewService implements IReviewService{
             throw new UnauthorizedException('You can only edit your own review')
         }
 
-        return this.reviewRepository.update(reviewId,{
+        return this._reviewRepository.update(reviewId,{
             ...updateReviewDto,
             isEdited:true
         })
@@ -83,21 +83,21 @@ export class ReviewService implements IReviewService{
 
 
     async deleteReview(reviewId:string,userId:string):Promise<Review|null>{
-        const review =await this.reviewRepository.findById(reviewId)
+        const review =await this._reviewRepository.findById(reviewId)
         if(!review){
             throw new Error('Review not found')
         }
         if(review.userId.toString()!==userId){
             throw new UnauthorizedException('You can only delete your own review')
         }
-        return this.reviewRepository.delete(reviewId,userId)
+        return this._reviewRepository.delete(reviewId,userId)
     }
 
 
 
     async getUserReviewForCourse(courseId: string, userId: string): Promise<Review | null> {
         try {
-            const review=await this.reviewRepository.findUserReviewForCourse(courseId,userId)
+            const review=await this._reviewRepository.findUserReviewForCourse(courseId,userId)
             if(!review){
                 return null
             }
@@ -113,12 +113,12 @@ export class ReviewService implements IReviewService{
 
     async addInstructorReply(reviewId:string,instructorId:string,replyDto:InstructorReplyDto):Promise<Review|null>{
         try {
-            const review=await this.reviewRepository.findById(reviewId)
+            const review=await this._reviewRepository.findById(reviewId)
             if(!review){
                 throw new NotFoundException('Review not found')
             }
 
-            return this.reviewRepository.addInstructorReply(reviewId,replyDto.instructorReply)
+            return this._reviewRepository.addInstructorReply(reviewId,replyDto.instructorReply)
         } catch (error) {
              this.logger.error(`Error adding instructor reply: ${error.message}`);
              if (error instanceof NotFoundException) {

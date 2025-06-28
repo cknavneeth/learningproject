@@ -12,7 +12,7 @@ import { Role } from 'src/common/enums/role.enum';
 
 @Controller('auth/student/learning')
 export class MylearningController {
-    constructor(@Inject(MYLEARNING_SERVICE) private readonly mylearningService:IMyLearningService){}
+    constructor(@Inject(MYLEARNING_SERVICE) private readonly _mylearningService:IMyLearningService){}
 
 
     @Get()
@@ -25,7 +25,7 @@ export class MylearningController {
     ){
         console.log('enroll ayath kittm chelpo')
         const userId=req.user.userId
-        return this.mylearningService.getEnrolledCourses(userId,page,limit)
+        return this._mylearningService.getEnrolledCourses(userId,page,limit)
     }
 
     @Get('course/:courseId')
@@ -50,7 +50,7 @@ export class MylearningController {
             throw new UnauthorizedException('User not authenticated');
         }
 
-        return this.mylearningService.getCourseDetails(userId, courseId);
+        return this._mylearningService.getCourseDetails(userId, courseId);
     }
 
 
@@ -76,7 +76,7 @@ export class MylearningController {
         console.log('type veno',typeof updateProgressDto.sectionId)
 
         const userId=req.user.userId
-         const result=await this.mylearningService.updateProgress(userId,courseId,updateProgressDto.sectionId,updateProgressDto.progress)
+         const result=await this._mylearningService.updateProgress(userId,courseId,updateProgressDto.sectionId,updateProgressDto.progress)
          console.log('result ahneyyy',result)
          return result
     }
@@ -91,7 +91,7 @@ export class MylearningController {
         @Res() res
     ) {
         const userId = req.user.userId;
-        const resourceInfo = await this.mylearningService.downloadResource(userId, courseId, resourceId);
+        const resourceInfo = await this._mylearningService.downloadResource(userId, courseId, resourceId);
         
         // Fetch the file from Cloudinary
         const response = await fetch(resourceInfo.fileUrl);
@@ -119,6 +119,6 @@ async getCourseProgress(
     @Param('courseId') courseId: string
 ) {
     const userId = req.user.userId;
-    return this.mylearningService.getCourseProgress(userId, courseId);
+    return this._mylearningService.getCourseProgress(userId, courseId);
 }
 }

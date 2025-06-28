@@ -140,7 +140,8 @@ export class UsersService {
     languages?: string[],
     categories?: string[],
     page?: number,
-    limit?: number
+    limit?: number,
+    searchTerm?:string
    }):Promise<CourseResponse>{
     return await this.userRepository.getAllPublishedCourses(filters)
    }

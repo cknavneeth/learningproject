@@ -101,6 +101,7 @@ export class AppModule implements NestModule{
         '/auth/student/verifyotp',
         '/auth/student/forgotpassword',
         '/auth/student/resetpassword/:token',
+        '/auth/student/google',
 
         '/auth/instructor/inslogin',
         '/auth/instructor/instructorRegister',
@@ -120,6 +121,7 @@ export class AppModule implements NestModule{
            '/auth/student/sendotp',
            '/auth/student/verifyotp',
            '/auth/student/refreshtoken',
+           '/auth/student/google',
 
           
            '/auth/instructor/inslogin',

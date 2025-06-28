@@ -12,8 +12,10 @@ export class AdminService {
     constructor(@InjectModel(admin.name) private adminmodel:Model<admindocument>,
     @InjectModel(user.name) private usermodel:Model<userDocument>,
     @InjectModel(instructor.name) private instructorModel:Model<instructorDocument>,
-    private readonly adminRepository:AdminRepository,
-    private readonly emailService:EmailService
+
+    private readonly _adminRepository:AdminRepository,
+
+    private readonly _emailService:EmailService
  ){}
 
     async findbyEmail(email:string){
@@ -107,7 +109,7 @@ export class AdminService {
 
     async getAllCourses(page:number=1,limit:number=10){
         // return this.adminRepository.getAllCourses()
-        const {courses,total}=await this.adminRepository.getAllCourses(page,limit)
+        const {courses,total}=await this._adminRepository.getAllCourses(page,limit)
 
         return {
             courses,
@@ -122,7 +124,7 @@ export class AdminService {
 
     async updateCourseStatus(courseId:string,isApproved:boolean,feedback?:string){
         console.log('ingot ethiyo')
-        const course=await this.adminRepository.updateCourseStatus(courseId,isApproved,feedback)
+        const course=await this._adminRepository.updateCourseStatus(courseId,isApproved,feedback)
 
         if(!course){
             throw new NotFoundException('Failed to update course')
@@ -133,10 +135,10 @@ export class AdminService {
 
         console.log('Course details:', { instructorEmail, courseName, isApproved });
         if (isApproved) {
-            await this.emailService.sendCourseApprovalEmail(instructorEmail, courseName);
+            await this._emailService.sendCourseApprovalEmail(instructorEmail, courseName);
         } else {
             console.log('hmmmr reject aay')
-            await this.emailService.sendCourseRejectionEmail(instructorEmail, courseName, feedback||'No feedback provided');
+            await this._emailService.sendCourseRejectionEmail(instructorEmail, courseName, feedback||'No feedback provided');
         }
 
         return course;
@@ -144,7 +146,7 @@ export class AdminService {
 
 
     async addCourseOffer(courseId:string,offerData:{percentage:number;discountPrice:number}){
-        const course=await this.adminRepository.getCourseById(courseId)
+        const course=await this._adminRepository.getCourseById(courseId)
 
         if(!course){
             throw new NotFoundException('Course not found')
@@ -164,7 +166,7 @@ export class AdminService {
             throw new BadRequestException('invalid discounted price calculation')
         }
 
-        const updatedCourse=await this.adminRepository.addCourseOffer(courseId,offerData)
+        const updatedCourse=await this._adminRepository.addCourseOffer(courseId,offerData)
         console.log(updatedCourse)
         if(!updatedCourse){
             throw new BadRequestException('failded to add course')
@@ -178,7 +180,7 @@ export class AdminService {
         }
 
     try {
-        await this.emailService.sendCourseOfferNotification(
+        await this._emailService.sendCourseOfferNotification(
             instructorEmail,
             updatedCourse.title,
             offerData.percentage
@@ -196,7 +198,7 @@ export class AdminService {
 
 
     async removeCourseOffer(courseId:string){
-        const course=await this.adminRepository.getCourseById(courseId)
+        const course=await this._adminRepository.getCourseById(courseId)
 
         if(!course){
             throw new NotFoundException('Course Not found')
@@ -206,7 +208,7 @@ export class AdminService {
             throw new BadRequestException('No offer exists for this course')
         }
 
-        const updatedCourse=await this.adminRepository.removeCourseOffer(courseId)
+        const updatedCourse=await this._adminRepository.removeCourseOffer(courseId)
 
         if(!updatedCourse){
             throw new BadRequestException('Failed to remove offer')
@@ -216,7 +218,7 @@ export class AdminService {
 
         if(instructor?.emailaddress){
             try {
-                await this.emailService.sendCourseRemovalNotification(instructor.emailaddress,updatedCourse.title)
+                await this._emailService.sendCourseRemovalNotification(instructor.emailaddress,updatedCourse.title)
             } catch (error) {
                 console.error('error sending email notification',error)
             }
@@ -229,7 +231,7 @@ export class AdminService {
 
     //for getting sales history
     async getSalesHistory(page:number=1,limit:number=10){
-        const {sales,total}=await this.adminRepository.getSalesHistory(page,limit)
+        const {sales,total}=await this._adminRepository.getSalesHistory(page,limit)
 
         const formattedSales=sales.map(sale=>({
             _id: sale._id ,
@@ -260,7 +262,7 @@ export class AdminService {
 
     async approveRefund(orderId:string,courseId:string){
         console.log('Processing refund in service')
-        const payment=await this.adminRepository.getOrderById(orderId)
+        const payment=await this._adminRepository.getOrderById(orderId)
 
         console.log('found payment',payment)
 
@@ -299,7 +301,7 @@ export class AdminService {
             refundAmount
         });
 
-        const updatedPayment=await this.adminRepository.updateOrderStatus(orderId,courseId,'cancelled')
+        const updatedPayment=await this._adminRepository.updateOrderStatus(orderId,courseId,'cancelled')
 
         if(!updatedPayment){
             throw new BadRequestException('Failed to update order')
@@ -327,7 +329,7 @@ export class AdminService {
         await student.save()
 
         try {
-            await this.emailService.sendRefundApprovalEmail(
+            await this._emailService.sendRefundApprovalEmail(
                 (payment.userId as any).email,
                 orderId,
                 [(courseToRefund.courseId as any).title],
@@ -353,7 +355,7 @@ export class AdminService {
 
     //get dashboard stats from service
     async getDashboardStats(){
-        return this.adminRepository.getDashboardStats()
+        return this._adminRepository.getDashboardStats()
     }
 
 

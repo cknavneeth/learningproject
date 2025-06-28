@@ -7,13 +7,13 @@ import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@n
 
 @Injectable()
 export class MylearningService implements IMyLearningService{
-    constructor(@Inject(MYLEARNING_REPOSITORY) private readonly mylearningRepository:IMyLearningRepository){}
+    constructor(@Inject(MYLEARNING_REPOSITORY) private readonly _mylearningRepository:IMyLearningRepository){}
 
     async getEnrolledCourses(userId:string,page:number,limit:number){
         console.log('service ethi ,ini kitto')
         const skip=(page-1)*limit
 
-        const {courses,total}=await this.mylearningRepository.findEnrolledCourses(userId,skip,limit)
+        const {courses,total}=await this._mylearningRepository.findEnrolledCourses(userId,skip,limit)
 
         return {
             courses,
@@ -28,14 +28,14 @@ export class MylearningService implements IMyLearningService{
 
 
     async getCourseDetails(userId:string,courseId:string){
-        const isEnrolled=await this.mylearningRepository.isEnrolled(userId,courseId)
+        const isEnrolled=await this._mylearningRepository.isEnrolled(userId,courseId)
 
         if(!isEnrolled){
             console.log('why this happnes',isEnrolled)
             throw new UnauthorizedException('You are not enrolled in this course')
         }
 
-        const course=await this.mylearningRepository.findCourseById(courseId)
+        const course=await this._mylearningRepository.findCourseById(courseId)
 
         if(!course){
             throw new NotFoundException('Course not found')
@@ -53,20 +53,20 @@ export class MylearningService implements IMyLearningService{
 
 
     async getProgress(userId:string,courseId:string):Promise<CourseProgress>{
-        let progress=await this.mylearningRepository.findProgress(userId,courseId)
+        let progress=await this._mylearningRepository.findProgress(userId,courseId)
         if(!progress){
-            progress=await this.mylearningRepository.createProgress(userId,courseId)
+            progress=await this._mylearningRepository.createProgress(userId,courseId)
         }
         return progress
     }
 
 
     async updateProgress(userId:string,courseId:string,sectionId:string,progress:number):Promise<CourseProgress>{
-         const isEnrolled=await this.mylearningRepository.isEnrolled(userId,courseId)
+         const isEnrolled=await this._mylearningRepository.isEnrolled(userId,courseId)
          if(!isEnrolled){
             throw new UnauthorizedException('ERROR_MESSAGES.NOT_ENROLLED')
          }
-         return this.mylearningRepository.updateProgress(userId,courseId,{
+         return this._mylearningRepository.updateProgress(userId,courseId,{
             sectionId,
             progress
          })
@@ -75,13 +75,13 @@ export class MylearningService implements IMyLearningService{
     
 
     async downloadResource(userId: string, courseId: string, resourceId: string): Promise<{fileUrl: string, fileName: string, contentType: string}> {
-        const isEnrolled = await this.mylearningRepository.isEnrolled(userId, courseId);
+        const isEnrolled = await this._mylearningRepository.isEnrolled(userId, courseId);
         if (!isEnrolled) {
             console.log('why this happnes while download ', isEnrolled);
             throw new UnauthorizedException('ERROR_MESSAGES.NOT_ENROLLED');
         }
 
-        const course = await this.mylearningRepository.findCourseById(courseId);
+        const course = await this._mylearningRepository.findCourseById(courseId);
         if (!course) {
             throw new NotFoundException(ERROR_MESSAGES.COURSE_NOT_FOUND);
         }
@@ -118,14 +118,14 @@ export class MylearningService implements IMyLearningService{
 
 
     async getCourseProgress(userId:string,courseId:string):Promise<CourseProgress>{
-        const isEnrolled=await this.mylearningRepository.isEnrolled(userId,courseId)
+        const isEnrolled=await this._mylearningRepository.isEnrolled(userId,courseId)
 
         if(!isEnrolled){
             throw new UnauthorizedException('ERROR_MESSAGES.NOT_ENROLLED');       
          }
-         let progress = await this.mylearningRepository.getCourseProgress(userId, courseId);
+         let progress = await this._mylearningRepository.getCourseProgress(userId, courseId);
          if (!progress) {
-             progress = await this.mylearningRepository.createProgress(userId, courseId);
+             progress = await this._mylearningRepository.createProgress(userId, courseId);
          }
          return progress;
     }

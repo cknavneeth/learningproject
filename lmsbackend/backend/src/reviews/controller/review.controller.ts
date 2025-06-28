@@ -9,7 +9,7 @@ import { InstructorReplyDto } from '../Dto/instructor-reply.dto';
 @Controller('review')
 export class ReviewController {
     constructor(
-        @Inject(REVIEW_SERVICE) private readonly reviewService:IReviewService
+        @Inject(REVIEW_SERVICE) private readonly _reviewService:IReviewService
     ){}
 
     @Post('course/:courseId')
@@ -20,13 +20,13 @@ export class ReviewController {
         @Body() createReviewDto:CreateReviewDto
      ){
         const userId=req.user.userId
-        const result=await this.reviewService.createReview(userId,courseId,createReviewDto)
+        const result=await this._reviewService.createReview(userId,courseId,createReviewDto)
     }
 
 
     @Get('course/:courseId')
     async getReviewsByCourse(@Param('courseId') courseId:string){
-          return this.reviewService.getReviewsByCourse(courseId)
+          return this._reviewService.getReviewsByCourse(courseId)
     }
 
 
@@ -39,7 +39,7 @@ export class ReviewController {
     ){
 
         const userId=req.user.userId
-        return this.reviewService.updateReview(reviewId,userId,updateReviewDto)
+        return this._reviewService.updateReview(reviewId,userId,updateReviewDto)
 
     }
 
@@ -52,7 +52,7 @@ export class ReviewController {
         @Param('reviewId') reviewId:string
     ){
         const userId=req.user.userId
-        return this.reviewService.deleteReview(reviewId,userId)
+        return this._reviewService.deleteReview(reviewId,userId)
     }
 
 
@@ -63,7 +63,7 @@ export class ReviewController {
         @Req() req
     ){
         const userId=req.user.userId
-        return this.reviewService.getUserReviewForCourse(courseId,userId)
+        return this._reviewService.getUserReviewForCourse(courseId,userId)
     }
 
 
@@ -75,7 +75,7 @@ export class ReviewController {
         @Body() replyDto:InstructorReplyDto
     ){
         const instructorId=req.user.InstructorId
-        return this.reviewService.addInstructorReply(reviewId,instructorId,replyDto)
+        return this._reviewService.addInstructorReply(reviewId,instructorId,replyDto)
     }
 }
 

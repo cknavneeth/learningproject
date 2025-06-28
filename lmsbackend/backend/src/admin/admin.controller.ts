@@ -9,33 +9,33 @@ import { Role } from 'src/common/enums/role.enum';
 
 @Controller('auth/admin')
 export class AdminController {
-    constructor(private readonly adminservice:AdminService){}
+    constructor(private readonly _adminService:AdminService){}
 
     @Get('students')
     async fetchallstudents(){
-        return this.adminservice.fetchallstudents()
+        return this._adminService.fetchallstudents()
     }
 
     @Patch('toggleblock/:studentId')
     async toggleBlockStatus(@Param('studentId') studentId:string){
         console.log('jijo shibu',studentId)
-        return this.adminservice.toggleBlockStatus(studentId)
+        return this._adminService.toggleBlockStatus(studentId)
     }
 
     @Get('/instructors')
     async fetchallinstructors(){
-        return this.adminservice.fetchallinstructors()
+        return this._adminService.fetchallinstructors()
     }
 
     @Patch('blockinstructor/:instructorId')
     async toggleblockInstructor(@Param('instructorId') instructorId:string){
-        return this.adminservice.blockstatus(instructorId)
+        return this._adminService.blockstatus(instructorId)
     }
 
 
     @Patch('verifyinstructor/:instructorId')
     async verifyinstructor(@Param('instructorId') instructorId:string,@Body() body:{isApproved:boolean,feedback?:string}){
-          return this.adminservice.verifyinstructor(instructorId,body.isApproved,body.feedback)
+          return this._adminService.verifyinstructor(instructorId,body.isApproved,body.feedback)
     }
 
 
@@ -45,7 +45,7 @@ export class AdminController {
         @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number)
     {
         try {
-            const courses=await this.adminservice.getAllCourses(page,limit)
+            const courses=await this._adminService.getAllCourses(page,limit)
             return courses
         } catch (error) {
             console.error('Controller error',error)
@@ -57,7 +57,7 @@ export class AdminController {
     @Patch('courses/:courseId/approve')
     async approveCourse(@Param('courseId') courseId:string){
         try {
-            return await this.adminservice.updateCourseStatus(courseId,true)
+            return await this._adminService.updateCourseStatus(courseId,true)
         } catch (error) {
             if(error instanceof NotFoundException){
                 throw error
@@ -76,7 +76,7 @@ export class AdminController {
         if (!body.feedback) {
             throw new BadRequestException('Feedback is required when rejecting a course');
         }
-            const result= await this.adminservice.updateCourseStatus(courseId,false,body.feedback)
+            const result= await this._adminService.updateCourseStatus(courseId,false,body.feedback)
             return result
         } catch (error) {
             console.log('error while rejecting')
@@ -96,7 +96,7 @@ export class AdminController {
     ){
 
         try {
-            return await this.adminservice.addCourseOffer(courseId,offerData)
+            return await this._adminService.addCourseOffer(courseId,offerData)
         } catch (error) {
             if(error instanceof NotFoundException){
                 throw error
@@ -109,7 +109,7 @@ export class AdminController {
     @Delete('courses/:courseId/offer')
     async removeCourseOffer(@Param('courseId') courseId:string){
          try {
-            return await this.adminservice.removeCourseOffer(courseId)
+            return await this._adminService.removeCourseOffer(courseId)
          } catch (error) {
             if(error instanceof NotFoundException){
                     throw error
@@ -125,7 +125,7 @@ export class AdminController {
         @Query('page',new DefaultValuePipe(1),ParseIntPipe) page:number,
         @Query('limit',new DefaultValuePipe(10),ParseIntPipe) limit:number
     ){
-        const salesreport=await this.adminservice.getSalesHistory(page,limit)
+        const salesreport=await this._adminService.getSalesHistory(page,limit)
         return salesreport
     }
 
@@ -136,7 +136,7 @@ export class AdminController {
         @Param('courseId') courseId:string,
     ){
         try {
-            const result= await this.adminservice.approveRefund(orderId,courseId)
+            const result= await this._adminService.approveRefund(orderId,courseId)
             return result
         } catch (error) {
             if(error instanceof NotFoundException){
@@ -152,7 +152,7 @@ export class AdminController {
     @Get('dashboard/stats')
     @Roles(Role.ADMIN)
     async getDashboardStats(){
-        return this.adminservice.getDashboardStats()
+        return this._adminService.getDashboardStats()
     }
 
 

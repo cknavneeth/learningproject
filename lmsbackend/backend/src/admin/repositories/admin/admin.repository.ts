@@ -2,37 +2,37 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 import { Course, CourseDocument, CourseStatus } from 'src/instructors/courses/course.schema';
-import { IAdminRepository } from '../admin.repository.interface';
+import { AggregatedSale, IAdminRepository } from '../admin.repository.interface';
 import { Payment, PaymentDocument } from 'src/payment/schema/payment.schema';
 import { user, userDocument } from 'src/users/users.schema';
 import { instructor, instructorDocument } from 'src/instructors/instructor.schema';
 
 
-interface AggregatedSale {
-    _id: Types.ObjectId;
-    orderId: string;
-    status: string;
-    amount: number;
-    createdAt:Date
-    purchaseDate: Date;
-    coursesDetails: {
-        courseId: Types.ObjectId;
-        amount: number;
-        status: string;
-        cancellationReason?: string;
-        cancellationDate?: Date;
-        cancellationStatus?: string;
-    }[];
-    student: {
-        username: string;
-        email: string;
-    };
-}
+// interface AggregatedSale {
+//     _id: Types.ObjectId;
+//     orderId: string;
+//     status: string;
+//     amount: number;
+//     createdAt:Date
+//     purchaseDate: Date;
+//     coursesDetails: {
+//         courseId: Types.ObjectId;
+//         amount: number;
+//         status: string;
+//         cancellationReason?: string;
+//         cancellationDate?: Date;
+//         cancellationStatus?: string;
+//     }[];
+//     student: {
+//         username: string;
+//         email: string;
+//     };
+// }
 
 @Injectable()
 export class AdminRepository implements IAdminRepository{
 
-    constructor(@InjectModel(Course.name) private courseModel:Model<CourseDocument>, 
+    constructor(@InjectModel(Course.name) private _courseModel:Model<CourseDocument>, 
                 @InjectModel(Payment.name) private paymentModel:Model<PaymentDocument>,
                 @InjectModel(user.name) private userModel:Model<userDocument>,
                 @InjectModel(instructor.name) private instructorModel:Model<instructorDocument>
@@ -42,13 +42,13 @@ export class AdminRepository implements IAdminRepository{
         const skip=(page-1)*limit
 
         const [courses,total]=await Promise.all([
-            this.courseModel.find()
+            this._courseModel.find()
             .populate('instructor','name email isApproved')
             .sort({createdAt:-1})
             .skip(skip)
             .limit(limit)
             .exec(),
-            this.courseModel.countDocuments().exec()
+            this._courseModel.countDocuments().exec()
         ])
         return { courses, total };
     }
@@ -58,7 +58,7 @@ export class AdminRepository implements IAdminRepository{
             throw new NotFoundException('invalid course id')
         }
 
-        const course=await this.courseModel.findById(courseId)
+        const course=await this._courseModel.findById(courseId)
         if(!course){
             throw new NotFoundException('course not found')
         }
@@ -77,7 +77,7 @@ export class AdminRepository implements IAdminRepository{
             updates.rejectedAt=new Date()
         }
 
-        const updateCourse=await this.courseModel.findByIdAndUpdate(courseId,{$set:updates},{new:true}).populate('instructor').exec()
+        const updateCourse=await this._courseModel.findByIdAndUpdate(courseId,{$set:updates},{new:true}).populate('instructor').exec()
 
         if(!updateCourse){
             throw new NotFoundException('Failed to update course')
@@ -93,7 +93,7 @@ export class AdminRepository implements IAdminRepository{
             throw new BadRequestException('Invalid course id')
           }
 
-          return this.courseModel.findByIdAndUpdate(
+          return this._courseModel.findByIdAndUpdate(
             courseId,
             {
                 $set:{
@@ -115,7 +115,7 @@ export class AdminRepository implements IAdminRepository{
             throw new BadRequestException('invalid course id')
         }
 
-        const course=await this.courseModel.findById(courseId)
+        const course=await this._courseModel.findById(courseId)
 
         if(!course){
             throw new NotFoundException('Course not found')
@@ -131,7 +131,7 @@ export class AdminRepository implements IAdminRepository{
             throw new BadRequestException('invalid course id')
         }
 
-        return this.courseModel.findByIdAndUpdate(
+        return this._courseModel.findByIdAndUpdate(
             courseId,
             {
                 $unset:{offer:''}
@@ -321,7 +321,7 @@ export class AdminRepository implements IAdminRepository{
         const [totalStudents,totalInstructors,totalCourses]=await Promise.all([
             this.userModel.countDocuments(),
             this.instructorModel.countDocuments(),
-            this.courseModel.countDocuments()
+            this._courseModel.countDocuments()
         ])
 
 

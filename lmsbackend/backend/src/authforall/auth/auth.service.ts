@@ -272,6 +272,7 @@ export class AuthService {
 
    //for google authentication
    async handleGoogleSignIn(credential:string,res:Response){
+    this.logger.log('handling google sign in for you')
     try{
        const ticket=await this.googleClient.verifyIdToken({
         idToken:credential,

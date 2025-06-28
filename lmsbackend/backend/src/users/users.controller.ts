@@ -42,10 +42,11 @@ export class UsersController {
    async getAllCourses(
     @Query('minPrice',new DefaultValuePipe(0),ParseIntPipe) minPrice?:number,
     @Query('maxPrice', new DefaultValuePipe(1000000), ParseIntPipe) maxPrice?: number,
+
+    @Query('searchTerm') searchTerm?:string,
+
         @Query('languages') languages?: string,
-
         @Query('categories') categories?: string,
-
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number
    ){
@@ -60,7 +61,8 @@ export class UsersController {
             languages: languages ? languages.split(',') : undefined,
             categories: categories ? categories.split(',') : undefined,
             page,
-            limit
+            limit,
+            searchTerm
           };
 
           this.logger.log('filteing all courses',filters)

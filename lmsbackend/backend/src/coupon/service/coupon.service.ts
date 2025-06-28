@@ -11,18 +11,18 @@ import { COUPON_REPOSITORY } from '../constants/constant';
 @Injectable()
 export class CouponService implements ICouponService {
 
-    constructor (@Inject(COUPON_REPOSITORY) private readonly couponRepository:ICouponRepository){}
+    constructor (@Inject(COUPON_REPOSITORY) private readonly _couponRepository:ICouponRepository){}
 
     async createCoupon(createCouponDto:CreateCouponDto):Promise<Coupon>{
-        const existingCoupon=await this.couponRepository.findByCode(createCouponDto.code)
+        const existingCoupon=await this._couponRepository.findByCode(createCouponDto.code)
         if(existingCoupon){
             throw new ConflictException('Coupon code already exists')
         }
-        return this.couponRepository.create(createCouponDto)
+        return this._couponRepository.create(createCouponDto)
     }
 
     async getAllCoupons(page:number=1,limit:number=10){
-        const result=await this.couponRepository.findAll(page,limit)
+        const result=await this._couponRepository.findAll(page,limit)
         return {
             coupons:result.coupons,
             pagination:{
@@ -36,25 +36,25 @@ export class CouponService implements ICouponService {
 
 
     async getCouponById(id:string):Promise<Coupon>{
-        return this.couponRepository.findById(id)
+        return this._couponRepository.findById(id)
     }
 
 
     async updateCoupon(id:string,updateCouponDto:UpdateCouponDto):Promise<Coupon>{
         if(updateCouponDto.code){
-            const existingCoupon=await this.couponRepository.findByCodeExcludingId(updateCouponDto.code,id)
+            const existingCoupon=await this._couponRepository.findByCodeExcludingId(updateCouponDto.code,id)
             if(existingCoupon &&existingCoupon._id.toString() !==id){
                 throw new ConflictException('Coupon code already exists')
             }
 
         }
-        return this.couponRepository.update(id,updateCouponDto)
+        return this._couponRepository.update(id,updateCouponDto)
     }
 
 
 
     async deleteCoupon(id:string):Promise<Coupon>{
-        return this.couponRepository.delete(id)
+        return this._couponRepository.delete(id)
     }
     
 }

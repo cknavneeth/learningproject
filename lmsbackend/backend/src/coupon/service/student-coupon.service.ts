@@ -7,11 +7,11 @@ import { Types } from 'mongoose';
 
 @Injectable()
 export class StudentCouponService implements IStudentCouponService{
-    constructor(@Inject(COUPON_REPOSITORY) private readonly couponRepository:ICouponRepository){}
+    constructor(@Inject(COUPON_REPOSITORY) private readonly _couponRepository:ICouponRepository){}
 
     async getAvailableCoupons(amount:number):Promise<{coupons:ICouponResponse[]}>{
         const currentDate=new Date()
-        const coupons=await this.couponRepository.findAvailableCoupons(amount,currentDate)
+        const coupons=await this._couponRepository.findAvailableCoupons(amount,currentDate)
 
         return {
             coupons: coupons.map(coupon => ({
@@ -27,7 +27,7 @@ export class StudentCouponService implements IStudentCouponService{
 
 
     async validateCoupon(code:string,amount:number){
-        const coupon=await this.couponRepository.findByCode(code)
+        const coupon=await this._couponRepository.findByCode(code)
 
         if(!coupon){
             throw new NotFoundException('coupon not found')
@@ -76,7 +76,7 @@ export class StudentCouponService implements IStudentCouponService{
             throw new BadRequestException('Invalid coupon ID')
         }
 
-        const coupon=await this.couponRepository.findById(couponId)
+        const coupon=await this._couponRepository.findById(couponId)
 
         if(!coupon){
             throw new NotFoundException('coupon not found')
