@@ -98,6 +98,7 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
             this.snackBar.open(this.error, 'Close', {duration: 3000});
           }
         });
+        
       }
 
       continueLearning(courseId:string):void{

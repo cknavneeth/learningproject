@@ -1,4 +1,8 @@
+import { ObjectId, Types } from "mongoose";
 import { Payment, PaymentDocument } from "src/payment/schema/payment.schema";
+import { coursePurchaseDocument } from "src/payment/schema/purchased.schema";
+
+import { ICoursePurchase } from 'src/common/interfaces/payment.interface';
 
 export interface IPaymentRepository{
     create(paymentData:Partial<Payment>):Promise<PaymentDocument>
@@ -9,4 +13,8 @@ export interface IPaymentRepository{
     findLatestPaymentByCourse(userId:string,courseId:string):Promise<PaymentDocument|null>
 
     updateCourseCancellationStatus(paymentId:string,courseId:string,reason:string):Promise<PaymentDocument|null>
+
+    coursepurchaseSave(doc:ICoursePurchase):Promise<coursePurchaseDocument|null>
+
+    findPurchased(userId:string,courseIds:Types.ObjectId[]):Promise<ICoursePurchase[]>
 }

@@ -1,12 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { IPaymentRepository } from './interfaces/payment.repository.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Payment, PaymentDocument } from '../schema/payment.schema';
-import { Model, Types } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
+import { coursePurchased, coursePurchaseDocument } from '../schema/purchased.schema';
+
+
+import { ICoursePurchase } from 'src/common/interfaces/payment.interface';
+import { InternalServerError } from 'openai';
 
 @Injectable()
 export class paymentRepository implements IPaymentRepository{
-    constructor(@InjectModel(Payment.name) private paymentModel:Model<PaymentDocument>){}
+    constructor(
+        @InjectModel(Payment.name) private paymentModel:Model<PaymentDocument>,
+        @InjectModel(coursePurchased.name) private _coursePurchaseModel:Model<coursePurchaseDocument>
+    ){}
 
 
     async create(paymentData:Partial<Payment>):Promise<PaymentDocument>{
@@ -70,6 +78,35 @@ export class paymentRepository implements IPaymentRepository{
     )
     .populate('coursesDetails.courseId')
     .exec()
+    }
+
+
+    async coursepurchaseSave(doc:ICoursePurchase):Promise<coursePurchaseDocument|null>{
+             
+        try {
+            const savingDoc=new this._coursePurchaseModel(doc)
+            const document= await savingDoc.save()
+            return document
+        } catch (error) {
+            console.error('Error in course purchase save')
+            throw error
+        }
+    }
+
+
+    async findPurchased(userId: string, courseIds: Types.ObjectId[]): Promise<ICoursePurchase[]> {
+        try {
+            const studentId=new Types.ObjectId(userId)
+            const purchased=await this._coursePurchaseModel.find({
+                userId:studentId,
+                courseId:{$in:courseIds}
+            }).select('courseId')
+            .lean()
+
+            return purchased
+        } catch (error) {
+            throw new InternalServerErrorException('something went wrong')
+        }
     }
 
 }

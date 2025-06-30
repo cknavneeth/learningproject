@@ -10,10 +10,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { user, userSchema } from 'src/users/users.schema';
 import { CouponModule } from 'src/coupon/coupon.module';
+import { coursePurchased, coursepurchaseSchema } from './schema/purchased.schema';
 
 @Module({
     imports:[
-        MongooseModule.forFeature([{name:Payment.name,schema:PaymentSchema},{name:user.name,schema:userSchema}]),
+        MongooseModule.forFeature([{name:coursePurchased.name,schema:coursepurchaseSchema},{name:Payment.name,schema:PaymentSchema},{name:user.name,schema:userSchema}]),
         AuthenticationModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],

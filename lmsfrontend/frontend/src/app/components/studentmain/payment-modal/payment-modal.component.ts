@@ -119,7 +119,7 @@ export class PaymentModalComponent {
         },
         error: (error) => {
           console.error('Verification error:', error);
-          this.snackBar.open('Payment verification failed', 'Close', {
+          this.snackBar.open(error.error?.message, 'Close', {
             duration: 3000
           });
         }

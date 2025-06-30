@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IPaymentService } from './interfaces/payment.service.interface';
 import Razorpay from 'razorpay'; 
 import * as crypto from 'crypto';
@@ -10,6 +10,14 @@ import { VerifyPaymentDto } from '../dto/verify-payment.dto';
 import { Payment } from '../schema/payment.schema';
 import { Types } from 'mongoose';
 
+import { ObjectId } from "mongoose";
+import { ICoursePurchase } from 'src/common/interfaces/payment.interface';
+import { MESSAGES } from '@nestjs/core/constants';
+import { ERROR_MESSAGES } from 'src/mylearning/constants/mylearning.constants';
+import { MESSAGE } from 'src/common/constants/messages.constants';
+import { InternalServerError } from 'openai';
+import { NotFoundError } from 'rxjs';
+
 @Injectable()
 export class PaymentService implements IPaymentService{
 
@@ -18,7 +26,11 @@ export class PaymentService implements IPaymentService{
 
     private razorpay:Razorpay
 
-    constructor(@Inject(PAYMENT_REPOSITORY) private readonly paymentRepository:IPaymentRepository,private configService:ConfigService){
+    constructor(
+        @Inject(PAYMENT_REPOSITORY) private readonly paymentRepository:IPaymentRepository,
+        private configService:ConfigService,
+        
+    ){
         const key_id = this.configService.get<string>('RAZORPAY_KEY_ID');
         const key_secret = this.configService.get<string>('RAZORPAY_KEY_SECRET');
 
@@ -59,6 +71,21 @@ export class PaymentService implements IPaymentService{
                     throw new BadRequestException('User ID is required');
                 }
 
+                //pre -check for already exist
+                   const purchased=await this.paymentRepository.findPurchased(userId,courseIds)
+
+                   const alreadyPurchasedCourses=new Set(
+                    purchased.map(p=>p.courseId)
+                   )
+
+                   const conflictedCourses=courseIds.filter((courseId)=>alreadyPurchasedCourses.has(courseId))
+
+                   if(conflictedCourses.length>0){
+                        this.logger.log('conflicting courses are here',conflictedCourses)
+                        throw new ConflictException(`You already purchased following courses ${conflictedCourses.map((item)=>item.toString()).join(',')}`)
+                   }
+                //pre check for already exist
+
 
 
                 const payment = await this.paymentRepository.create({
@@ -71,14 +98,14 @@ export class PaymentService implements IPaymentService{
                         amount:amountInRupees,
                         status:'active'
                     })) ,// Add items to track what's being purchased
-                    userId:new Types.ObjectId(userId) // Add userId if available in DTO
+                    userId:new Types.ObjectId(userId) 
                     
                 });
                 console.log('Payment record created:', payment);
             } catch (dbError) {
                 console.error('Failed to create payment record:', dbError);
-                // Continue even if payment record creation fails
-                // We can handle this in the verification step
+            
+                
             }
 
             // 3. Return order details
@@ -95,6 +122,11 @@ export class PaymentService implements IPaymentService{
                 stack: error.stack,
                 details: error.response?.data
             });
+
+            //my little update to check dupes
+            if(error?.code===11000||error.message.includes('E11000')){
+                throw new BadRequestException('The Course is already purchased')
+            }
             throw new BadRequestException(`Failed to create order: ${error.message}`);
         }
     }
@@ -145,10 +177,40 @@ export class PaymentService implements IPaymentService{
                 razorpay_payment_id
             );
 
+
+            //gonna save data to my coursePurchased schema
+
+            try {
+                   for(let courseDetail of originalPayment.coursesDetails){
+                       let newDoc:ICoursePurchase={
+                          userId: new Types.ObjectId(originalPayment.userId),
+                          courseId: new Types.ObjectId(courseDetail.courseId),
+                          paymentId: new Types.ObjectId(originalPayment._id),
+                          purchasedDate: new Date()
+                       }
+
+                      const savingDoc=await this.paymentRepository.coursepurchaseSave(newDoc)
+                      this.logger.log(savingDoc)
+                  }
+            } catch (error) {
+                    console.error('Inner catch error:', error);
+                    console.error('Inner catch error code:', error?.code);
+                    console.error('Inner catch error message:', error?.message);
+
+                    if(error?.code===11000||error?.message?.includes('E11000')) {
+                        throw new BadRequestException(MESSAGE.PAYMENT.ALREADY_PURCHASED);
+                    }
+
+                    throw new BadRequestException('Something occured in wrong');
+
+            }
+                 
+            //saving ends here
+
             if (!payment) {
 
                 this.logger.log('payment update avathond puthiyath indakam')
-                // If update failed, create new payment record with userId from original payment
+
                 const paymentDetails = await this.razorpay.payments.fetch(razorpay_payment_id);
                 const newPayment = await this.paymentRepository.create({
                     orderId: razorpay_order_id,
@@ -166,6 +228,12 @@ export class PaymentService implements IPaymentService{
             return payment;
         } catch (error) {
             console.error('Payment verification error:', error);
+            console.error('outer catch',error.message)
+  
+            if(error instanceof BadRequestException){
+                throw error
+            }
+
             throw new BadRequestException('Failed to verify payment');
         }
     }

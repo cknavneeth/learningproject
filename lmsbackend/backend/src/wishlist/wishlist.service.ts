@@ -3,7 +3,7 @@ import { WishlistRepository } from './repositories/wishlist/wishlist.repository'
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from 'src/instructors/courses/course.schema';
 import { Model } from 'mongoose';
-import { MESSAGES } from 'src/common/constants/messages.constants';
+import { MESSAGE } from 'src/common/constants/messages.constants';
 import { UserRepository } from 'src/users/repositories/user/user.repository';
 
 @Injectable()
@@ -53,7 +53,7 @@ export class WishlistService {
             // console.log('courseExists kitti', courseExists)
             
             if (courseExists) {
-                throw new Error(MESSAGES.WISHLIST.ALREADY_IN_WISHLIST)
+                throw new Error(MESSAGE.WISHLIST.ALREADY_IN_WISHLIST)
             }
             
             return this.wishlistRepository.addToWishlist(userId, courseId)

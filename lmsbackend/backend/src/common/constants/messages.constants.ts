@@ -1,4 +1,4 @@
-export const MESSAGES = {
+export const MESSAGE = {
     AUTH: {
         LOGIN_SUCCESS: 'Login successful',
         LOGIN_FAILED: 'Invalid credentials',
@@ -102,5 +102,8 @@ export const MESSAGES = {
         FAILED: 'Operation failed',
         INVALID_ID: 'Invalid ID format',
         VALIDATION_ERROR: 'Validation error'
+    },
+    PAYMENT:{
+        ALREADY_PURCHASED:'These course is already purchased'
     }
 } as const;
