@@ -1,24 +1,43 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { WishlistRepository } from './repositories/wishlist/wishlist.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from 'src/instructors/courses/course.schema';
 import { Model } from 'mongoose';
 import { MESSAGE } from 'src/common/constants/messages.constants';
 import { UserRepository } from 'src/users/repositories/user/user.repository';
+import { MYWISHLIST_REPOSITORY } from './constants/constant';
+import { IWishlistRepository } from './repositories/wishlist.repository.interface';
+import { plainToInstance } from 'class-transformer';
+import { wishlistResponseDto } from './dto/response-wishlist.dto';
 
 @Injectable()
 export class WishlistService {
-    constructor(private readonly wishlistRepository:WishlistRepository,
-        @InjectModel(Course.name) private courseModel:Model<Course> ,private readonly userRepository:UserRepository
+    constructor(
+        // private readonly wishlistRepository:WishlistRepository,
+        @Inject(MYWISHLIST_REPOSITORY) private _wishlistRepository:IWishlistRepository,
+        @InjectModel(Course.name) private courseModel:Model<Course> ,
+        private readonly userRepository:UserRepository
     ){}
 
 
     async getWishlist(userId:string){
-        let wishlist=await this.wishlistRepository.findByUser(userId)
-        if(!wishlist){
-            wishlist=await this.wishlistRepository.create(userId)
+        try {
+            let wishlist=await this._wishlistRepository.findByUser(userId)
+            if(!wishlist){
+            wishlist=await this._wishlistRepository.create(userId)
+            }
+
+            const mappedWishlist=plainToInstance(
+                wishlistResponseDto,
+                wishlist.toObject()
+            )
+            return mappedWishlist
+        } catch (error) {
+            throw Error(MESSAGE.COMMON.SERVER_ERROR)
         }
-        return wishlist
+       
+        // return wishlist
+
     }
 
 
@@ -39,12 +58,12 @@ export class WishlistService {
         }
         console.log('course kitti')
         try {
-            const wishlist = await this.wishlistRepository.findByUser(userId)
+            const wishlist = await this._wishlistRepository.findByUser(userId)
     
             if (!wishlist) {
                 console.log('Creating new wishlist for user:', userId);
-                const newWishlist = await this.wishlistRepository.create(userId);
-                return this.wishlistRepository.addToWishlist(userId, courseId);
+                const newWishlist = await this._wishlistRepository.create(userId);
+                return this._wishlistRepository.addToWishlist(userId, courseId);
             }
     
             console.log('wishlist kitti')
@@ -54,7 +73,7 @@ export class WishlistService {
                 throw new Error(MESSAGE.WISHLIST.ALREADY_IN_WISHLIST)
             }
             
-            return this.wishlistRepository.addToWishlist(userId, courseId)
+            return this._wishlistRepository.addToWishlist(userId, courseId)
         } 
         catch (error) {
             console.error('Error in addToWishlist:', error);
@@ -65,6 +84,7 @@ export class WishlistService {
 
 
     async removeFromWishlist(userId:string,courseId:string){
-        return this.wishlistRepository.removeFromWishlist(userId,courseId)
+        return this._wishlistRepository.removeFromWishlist(userId,courseId)
     }
+
 }

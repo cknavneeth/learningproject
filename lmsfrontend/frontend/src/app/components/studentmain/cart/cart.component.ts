@@ -38,18 +38,29 @@ export class CartComponent implements OnInit{
 
    loadCart(){
     this.loading=true
-    this.cartService.getCart().subscribe(
-      response=>{
-        console.log('My cart response',response)
+    this.cartService.getCart().subscribe({
+      next:(response)=>{
         this.loading=false
         this.cartItems=response.items||[]
         this.totalAmount=response.totalAmount||0
       },
-      error=>{
-        this.error='Failed to load cart'
-        this.snackBar.open(this.error, 'Close', { duration: 3000 });
+      error:(error)=>{
+           this.error='Failed to load cart'
+           this.snackBar.open(this.error, 'Close', { duration: 3000 });
       }
-    )
+    })
+    // this.cartService.getCart().subscribe(
+    //   response=>{
+    //     console.log('My cart response',response)
+    //     this.loading=false
+    //     this.cartItems=response.items||[]
+    //     this.totalAmount=response.totalAmount||0
+    //   },
+    //   error=>{
+    //     this.error='Failed to load cart'
+    //     this.snackBar.open(this.error, 'Close', { duration: 3000 });
+    //   }
+    // )
    }
 
    clearCart(){

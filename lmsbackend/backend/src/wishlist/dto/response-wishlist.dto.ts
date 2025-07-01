@@ -1,14 +1,14 @@
 import { Expose, Type } from "class-transformer";
 import { Types } from "mongoose";
 
-
 export class instructorDto{
+
     @Expose()
     name:String
 }
 
+export class wishlistCourseDto{
 
-export class courseDto{
     @Expose()
     _id:Types.ObjectId
 
@@ -22,32 +22,26 @@ export class courseDto{
     thumbnailUrl:String
 
     @Expose()
-    offer:string
-
-    @Expose()
     @Type(()=>instructorDto)
     instructor:instructorDto
 }
 
-export class cartItemDto{
-    @Expose()
-    @Type(()=>courseDto)
-    courseId:courseDto
-}
 
-
-export class responsecartDto{
+export class wishlistResponseDto{
+    
     @Expose()
     _id:Types.ObjectId
 
     @Expose()
-    userId:Types.ObjectId
+    user:Types.ObjectId
 
     @Expose()
-    @Type(()=>cartItemDto)
-    items:cartItemDto
+    @Type(()=>wishlistCourseDto)
+    courses:wishlistCourseDto[]
 
-    constructor(partial:Partial<responsecartDto>){
-        Object.assign(this,partial)
+
+    constructor(partial:Partial<wishlistResponseDto>){
+           Object.assign(this,partial)
     }
+    
 }

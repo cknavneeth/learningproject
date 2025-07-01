@@ -36,15 +36,17 @@ export class WishlistComponent {
 
    loadWishlist(){
     this.loading=true
-    this.wishlistService.getWishlist().subscribe(
-      response=>{
+    this.wishlistService.getWishlist().subscribe({
+      next:(response)=>{
+        console.log('My wishlist ',response)
         this.wishlistItems=response.courses||[]
         this.loading=false
       },
-      error=>{
-        this.error='Failed to load wishlist'
+      error:(error)=>{
         this.loading=false
+        this.error='Failed to load wishlist'
       }
+    }
     )
    }
 

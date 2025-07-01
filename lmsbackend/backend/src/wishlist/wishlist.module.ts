@@ -10,6 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthenticationModule } from 'src/authentication/auth.module';
 import { UsersModule } from 'src/users/users.module';
+import { MYWISHLIST_REPOSITORY } from './constants/constant';
 
 @Module({
   imports: [
@@ -31,7 +32,14 @@ import { UsersModule } from 'src/users/users.module';
     UsersModule
 ],
  controllers:[WishlistController],
-  providers: [WishlistService,WishlistRepository],
+  providers: [
+    WishlistService,
+    WishlistRepository,
+    {
+      provide:MYWISHLIST_REPOSITORY,
+      useClass:WishlistRepository
+    }
+  ],
   exports: [WishlistService,WishlistRepository],
 
 })

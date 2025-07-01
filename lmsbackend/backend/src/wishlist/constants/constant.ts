@@ -1,0 +1,1 @@
+export const MYWISHLIST_REPOSITORY='IWishlistRepository'
