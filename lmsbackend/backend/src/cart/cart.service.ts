@@ -1,24 +1,41 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CartRepository } from './repositories/cart/cart.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from 'src/instructors/courses/course.schema';
 import { Model, Types } from 'mongoose';
 import { MESSAGE } from 'src/common/constants/messages.constants';
 import { UserRepository } from 'src/users/repositories/user/user.repository';
+import { plainToInstance } from 'class-transformer';
+import { responsecartDto } from './dto/response-cart.dto';
+import { ICartRepository } from './repositories/cart.repository.interface';
 
 @Injectable()
 export class CartService {
 
-    constructor(private readonly _cartRepository:CartRepository,
-        @InjectModel(Course.name) private _courseModel: Model<Course>,private readonly _userRepository:UserRepository
+    constructor(
+        // private readonly _cartRepository:CartRepository,
+        @Inject(CartRepository) private _cartRepository:ICartRepository,
+        @InjectModel(Course.name) private _courseModel: Model<Course>,
+        private readonly _userRepository:UserRepository
     ){}
 
     async getCart(userId:string){
-        let cart=await this._cartRepository.findByUser(userId)
-        if(!cart){
-            cart=await this._cartRepository.create(userId)
+        try {
+            let cart=await this._cartRepository.findByUser(userId)
+            if(!cart){
+                cart=await this._cartRepository.create(userId)
+            }
+
+            const mappedCart=plainToInstance(
+                responsecartDto,
+                cart.toObject()
+            )
+            
+             return mappedCart
+           
+        } catch (error) {
+             throw new NotFoundException('Cart not found')
         }
-        return cart
     }
 
 
@@ -60,7 +77,9 @@ export class CartService {
             });
         }
 
-        const rawCart=await this._cartRepository.cartModel.findOne({user:userId})
+        // const rawCart=await this._cartRepository.cartModel.findOne({user:userId})
+
+        const rawCart=await this._cartRepository.findUserById(userId)
         if(!rawCart){
             throw new Error(MESSAGE.CART.NOT_FOUND)
         }

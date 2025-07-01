@@ -40,6 +40,7 @@ export class CartComponent implements OnInit{
     this.loading=true
     this.cartService.getCart().subscribe(
       response=>{
+        console.log('My cart response',response)
         this.loading=false
         this.cartItems=response.items||[]
         this.totalAmount=response.totalAmount||0

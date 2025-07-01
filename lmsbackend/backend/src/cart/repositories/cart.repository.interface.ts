@@ -6,4 +6,5 @@ export interface ICartRepository{
     addItem(userId:string,courseId:string):Promise<CartDocument|null>
     removeItem(userId:string,courseId:string):Promise<CartDocument|null>
     clearCart(userId:string):Promise<CartDocument>
+    findUserById(userId:string):Promise<CartDocument>
 }

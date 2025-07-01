@@ -15,7 +15,7 @@ export class CartRepository implements ICartRepository{
         return this.cartModel.findOne({user:userId})
         .populate({
             path:'items.courseId',
-            select:'title price thumbnailUrl instructor offer',
+            select:'_id title price thumbnailUrl instructor offer',
             populate:{
                 path:'instructor',
                 select:'name'
@@ -125,6 +125,19 @@ export class CartRepository implements ICartRepository{
             }
 
             return clearedCart
+        }
+
+
+        async findUserById(userId: string): Promise<CartDocument> {
+            try {
+                const userCart=await this.cartModel.findOne({user:userId})
+                if(!userCart){
+                    throw new NotFoundException('Cart not found for this user')
+                }
+                return userCart
+            } catch (error) {
+                throw Error('Something went wrong')
+            }
         }
     
 }

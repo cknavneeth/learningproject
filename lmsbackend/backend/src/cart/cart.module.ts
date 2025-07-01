@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthenticationModule } from '../authentication/auth.module';
 import { user, userSchema } from 'src/users/users.schema';
 import { UsersModule } from 'src/users/users.module';
+import { CART_REPOSITORY } from './constants/constant';
 
 @Module({
   imports: [
@@ -31,7 +32,12 @@ import { UsersModule } from 'src/users/users.module';
     UsersModule
   ],
   controllers:[CartController],
-  providers:[CartService,CartRepository],
+  providers:[CartService,CartRepository,
+    {
+      provide:CART_REPOSITORY,
+      useClass: CartRepository
+    }
+  ],
   exports: [CartService, CartRepository],
 })
 export class CartModule {}
