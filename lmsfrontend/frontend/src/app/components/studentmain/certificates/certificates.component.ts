@@ -4,6 +4,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-certificates',
@@ -23,6 +24,8 @@ export class CertificatesComponent implements OnInit{
   pageSize = 3;
   totalItems = 0;
   pageSizeOptions = [3,6,9,12];
+
+  
 
 
   constructor(private certificateService:StudentcertificateService,private snackBar:MatSnackBar){}
@@ -106,5 +109,9 @@ export class CertificatesComponent implements OnInit{
       // Smooth scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }
+
+  getCertificateUrl(certificateUrl:string){
+     return `${environment.cloudinaryBase}${certificateUrl}`
   }
 }

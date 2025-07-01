@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ICertificateService } from './interfaces/certificate.service.interface';
 import { CERTIFICATE_REPOSITORY } from '../constants/constant';
 import { ICertificateRepository } from '../repository/interfaces/certificate.repository.interface';
@@ -15,7 +15,7 @@ import { InstructorRepository } from 'src/instructors/repositories/instructor/in
 @Injectable()
 export class CertificateService implements ICertificateService{
 
-
+    private logger=new Logger(CertificateService.name)
     constructor(
         @Inject(CERTIFICATE_REPOSITORY) private readonly _certificateRepository:ICertificateRepository,
         private readonly _cloudinaryService:CloudinaryService,
@@ -293,14 +293,16 @@ export class CertificateService implements ICertificateService{
 
         const certificateUrl=await this._cloudinaryService.UploadedFile(file)
 
-        
+        const url=new URL(certificateUrl)
+
+        const uniquePath=url.pathname.split('/image/upload')[1]
 
         return this._certificateRepository.create({
             userId,
             courseId:courseObjectId,
             courseName:course.title,
             completionDate,
-            certificateUrl,
+            certificateUrl:uniquePath
         })
 
     }
