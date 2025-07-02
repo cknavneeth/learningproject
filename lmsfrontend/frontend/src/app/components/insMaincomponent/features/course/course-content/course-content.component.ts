@@ -57,8 +57,8 @@ export class CourseContentComponent implements OnInit{
 
   createSection(){
     return this.fb.group({
-      title:['',[Validators.required]],
-      description:['',[Validators.required]],
+      title:['',[Validators.required,Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/)]],
+      description:['',[Validators.required,Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/),Validators.minLength(5)]],
       videoUrl:['',[Validators.required]],
       duration:[0,[Validators.required,Validators.min(0)]],
       order:[this.sections.length+1],
@@ -87,7 +87,7 @@ export class CourseContentComponent implements OnInit{
 
   createResource():FormGroup{
     return this.fb.group({
-      title:['',[Validators.required]],
+      title:['',[Validators.required,Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/)]],
       fileUrl:['',[Validators.required]],
       fileType:['',[Validators.required]]
     })

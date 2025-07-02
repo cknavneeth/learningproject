@@ -5,6 +5,7 @@
         <input matInput formControlName="title" placeholder="Enter course title">
         <mat-error *ngIf="basicInfoForm.get('title')?.errors?.['required']">Title is required</mat-error>
         <mat-error *ngIf="basicInfoForm.get('title')?.errors?.['minlength']">Title must be at least 5 characters</mat-error>
+        <mat-error *ngIf="basicInfoForm.get('title')?.errors?.['pattern']">Title contains special characters</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
@@ -20,13 +21,15 @@
           <mat-label>Course Topic</mat-label>
           <input matInput formControlName="courseTopic" placeholder="Enter course topic">
           <mat-error *ngIf="basicInfoForm.get('courseTopic')?.errors?.['required']">Course topic is required</mat-error>
+          <mat-error *ngIf="basicInfoForm.get('courseTopic')?.errors?.['pattern']">Course topic contains special characters</mat-error>
+           <mat-error *ngIf="basicInfoForm.get('courseTopic')?.errors?.['minlength']">Title must be at least 3 characters</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">
           <mat-label>Price (USD)</mat-label>
           <input matInput type="number" formControlName="price" placeholder="Enter course price">
           <mat-error *ngIf="basicInfoForm.get('price')?.errors?.['required']">Price is required</mat-error>
-          <mat-error *ngIf="basicInfoForm.get('price')?.errors?.['min']">Price cannot be negative</mat-error>
+          <mat-error *ngIf="basicInfoForm.get('price')?.errors?.['min']">Price cannot be negative or zero</mat-error>
       </mat-form-field>
 
       <mat-form-field class="w-full">

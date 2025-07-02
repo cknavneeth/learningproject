@@ -48,8 +48,7 @@
 
               <!--download section-->
 
-                  @if(certificate.certificateUrl.includes('https://res.cloudinary.com')){
-                  
+              @if(certificate.certificateUrl.includes('https://res.cloudinary.com')){ 
                 <button (click)="downloadCertificate(certificate.certificateUrl)" class="download-btn">
                 <i class="fas fa-download mr-2"></i> Download
                 </button>

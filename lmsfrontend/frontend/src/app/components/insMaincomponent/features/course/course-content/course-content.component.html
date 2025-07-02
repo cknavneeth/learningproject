@@ -14,12 +14,15 @@
           <mat-label>Section Title</mat-label>
           <input matInput formControlName="title" placeholder="Enter section title">
           <mat-error *ngIf="sections.controls[i].get('title')?.errors?.['required']">Title is required</mat-error>
+          <mat-error *ngIf="sections.controls[i].get('title')?.errors?.['pattern']">Title contains special characters</mat-error>
         </mat-form-field>
 
         <mat-form-field class="w-full">
           <mat-label>Description</mat-label>
           <textarea matInput formControlName="description" rows="3"></textarea>
           <mat-error *ngIf="sections.controls[i].get('description')?.errors?.['required']">Description is required</mat-error>
+          <mat-error *ngIf="sections.controls[i].get('description')?.errors?.['minlength']">Description atleast 5 characters</mat-error>
+          <mat-error *ngIf="sections.controls[i].get('description')?.errors?.['pattern']"> Description contains special characters</mat-error>
         </mat-form-field>
 
         <div class="mb-4">
@@ -71,6 +74,7 @@
               <mat-label>Resource Title</mat-label>
               <input matInput formControlName="title">
               <mat-error *ngIf="getResources(i).controls[j].get('title')?.errors?.['required']">Title is required</mat-error>
+              <mat-error *ngIf="getResources(i).controls[j].get('title')?.errors?.['pattern']">Title contains special characters</mat-error>
             </mat-form-field>
             
             <input type="file" 

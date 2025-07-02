@@ -34,7 +34,7 @@ export class CourseDetailsComponent implements OnInit{
 
   constructor(private fb:FormBuilder,private courseService:InstructorcourseService){
        this.detailsForm=this.fb.group({
-        description:['',[Validators.required,Validators.required]],
+        description:['',[Validators.required,Validators.required,Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/)]],
         targetAudience:this.fb.array([]),
         courseRequirements:this.fb.array([])
        })

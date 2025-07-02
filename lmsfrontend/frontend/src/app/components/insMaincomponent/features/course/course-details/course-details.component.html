@@ -19,6 +19,7 @@
       <mat-label>Course Description</mat-label>
       <textarea matInput formControlName="description" rows="4"></textarea>
       <mat-error *ngIf="detailsForm.get('description')?.errors?.['required']">Description is required</mat-error>
+      <mat-error *ngIf="detailsForm.get('description')?.errors?.['pattern']">Description contains special characters</mat-error>
     </mat-form-field>
 
 

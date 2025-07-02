@@ -39,13 +39,26 @@ export class CourseBasicInfoComponent implements OnInit,OnChanges{
 
   constructor(private fb:FormBuilder,private categoryService:CategoryService){
     this.basicInfoForm=this.fb.group({
-      title:['',[Validators.required,Validators.minLength(5)]],
+      title:['',[Validators.required,
+                 Validators.minLength(5),
+                Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/)]
+            ],
+
       category:['',Validators.required],
-      courseTopic:['',Validators.required],
-      price:['',[Validators.required,Validators.min(0)]],
-      courseLanguage:['',Validators.required],
+
+      courseTopic:['',[
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9\s.,-]*$/),
+        Validators.minLength(3)
+      ]],
+
+      price:['',[Validators.required,Validators.min(1)]],
+
+      courseLanguage:['',[Validators.required]],
+
       duration:['',[Validators.required,Validators.min(0)]],
-      courseLevel:['',Validators.required]
+
+      courseLevel:['',[Validators.required]]
     })
 
     this.basicInfoForm.statusChanges.subscribe(status=>{
