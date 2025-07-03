@@ -11,6 +11,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { user, userSchema } from 'src/users/users.schema';
 import { CouponModule } from 'src/coupon/coupon.module';
 import { coursePurchased, coursepurchaseSchema } from './schema/purchased.schema';
+import { UsersModule } from 'src/users/users.module';
+import { CartModule } from 'src/cart/cart.module';
 
 @Module({
     imports:[
@@ -25,7 +27,9 @@ import { coursePurchased, coursepurchaseSchema } from './schema/purchased.schema
             }),
         }),
         ConfigModule,
-        CouponModule
+        CouponModule,
+        UsersModule,
+        CartModule
     ],
     controllers:[PaymentController],
     providers:[

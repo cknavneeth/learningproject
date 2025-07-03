@@ -10,4 +10,6 @@ export interface IPaymentService{
     getPaymentHistory(userId:string)
 
     requestCourseCancellation(userId:string,courseId:string,reason:string):Promise<Payment>
+
+    payusingWallet(createOrderDto:CreateOrderDto,userId:string)
 }

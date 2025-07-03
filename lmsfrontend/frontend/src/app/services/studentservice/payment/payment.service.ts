@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { Coupon } from '../../../interfaces/coupon.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,18 @@ export class PaymentService {
   }): Observable<any> {
     console.log('Sending verification data:', paymentData);
     return this.http.post(`${this.apiUrl}/verify-payment`, paymentData);
+  }
+
+
+  walletPayment(data:any):Observable<{success:true,message:'Wallet payment done'}>{
+     console.log('for wallet payment',data)
+     const payload={
+      amount:data.amount,
+      items:data.items,
+      coupon:data.coupon
+     }
+     return this.http.post<{success:true,message:'Wallet payment done'}>(`${this.apiUrl}/wallet`,payload)
+
   }
   
 }

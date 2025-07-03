@@ -1,13 +1,17 @@
-import { BadRequestException, Body, Controller, Get, Inject, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpException, Inject, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { PAYMENT_SERVICE } from '../constants/payment-constant';
 import { IPaymentService } from '../service/interfaces/payment.service.interface';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { VerifyPaymentDto } from '../dto/verify-payment.dto';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
+import { InternalServerError } from 'openai';
+import { MESSAGE } from 'src/common/constants/messages.constants';
 
 @Controller('student/payment')
 export class PaymentController {
     constructor(@Inject(PAYMENT_SERVICE) private readonly paymentService:IPaymentService){}
+
+    private logger=new Logger()
 
     @Post('create-order')
     @UseGuards(GuardGuard)
@@ -45,6 +49,27 @@ export class PaymentController {
 
         return this.paymentService.requestCourseCancellation(userId,courseId,reason)
 
+    }
+
+
+
+    @Post('wallet')
+    @UseGuards(GuardGuard)
+    async walletPayment(
+        @Body() createOrderDto:CreateOrderDto,
+        @Req() req:any,
+    ){
+        try {
+            this.logger.log('wallet payment controller',createOrderDto)
+            createOrderDto.userId=req.user.userId
+            const userId=req.user.userId
+            const payment=await this.paymentService.payusingWallet(createOrderDto,userId)
+            return payment
+        } catch (error) {
+            if(error instanceof HttpException){
+                throw error
+            }
+        }
     }
 
 

@@ -104,6 +104,11 @@ export const MESSAGE = {
         VALIDATION_ERROR: 'Validation error'
     },
     PAYMENT:{
-        ALREADY_PURCHASED:'These course is already purchased'
+        ALREADY_PURCHASED:'These course is already purchased',
+        INTERNAL_SERVER_ERROR:'Something went wrong',
+        NOT_SAVED:'Payment is not saved properly'
+    },
+    WALLET:{
+        NOT_ENOUGH:'Wallet doesnt have enough money',
     }
 } as const;

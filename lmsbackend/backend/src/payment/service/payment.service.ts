@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, Inject, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { IPaymentService } from './interfaces/payment.service.interface';
 import Razorpay from 'razorpay'; 
 import * as crypto from 'crypto';
@@ -17,6 +17,10 @@ import { ERROR_MESSAGES } from 'src/mylearning/constants/mylearning.constants';
 import { MESSAGE } from 'src/common/constants/messages.constants';
 import { InternalServerError } from 'openai';
 import { NotFoundError } from 'rxjs';
+import { UserRepository } from 'src/users/repositories/user/user.repository';
+
+import { v4 as uuidv4 } from 'uuid';
+import { CartRepository } from 'src/cart/repositories/cart/cart.repository';
 
 @Injectable()
 export class PaymentService implements IPaymentService{
@@ -29,6 +33,8 @@ export class PaymentService implements IPaymentService{
     constructor(
         @Inject(PAYMENT_REPOSITORY) private readonly paymentRepository:IPaymentRepository,
         private configService:ConfigService,
+        private userRepository:UserRepository,
+        private cartRepository:CartRepository
         
     ){
         const key_id = this.configService.get<string>('RAZORPAY_KEY_ID');
@@ -297,4 +303,56 @@ export class PaymentService implements IPaymentService{
 
          return updatedPayment
     }
+
+
+
+    //gonna pay using wallet
+
+     async payusingWallet(createOrderDto:CreateOrderDto,userId:string) {
+         try {
+            this.logger.log('entered to wallet service')
+             const user=await this.userRepository.findById(createOrderDto?.userId||userId)
+             if(!user){
+                throw new NotFoundException(MESSAGE.USER.NOT_FOUND)
+             }
+             this.logger.log('wallet user',user)
+             if(user.wallet<createOrderDto.amount){
+                this.logger.log('no enough money')
+                 throw new BadRequestException(MESSAGE.WALLET.NOT_ENOUGH)
+             }
+
+             const orderId=`WALLET-ORDER-${uuidv4()}`
+             const paymentId= `WALLET-TXN-${uuidv4()}`
+
+             
+
+             const paymentSaving=await this.paymentRepository.createwalletPay(createOrderDto,userId,orderId,paymentId)
+
+             if(!paymentSaving){
+                this.logger.log('No payment found')
+                throw new Error('No payment found')
+             }
+             this.logger.log('wallet paymentSaving',paymentSaving)
+             user.wallet-=createOrderDto.amount
+             await user.save()
+
+             const cartofUser=await this.cartRepository.findUserById(userId)
+             if(!cartofUser){
+                throw new Error ('No cart found for this user')
+             }
+             cartofUser.items=[]
+             await cartofUser.save()
+
+             return {success:true,message:'wallet payment done'}
+         } catch (error) {
+               this.logger.error('Wallet Payment Error:', error);
+               if (error instanceof HttpException) {
+                throw error;
+              }
+              throw new InternalServerErrorException(error?.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
+         }
+     }
+
+
+     
 }

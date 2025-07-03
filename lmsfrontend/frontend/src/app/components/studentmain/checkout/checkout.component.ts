@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { PaymentModalComponent } from '../payment-modal/payment-modal.component';
+import { ConfirmationcomponentComponent } from '../../common/confirmationcomponent/confirmationcomponent.component';
+import { PaymentService } from '../../../services/studentservice/payment/payment.service';
 
 @Component({
   selector: 'app-checkout',
@@ -40,7 +42,8 @@ export class CheckoutComponent implements OnInit{
       private couponService:StudentcouponService,
       private snackBar:MatSnackBar,
       private router:Router,
-      private dialogue:MatDialog
+      private dialogue:MatDialog,
+      private paymentService:PaymentService
     ){}
 
     ngOnInit(){
@@ -171,5 +174,39 @@ export class CheckoutComponent implements OnInit{
         return `${coupon.value}% off${coupon.maxDiscountAmount ? ' up to ₹' + coupon.maxDiscountAmount : ''}`;
       }
       return `₹${coupon.value} off`;
+    }
+
+
+    proceedToWallet(){
+      const dialogRef=this.dialogue.open(ConfirmationcomponentComponent,{
+          width:'500px',
+          data:{
+            title:'Wallet payment',
+            message:'Are you sure to make payment?'
+          }
+
+      })
+
+
+      dialogRef.afterClosed().subscribe((result)=>{
+         console.log('Dialog result:', result);
+        if(result==true){
+             console.log('Proceeding with wallet payment...');
+             console.log('consoling cart items for wallet payment',this.cartItems)
+             const items=this.cartItems.map((item)=>item.courseId._id)
+             console.log('wallet items console',items)
+             
+
+            this.paymentService.walletPayment({amount:this.total,items:items,coupon:this.selectedCoupon}).subscribe({
+              next:(response)=>{
+                  console.log('wallet response',response)
+                  this.snackBar.open('Successfully Purchased','close',{duration:3000})
+              },
+              error:(error)=>{
+                  console.log('wallet payment error',error)
+              }
+            })
+        }
+      })
     }
 }
