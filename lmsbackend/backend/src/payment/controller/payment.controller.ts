@@ -16,7 +16,7 @@ export class PaymentController {
     @Post('create-order')
     @UseGuards(GuardGuard)
     async createOrder(@Body() createOrderDto:CreateOrderDto,@Req() req){
-        createOrderDto.userId=req.user.userId
+         createOrderDto.userId=req.user.userId
          return this.paymentService.createOrder(createOrderDto)
     }
 

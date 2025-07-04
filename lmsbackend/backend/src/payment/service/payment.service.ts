@@ -21,6 +21,9 @@ import { UserRepository } from 'src/users/repositories/user/user.repository';
 
 import { v4 as uuidv4 } from 'uuid';
 import { CartRepository } from 'src/cart/repositories/cart/cart.repository';
+import { TransactionType } from 'src/users/users.schema';
+import { InjectRedis } from '@nestjs-modules/ioredis';
+import Redis from 'ioredis';
 
 @Injectable()
 export class PaymentService implements IPaymentService{
@@ -30,11 +33,14 @@ export class PaymentService implements IPaymentService{
 
     private razorpay:Razorpay
 
+    private redis:Redis
+
     constructor(
         @Inject(PAYMENT_REPOSITORY) private readonly paymentRepository:IPaymentRepository,
         private configService:ConfigService,
         private userRepository:UserRepository,
-        private cartRepository:CartRepository
+        private cartRepository:CartRepository,
+        @InjectRedis() redis:Redis
         
     ){
         const key_id = this.configService.get<string>('RAZORPAY_KEY_ID');
@@ -48,12 +54,26 @@ export class PaymentService implements IPaymentService{
             key_id,
             key_secret
         });
+
+
+        this.redis=redis
     }
 
 
 
     async createOrder(createOrderDto: CreateOrderDto) {
         console.log('Received order request:', createOrderDto);
+
+        //setting up redis for distributed locking system
+        const userId=createOrderDto.userId
+        const lockKey=`lock:user:${userId}:checkout`
+
+        const isLocked=await this.redis.get(lockKey)
+        if(isLocked){
+            throw new ConflictException('Checkout is already active ,try after some time')
+        }
+
+        await this.redis.set(lockKey,'locked','EX',600)
         try {
             
             const order = await this.razorpay.orders.create({
@@ -183,6 +203,8 @@ export class PaymentService implements IPaymentService{
                 razorpay_payment_id
             );
 
+            //gonna delete redis here
+            await this.redis.del(`lock:user:${originalPayment.userId}:checkout`)
 
             //gonna save data to my coursePurchased schema
 
@@ -334,6 +356,14 @@ export class PaymentService implements IPaymentService{
              }
              this.logger.log('wallet paymentSaving',paymentSaving)
              user.wallet-=createOrderDto.amount
+
+             user.transactions.push({
+                type:TransactionType.DEBIT,
+                amount:createOrderDto.amount,
+                date:new Date(),
+                description:`money debited for ${orderId}`
+             })
+
              await user.save()
 
              const cartofUser=await this.cartRepository.findUserById(userId)
