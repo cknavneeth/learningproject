@@ -4,12 +4,17 @@ import { MatCardModule } from '@angular/material/card';
 import { Chart, registerables } from 'chart.js';
 import { instructorDashboard } from '../../../interfaces/dashboard.interface';
 import { DashboardService } from '../../../services/instructorservice/dashboard/dashboard.service';
+import { RouterModule } from '@angular/router';
+import { PayoutComponent } from '../payout/payout.component';
+import { PaymentService } from '../../../services/studentservice/payment/payment.service';
+import { WithdrawComponent } from '../withdraw/withdraw.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-instructor-dashboard',
-  imports: [CommonModule,MatCardModule],
+  imports: [CommonModule,MatCardModule,RouterModule,PayoutComponent,WithdrawComponent,MatTooltipModule],
   templateUrl: './instructor-dashboard.component.html',
   styleUrl: './instructor-dashboard.component.scss'
 })
@@ -22,7 +27,11 @@ export class InstructorDashboardComponent implements OnInit{
 
     topStudentsChart:any
 
-    constructor(private dashboardService:DashboardService){}
+    showPayoutModal=false
+
+    showWithdrawModal=false
+
+    constructor(private dashboardService:DashboardService,private paymentService:PaymentService){}
 
     ngOnInit(){
       this.loadDashboardStats()
@@ -238,9 +247,12 @@ export class InstructorDashboardComponent implements OnInit{
                     }
                 }
             }
-        });
-    
-        
+        });  
     }
+
+
+    // initiatePayout(){
+    //   this.paymentService.initiatePayout()
+    // }
 
 }

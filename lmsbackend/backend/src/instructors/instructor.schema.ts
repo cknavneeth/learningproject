@@ -63,6 +63,15 @@ export class instructor{
     @Prop()
     isGoogleUser:boolean
 
+    @Prop()
+    totalEarnings?:number
+
+    @Prop({default:0})
+    totalwithDrawn:number
+
+    @Prop()
+    lastPayoutDate:Date
+
 }
 
 export const instructorSchema=SchemaFactory.createForClass(instructor)

@@ -6,6 +6,8 @@ import { VerifyPaymentDto } from '../dto/verify-payment.dto';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { InternalServerError } from 'openai';
 import { MESSAGE } from 'src/common/constants/messages.constants';
+import { InstructorPayoutDto } from '../dto/instructor-payout.dto';
+import { InstructorPayoutRequestDto } from '../dto/instructorpayout-request.dto';
 
 @Controller('student/payment')
 export class PaymentController {
@@ -70,6 +72,43 @@ export class PaymentController {
                 throw error
             }
         }
+    }
+
+
+
+    @Post('payout')
+    @UseGuards(GuardGuard)
+    async instructorPayout(
+        @Body() InstructorPayoutDto:InstructorPayoutDto,@Req() req
+    ){
+          try {
+            const instructorId=req.user.InstructorId
+            const payout=await this.paymentService.createPayout(InstructorPayoutDto,instructorId)
+            return payout
+          } catch (error) {
+             if(error instanceof HttpException){
+                throw error
+             }
+          }
+    }
+
+
+    @Post('instructor/withdraw')
+    @UseGuards(GuardGuard)
+    async withDrawAmount(
+        @Body() instructorPayoutRequestDto:InstructorPayoutRequestDto,
+        @Req() req
+    ){
+        try {
+            const instructorId=req.user.InstructorId
+            const makePayout=await this.paymentService.makePayout(instructorPayoutRequestDto,instructorId)
+            return makePayout
+        } catch (error) {
+            if(error instanceof HttpException){
+                throw error
+            }
+        }
+
     }
 
 

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Coupon } from '../../../interfaces/coupon.interface';
+import { payoutData, PayoutResponse } from '../../../interfaces/payout.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -55,4 +56,15 @@ export class PaymentService {
 
   }
   
+
+
+
+  createpayoutDetails(payoutData:payoutData):Observable<{success:true,message:'Payout data got saved'}>{
+        return this.http.post<{success:true,message:'Payout data got saved'}>(`${this.apiUrl}/payout`,payoutData)
+  }
+  
+
+  withdrawMoney(amount:number):Observable<PayoutResponse>{
+      return this.http.post<PayoutResponse>(`${this.apiUrl}/instructor/withdraw`,{amount})
+  }
 }

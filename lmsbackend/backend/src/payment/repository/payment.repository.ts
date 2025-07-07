@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { IPaymentRepository } from './interfaces/payment.repository.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Payment, PaymentDocument } from '../schema/payment.schema';
@@ -10,12 +10,18 @@ import { ICoursePurchase } from 'src/common/interfaces/payment.interface';
 import { InternalServerError } from 'openai';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { MESSAGE } from 'src/common/constants/messages.constants';
+import { InstructorPayoutDto } from '../dto/instructor-payout.dto';
+import { Payout, payoutDocument } from '../schema/payout.schema';
+import { PayoutSave } from 'src/common/interfaces/payoutRequest.interface';
+import { PayoutSuccess, payoutsuccessDocument } from '../schema/payoutsuccess.schema';
 
 @Injectable()
 export class paymentRepository implements IPaymentRepository{
     constructor(
         @InjectModel(Payment.name) private paymentModel:Model<PaymentDocument>,
-        @InjectModel(coursePurchased.name) private _coursePurchaseModel:Model<coursePurchaseDocument>
+        @InjectModel(coursePurchased.name) private _coursePurchaseModel:Model<coursePurchaseDocument>,
+        @InjectModel(Payout.name) private _payoutModel:Model<payoutDocument>,
+        @InjectModel(PayoutSuccess.name) private _payoutSuccessModel:Model<payoutsuccessDocument>
     ){}
 
     private logger=new Logger()
@@ -171,6 +177,57 @@ export class paymentRepository implements IPaymentRepository{
                 throw error
               }
               throw new InternalServerErrorException(error?.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+
+    //creating payout schema for instructor
+    async createPayoutSchema(payoutData: InstructorPayoutDto,instructorId:string): Promise<payoutDocument | null> {
+        try {
+
+            let insId=new Types.ObjectId(instructorId)
+            const payoutSave=await this._payoutModel.create({
+                instructorId:insId,
+                name:payoutData.name,
+                email:payoutData.email,
+                phone:payoutData.phone,
+                ifsc:payoutData.ifsc,
+                accountNumber:payoutData.accountNumber,
+                accountHolderName:payoutData.accountHolderName
+            })
+            this.logger.log('payoutsave',payoutSave)
+            return payoutSave
+        } catch (error) {
+            if(error instanceof HttpException){
+                throw error
+            }
+            throw new InternalServerErrorException(error?.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+
+
+    async findInstructorPayout(instructorId: string): Promise<payoutDocument | null> {
+        try {
+            return await  this._payoutModel.findOne({instructorId:new Types.ObjectId(instructorId)})
+        } catch (error) {
+            if(error instanceof HttpException){
+                throw error
+            }
+            throw new InternalServerErrorException(error.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+
+    async payoutSuccessSave(obj: PayoutSave): Promise<payoutsuccessDocument | null> {
+        try {
+            let payoutsave=await this._payoutSuccessModel.create(obj)
+            return payoutsave
+        } catch (error) {
+            if(error instanceof HttpException){
+                throw error
+            }
+            throw new InternalServerErrorException(error.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
         }
     }
 

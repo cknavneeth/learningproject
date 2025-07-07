@@ -1,0 +1,55 @@
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <!-- Modal Container -->
+  <div class="bg-gray-900 text-white rounded-xl shadow-lg w-full max-w-md p-8 relative">
+    <!-- Close Button -->
+    <button
+      (click)="closeModal()"
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-200"
+    >
+      <i class="fas fa-times"></i>
+    </button>
+
+    <!-- Modal Title -->
+    <h2 class="text-2xl font-bold mb-4">Withdraw Money</h2>
+
+    <!-- Withdrawal Form -->
+    <form [formGroup]="withdrawForm" (ngSubmit)="withdrawSubmit()">
+      <div class="mb-4">
+        <label class="block text-sm mb-2">Enter Amount</label>
+        <input
+          type="number"
+          formControlName="amount"
+          class="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter amount (min 10,000)"
+        />
+        <small *ngIf="withdrawForm.get('amount')?.invalid && withdrawForm.get('amount')?.touched" class="text-red-400">
+          Amount must be at least 10,000
+        </small>
+      </div>
+
+
+      @if(isSubmitted){
+          <button
+        type="submit"
+        [disabled]="isSubmitted"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md disabled:opacity-50"
+      >
+         Requested...
+       </button>
+      }
+      @else{
+            <button
+        type="submit"
+        [disabled]="withdrawForm.invalid"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md disabled:opacity-50"
+      >
+        Withdraw Money
+      </button>
+
+      }
+
+     
+    </form>
+  </div>
+</div>

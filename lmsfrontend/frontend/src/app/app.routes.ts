@@ -52,6 +52,7 @@ import { StudentcommunityComponent } from './components/studentmain/studentcommu
 import { CoursedetailComponent } from './components/insMaincomponent/coursedetail/coursedetail.component';
 import {MyaboutComponent} from './components/studentmain/myabout/myabout.component';
 import { NotfoundComponent } from './components/common/notfound/notfound.component';
+import { PayoutComponent } from './components/insMaincomponent/payout/payout.component';
 
 
 export const routes: Routes = [
@@ -257,6 +258,10 @@ export const routes: Routes = [
                 path:'course/:id',
                 component:CoursedetailComponent
             },
+            {
+                path:'payoutform',
+                component:PayoutComponent
+            }
             
         ]
     },

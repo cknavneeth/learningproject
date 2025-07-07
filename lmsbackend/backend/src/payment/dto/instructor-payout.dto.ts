@@ -27,5 +27,4 @@ export class InstructorPayoutDto{
     @IsOptional()
     @IsString()
     accountHolderName?:string
-
 }

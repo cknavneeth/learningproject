@@ -80,7 +80,8 @@ export const MESSAGE = {
         REJECTED: 'Instructor rejected',
         BLOCKED: 'Instructor has been blocked',
         UNBLOCKED: 'Instructor has been unblocked',
-        CERTIFICATE_REQUIRED: 'Certificate is required'
+        CERTIFICATE_REQUIRED: 'Certificate is required',
+        NOT_ENOUGH_MONEY:'Insufficient money'
     },
 
     FILE: {
@@ -106,7 +107,7 @@ export const MESSAGE = {
     PAYMENT:{
         ALREADY_PURCHASED:'These course is already purchased',
         INTERNAL_SERVER_ERROR:'Something went wrong',
-        NOT_SAVED:'Payment is not saved properly'
+        NOT_SAVED:'Payment is not saved properly',
     },
     WALLET:{
         NOT_ENOUGH:'Wallet doesnt have enough money',

@@ -234,6 +234,13 @@ export class InstructorRepository implements IInstructorRepository{
 
     this.logger.log('enrolledstudents in backend',enrolledStudents)
 
+        const instructorEarning=await this.findById(instructorId)
+        if(instructorEarning){
+            instructorEarning.totalEarnings=totalStats[0]?.totalEarnings||0
+             await instructorEarning.save()
+        }
+
+
         return {
             totalCourses:courses.length,
             totalStudents:totalStats[0]?.uniqueStudents.length||0,

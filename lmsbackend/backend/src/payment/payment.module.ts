@@ -13,10 +13,14 @@ import { CouponModule } from 'src/coupon/coupon.module';
 import { coursePurchased, coursepurchaseSchema } from './schema/purchased.schema';
 import { UsersModule } from 'src/users/users.module';
 import { CartModule } from 'src/cart/cart.module';
+import { InstructorsModule } from 'src/instructors/instructors.module';
+import { instructor, instructorSchema } from 'src/instructors/instructor.schema';
+import { InstructorPayoutSchema, Payout } from './schema/payout.schema';
+import { PayoutSuccess, payoutsuccessSchema } from './schema/payoutsuccess.schema';
 
 @Module({
     imports:[
-        MongooseModule.forFeature([{name:coursePurchased.name,schema:coursepurchaseSchema},{name:Payment.name,schema:PaymentSchema},{name:user.name,schema:userSchema}]),
+        MongooseModule.forFeature([{name:coursePurchased.name,schema:coursepurchaseSchema},{name:Payment.name,schema:PaymentSchema},{name:user.name,schema:userSchema},{name:Payout.name,schema:InstructorPayoutSchema},{name:PayoutSuccess.name,schema:payoutsuccessSchema}]),
         AuthenticationModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
@@ -29,7 +33,8 @@ import { CartModule } from 'src/cart/cart.module';
         ConfigModule,
         CouponModule,
         UsersModule,
-        CartModule
+        CartModule,
+        InstructorsModule
     ],
     controllers:[PaymentController],
     providers:[

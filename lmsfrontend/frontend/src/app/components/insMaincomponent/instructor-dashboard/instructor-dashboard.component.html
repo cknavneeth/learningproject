@@ -1,78 +1,134 @@
 <div class="p-6">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Total Courses Card -->
-        <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Courses</p>
-                        <p class="text-3xl font-bold text-gray-900 dark:text-white">{{stats?.totalCourses || 0}}</p>
-                    </div>
-                    <div class="p-3 bg-blue-100 rounded-full">
-                        <i class="fas fa-book text-blue-600 text-xl"></i>
-                    </div>
-                </div>
-            </div>
-        </mat-card>
-
-        <!-- Total Students Card -->
-        <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Students</p>
-                        <p class="text-3xl font-bold text-gray-900 dark:text-white">{{stats?.totalStudents || 0}}</p>
-                    </div>
-                    <div class="p-3 bg-green-100 rounded-full">
-                        <i class="fas fa-users text-green-600 text-xl"></i>
-                    </div>
-                </div>
-            </div>
-        </mat-card>
-
-        <!-- Total Earnings Card -->
-        <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Earnings</p>
-                        <p class="text-3xl font-bold text-gray-900 dark:text-white">₹{{stats?.totalEarnings || 0}}</p>
-                    </div>
-                    <div class="p-3 bg-yellow-100 rounded-full">
-                        <i class="fas fa-indian-rupee-sign text-yellow-600 text-xl"></i>
-                    </div>
-                </div>
-            </div>
-        </mat-card>
-    </div>
-
-    <!-- Sales Chart -->
-    <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h2 class="text-xl font-semibold mb-4 text-gray-900 text-white">Monthly Sales Overview</h2>
-        <div class="w-full h-[400px]">
-            <canvas id="salesChart"></canvas>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Total Courses Card -->
+    <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+      <div class="p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Total Courses
+            </p>
+            <p class="text-3xl font-bold text-gray-900 dark:text-white">
+              {{ stats?.totalCourses || 0 }}
+            </p>
+          </div>
+          <div class="p-3 bg-blue-100 rounded-full">
+            <i class="fas fa-book text-blue-600 text-xl"></i>
+          </div>
         </div>
+      </div>
     </mat-card>
 
-    <!--trending courses chart-->
-    <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mt-6">
-    <h2 class="text-xl font-semibold mb-4 text-gray-900 text-white">Trending Courses</h2>
-    <div class="w-full h-[400px]">
-        <canvas id="trendingCoursesChart"></canvas>
-    </div>
-   </mat-card>
+    <!-- Total Students Card -->
+    <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+      <div class="p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Total Students
+            </p>
+            <p class="text-3xl font-bold text-gray-900 dark:text-white">
+              {{ stats?.totalStudents || 0 }}
+            </p>
+          </div>
+          <div class="p-3 bg-green-100 rounded-full">
+            <i class="fas fa-users text-green-600 text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </mat-card>
 
-
-   <!-- Top Performing Students Chart -->
-<mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mt-6">
-  <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Top Performing Students</h2>
-  <div class="w-full h-[400px]">
-    <canvas id="topStudentsChart"></canvas>
+    <!-- Total Earnings Card -->
+    <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+      <div class="p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Total Earnings
+            </p>
+            <p class="text-3xl font-bold text-gray-900 dark:text-white">
+              ₹{{ stats?.totalEarnings || 0 }}
+            </p>
+          </div>
+          <div class="p-3 bg-yellow-100 rounded-full">
+            <i class="fas fa-indian-rupee-sign text-yellow-600 text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </mat-card>
   </div>
-</mat-card>
 
+  <!-- Sales Chart -->
+  <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-900 text-white">
+      Monthly Sales Overview
+    </h2>
+    <div class="w-full h-[400px]">
+      <canvas id="salesChart"></canvas>
+    </div>
+  </mat-card>
 
+  <!--trending courses chart-->
+  <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mt-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-900 text-white">
+      Trending Courses
+    </h2>
+    <div class="w-full h-[400px]">
+      <canvas id="trendingCoursesChart"></canvas>
+    </div>
+  </mat-card>
 
+  <!-- Top Performing Students Chart -->
+  <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mt-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+      Top Performing Students
+    </h2>
+    <div class="w-full h-[400px]">
+      <canvas id="topStudentsChart"></canvas>
+    </div>
+  </mat-card>
 
-  
+  <div class="flex gap-4">
+    <!-- Payout Form Button -->
+    <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+      <div class="p-6">
+        <div class="flex items-center justify-between">
+          <button
+            matTooltip="Fill payout details"
+            (click)="showPayoutModal = true"
+            class="flex items-center justify-center p-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition duration-200 relative group"
+          >
+            <i class="fas fa-file-signature text-lg"></i>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Withdraw Now Button -->
+
+    <mat-card class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+      <div class="p-6">
+        <div class="flex items-center justify-between">
+          <button
+            matTooltip="Withdraw money now"
+            (click)="showWithdrawModal = true"
+            class="flex items-center justify-center p-3 rounded-full bg-green-600 text-white hover:bg-green-700 transition duration-200 relative group"
+          >
+            <i class="fas fa-money-bill-wave text-lg"></i>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- <app-payout *ngIf="showPayoutModal" (close)="showPayoutModal = false"></app-payout> -->
+  <app-payout
+    *ngIf="showPayoutModal"
+    (close)="showPayoutModal = false"
+  ></app-payout>
+
+  <app-withdraw
+    *ngIf="showWithdrawModal"
+    (close)="showWithdrawModal = false"
+  ></app-withdraw>
 </div>
