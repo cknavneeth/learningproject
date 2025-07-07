@@ -1,4 +1,4 @@
-import { PayoutResponse } from "src/common/interfaces/payoutRequest.interface";
+import { PayoutDetailsResponse, PayoutResponse } from "src/common/interfaces/payoutRequest.interface";
 import { CreateOrderDto } from "src/payment/dto/create-order.dto";
 import { InstructorPayoutDto } from "src/payment/dto/instructor-payout.dto";
 import { InstructorPayoutRequestDto } from "src/payment/dto/instructorpayout-request.dto";
@@ -20,4 +20,8 @@ export interface IPaymentService{
     createPayout(instructorPayoutDto:InstructorPayoutDto,instructorId:string):Promise<payoutDocument|null>
 
     makePayout(instructorPayoutRequestDto:InstructorPayoutRequestDto,instructorId:string):Promise<PayoutResponse>
+
+    updatePayout(updateData:Partial<InstructorPayoutDto>,instructorId:string):Promise<string>
+
+    getPayoutDetails(instructorId:string):Promise<PayoutDetailsResponse>
 }

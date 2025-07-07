@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpException, Inject, Logger, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpException, Inject, InternalServerErrorException, Logger, Param, Post, Put, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { PAYMENT_SERVICE } from '../constants/payment-constant';
 import { IPaymentService } from '../service/interfaces/payment.service.interface';
 import { CreateOrderDto } from '../dto/create-order.dto';
@@ -8,6 +8,10 @@ import { InternalServerError } from 'openai';
 import { MESSAGE } from 'src/common/constants/messages.constants';
 import { InstructorPayoutDto } from '../dto/instructor-payout.dto';
 import { InstructorPayoutRequestDto } from '../dto/instructorpayout-request.dto';
+import { insupdatePayoutDto } from '../dto/inspayout-update.dto';
+import { ClassSerializerInterceptor } from '@nestjs/common';
+
+
 
 @Controller('student/payment')
 export class PaymentController {
@@ -108,7 +112,41 @@ export class PaymentController {
                 throw error
             }
         }
+    }
 
+
+    @Put('payout/:instructorId')
+    @UseGuards(GuardGuard)
+    async editPayout(
+        @Param('instructorId') instructorId:string,
+        @Body() updateDto:insupdatePayoutDto,
+        @Req() req
+    ){
+         try {
+            const update=await this.paymentService.updatePayout(updateDto,instructorId)
+            return update
+         } catch (error) {
+            if(error instanceof HttpException){
+                throw error
+            }
+            throw new InternalServerErrorException(error.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
+         }
+    }
+
+
+    @Get('instructor/getPayout')
+    @UseGuards(GuardGuard)
+    async getInstructorPayout(@Req() req){
+        try {
+            const instructorId=req.user.InstructorId
+
+            return this.paymentService.getPayoutDetails(instructorId)
+        } catch (error) {
+            if(error instanceof HttpException){
+                throw error
+            }
+            throw new InternalServerErrorException(error.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
+        }
     }
 
 

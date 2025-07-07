@@ -67,4 +67,9 @@ export class PaymentService {
   withdrawMoney(amount:number):Observable<PayoutResponse>{
       return this.http.post<PayoutResponse>(`${this.apiUrl}/instructor/withdraw`,{amount})
   }
+
+
+  getInstructorPayout():Observable<payoutData>{
+     return this.http.get<payoutData>(`${this.apiUrl}/instructor/getPayout`)
+  }
 }

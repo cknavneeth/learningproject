@@ -13,3 +13,11 @@ export interface PayoutSave{
     razorpayPayoutId:string,
     status:string
 }
+
+export interface PayoutDetailsResponse{
+    name:string,
+    email:string,
+    phone?:string,
+    accountNumber:string,
+    accountHolderName:string
+}

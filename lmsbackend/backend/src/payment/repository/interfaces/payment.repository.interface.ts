@@ -6,7 +6,7 @@ import { ICoursePurchase } from 'src/common/interfaces/payment.interface';
 import { CreateOrderDto } from "src/payment/dto/create-order.dto";
 import { InstructorPayoutDto } from "src/payment/dto/instructor-payout.dto";
 import { payoutDocument } from "src/payment/schema/payout.schema";
-import { PayoutSave } from "src/common/interfaces/payoutRequest.interface";
+import { PayoutResponse, PayoutSave } from "src/common/interfaces/payoutRequest.interface";
 import { payoutsuccessDocument } from "src/payment/schema/payoutsuccess.schema";
 
 export interface IPaymentRepository{
@@ -30,4 +30,6 @@ export interface IPaymentRepository{
     findInstructorPayout(instructorId:string):Promise<payoutDocument|null>
 
     payoutSuccessSave(obj:PayoutSave):Promise<payoutsuccessDocument|null>
+
+   
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { PaymentService } from '../../../services/studentservice/payment/payment.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { payoutData } from '../../../interfaces/payout.interface';
 
 @Component({
   selector: 'app-payout',
@@ -14,6 +15,7 @@ export class PayoutComponent {
 
   
   @Output() close=new EventEmitter()
+  isEditMode:boolean=false
 
 
     payoutForm!:FormGroup
@@ -55,5 +57,38 @@ export class PayoutComponent {
     closeModal(){
        this.close.emit()
     }
+
+
+    ngOnInit(): void {
+       this.loadPayoutDetails()
+    }
+
+
+    loadPayoutDetails(){
+      this.paymentService.getInstructorPayout().subscribe({
+
+        next:(data:payoutData)=>{
+          console.log('payout details for instructur',data)
+            if(data){
+              this.isEditMode=true
+              this.payoutForm.patchValue({
+                name:data.name,
+                email:data.email,
+                phone:data.phone,
+                ifsc:data.ifsc,
+                accountNumber:data.accountNumber,
+                accountHolderName:data.accountHolderName
+              })
+            }
+        },
+        error:()=>{
+           this.isEditMode=false
+        }
+
+      })
+    }
+
+
+
     
 }

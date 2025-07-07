@@ -34,11 +34,15 @@ import { TransactionType } from 'src/users/users.schema';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 import { InstructorPayoutDto } from '../dto/instructor-payout.dto';
-import { payoutDocument } from '../schema/payout.schema';
-import { PayoutResponse } from 'src/common/interfaces/payoutRequest.interface';
+import { Payout, payoutDocument } from '../schema/payout.schema';
+import { PayoutDetailsResponse, PayoutResponse } from 'src/common/interfaces/payoutRequest.interface';
 import { InstructorPayoutRequestDto } from '../dto/instructorpayout-request.dto';
 import { InstructorRepository } from 'src/instructors/repositories/instructor/instructor.repository';
 import axios from 'axios';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { PayoutDetails } from '../dto/payoutDetailsRes.dto';
+
+
 
 @Injectable()
 export class PaymentService implements IPaymentService {
@@ -598,8 +602,121 @@ export class PaymentService implements IPaymentService {
         }
         throw new InternalServerErrorException(error.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
     }
-     
+
   }
+
+
+
+  async updatePayout(updateData: Partial<InstructorPayoutDto>,instructorId:string): Promise<string> {
+      try {
+         const payout=await this.paymentRepository.findInstructorPayout(instructorId)
+
+         if(!payout){
+          throw new NotFoundException('No payout record found.lplease fill payout details first.')
+         }
+
+         const bankChanged=payout.ifsc!==updateData.ifsc||payout.accountNumber!==updateData.accountNumber
+
+         payout.name=updateData.name||payout.name
+         payout.email=updateData.email||payout.email
+         payout.phone=updateData.phone||payout.phone
+         payout.accountHolderName=updateData.accountHolderName||payout.accountHolderName
+         payout.ifsc=updateData.ifsc||payout.ifsc
+         payout.accountNumber=updateData.accountNumber||payout.accountNumber
+
+         if(payout.razorpayContactId){
+             const updateContact=await axios.patch(
+               `https://api.razorpay.com/v1/contacts/${payout.razorpayContactId}`,
+              {
+                 name:payout.name,
+                 email:payout.email,
+                 type:'vendor'
+              },
+              {
+                  auth:{
+                    username:this.configService.get<string>('RAZORPAY_KEY_ID')!,
+                    password:this.configService.get<string>('RAZORPAY_KEY_SECRET')!
+                  }
+              }
+             )
+
+         }else{
+            const contact=await axios.post(
+              'https://api.razorpay.com/v1/contacts',
+              {
+                  name:payout.name,
+                  email:payout.email,
+                  type:'vendor'
+              },
+              {
+                auth:{
+                    username:this.configService.get<string>('RAZORPAY_KEY_ID')!,
+                    password:this.configService.get<string>('RAZORPAY_KEY_SECRET')!
+                }
+
+              }
+            )
+            payout.razorpayContactId=contact.data.id
+         }
+
+
+         if(bankChanged){
+            const funcAccountId=await axios.post(
+              'https://api.razorpay.com/v1/fund_accounts',
+              {
+                  contact_id:payout.razorpayContactId,
+                  account_type:'bank_account',
+                  bank_account:{
+                    name:payout.accountHolderName||payout.name,
+                    ifsc:payout.ifsc,
+                    account_number:payout.accountNumber
+                  },
+              },
+              {
+                   auth: {
+                         username: this.configService.get<string>('RAZORPAY_KEY_ID')!,
+                         password: this.configService.get<string>('RAZORPAY_KEY_SECRET')!,
+                   },
+              }
+            )
+
+            payout.razorpayFundAccountId=funcAccountId.data.id
+         }
+
+         await payout.save()
+
+         return `Payout details updated successfully`
+      } catch (error) {
+          if(error instanceof HttpException){
+           throw error
+          }
+          throw new InternalServerErrorException(error.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
+      }
+
+
+  }
+
+
+
+   async getPayoutDetails(instructorId:string):Promise<PayoutDetailsResponse>{
+    try {
+        const instructorPayout=await this.paymentRepository.findInstructorPayout(instructorId)
+        if(!instructorPayout){
+          throw new NotFoundException(MESSAGE.INSTRUCTOR.NOT_FOUND)
+        }
+
+        const mappedPayout=plainToInstance(
+           PayoutDetails,
+           instructorPayout.toObject()
+        )
+        return mappedPayout
+    } catch (error) {
+       if(error instanceof HttpException){
+        throw error
+       }
+       throw new InternalServerErrorException(error.message||MESSAGE.PAYMENT.INTERNAL_SERVER_ERROR)
+    }
+   }
 
 
 }
