@@ -236,31 +236,38 @@ export const routes: Routes = [
             },
             {
                 path:'drafts',
-                component:CourseDraftComponent
+                component:CourseDraftComponent,
+                canActivate:[instructorguardGuard]
             },
             {
                 path:'my-courses',
-                component:MyCoursesComponent
+                component:MyCoursesComponent,
+                canActivate:[instructorguardGuard]
             },
             {
                 path:'enrolled-students',
-                component:InstructorstudentsComponent
+                component:InstructorstudentsComponent,
+                canActivate:[instructorguardGuard]
             },
             {
                 path:'dashboard',
-                component:InstructorDashboardComponent
+                component:InstructorDashboardComponent,
+                canActivate:[instructorguardGuard]
             },
             {
                 path:'community',
-                component:InstructorcommunityComponent
+                component:InstructorcommunityComponent,
+                canActivate:[instructorguardGuard]
             },
             {
                 path:'course/:id',
-                component:CoursedetailComponent
+                component:CoursedetailComponent,
+                canActivate:[instructorguardGuard]
             },
             {
                 path:'payoutform',
-                component:PayoutComponent
+                component:PayoutComponent,
+                canActivate:[instructorguardGuard]
             }
             
         ]
@@ -286,35 +293,43 @@ export const routes: Routes = [
             },
             {
                 path:'students',
-                component:StudentListComponent
+                component:StudentListComponent,
+                canActivate:[adminauthGuard]
             },
             {
                 path:'instructors',
-                component:InstructorListComponent
+                component:InstructorListComponent,
+                canActivate:[adminauthGuard]
             },
             {
                 path:'courses',
-                component:CourseListComponent
+                component:CourseListComponent,
+                canActivate:[adminauthGuard]
             },
             {
                 path:'category',
-                component:CategoryManagementComponent
+                component:CategoryManagementComponent,
+                canActivate:[adminauthGuard]
             },
             {
                 path:'coupons/add',
-                component:AddcouponComponent
+                component:AddcouponComponent,
+                canActivate:[adminauthGuard]
             },
             {
                 path:'coupons',
-                component:ListcouponComponent
+                component:ListcouponComponent,
+                canActivate:[adminauthGuard]
             },
             {
                 path:'sales-history',
-                component:SaleshistoryComponent
+                component:SaleshistoryComponent,
+                canActivate:[adminauthGuard]
             },
             {
                 path:'quiz-management',
-                component:AdminquizComponent
+                component:AdminquizComponent,
+                canActivate:[adminauthGuard]
             }
            
         ]
