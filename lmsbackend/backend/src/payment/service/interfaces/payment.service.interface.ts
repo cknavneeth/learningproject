@@ -21,7 +21,7 @@ export interface IPaymentService{
 
     makePayout(instructorPayoutRequestDto:InstructorPayoutRequestDto,instructorId:string):Promise<PayoutResponse>
 
-    updatePayout(updateData:Partial<InstructorPayoutDto>,instructorId:string):Promise<string>
+    updatePayout(updateData:Partial<InstructorPayoutDto>,instructorId:string):Promise<{message:string}>
 
     getPayoutDetails(instructorId:string):Promise<PayoutDetailsResponse>
 }

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { PaymentService } from '../../../services/studentservice/payment/payment.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
-import { payoutData } from '../../../interfaces/payout.interface';
+import { payoutData, PayoutResponse } from '../../../interfaces/payout.interface';
 
 @Component({
   selector: 'app-payout',
@@ -40,7 +40,25 @@ export class PayoutComponent {
         return 
        }
 
-       this.paymentService.createpayoutDetails(this.payoutForm.value).subscribe({
+       if(this.isEditMode){
+          
+        this.paymentService.updateInstructorPayout(this.payoutForm.value).subscribe({
+          next:()=>{
+              this.snackBar.open('Edited successfully','close',{
+                duration:3000
+              })
+              this.close.emit()
+          },
+          error:(error)=>{
+              this.snackBar.open(error?.error?.message,'close',{
+                duration:3000
+              })
+          }
+        })
+
+       }else{
+
+           this.paymentService.createpayoutDetails(this.payoutForm.value).subscribe({
         next:(response)=>{
             this.snackBar.open('Payout registered','close',{
               duration:3000
@@ -52,6 +70,10 @@ export class PayoutComponent {
             })
         }
        })
+
+       }
+
+       
     }
 
     closeModal(){

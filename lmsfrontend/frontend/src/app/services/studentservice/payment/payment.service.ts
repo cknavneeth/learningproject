@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Coupon } from '../../../interfaces/coupon.interface';
-import { payoutData, PayoutResponse } from '../../../interfaces/payout.interface';
+import { payoutData, PayoutResponse, PayoutUpdateResponse } from '../../../interfaces/payout.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -72,4 +72,10 @@ export class PaymentService {
   getInstructorPayout():Observable<payoutData>{
      return this.http.get<payoutData>(`${this.apiUrl}/instructor/getPayout`)
   }
+
+  updateInstructorPayout(payoutData:payoutData):Observable<PayoutUpdateResponse>{
+     return this.http.put<PayoutUpdateResponse>(`${this.apiUrl}/instructor/editpayout`,payoutData)
+  }
+
+
 }

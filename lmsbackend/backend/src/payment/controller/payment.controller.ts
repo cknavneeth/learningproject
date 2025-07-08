@@ -13,6 +13,7 @@ import { ClassSerializerInterceptor } from '@nestjs/common';
 
 
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('student/payment')
 export class PaymentController {
     constructor(@Inject(PAYMENT_SERVICE) private readonly paymentService:IPaymentService){}
@@ -115,14 +116,14 @@ export class PaymentController {
     }
 
 
-    @Put('payout/:instructorId')
+    @Put('instructor/editpayout')
     @UseGuards(GuardGuard)
     async editPayout(
-        @Param('instructorId') instructorId:string,
         @Body() updateDto:insupdatePayoutDto,
         @Req() req
     ){
          try {
+            const instructorId=req.user.InstructorId
             const update=await this.paymentService.updatePayout(updateDto,instructorId)
             return update
          } catch (error) {
@@ -136,7 +137,9 @@ export class PaymentController {
 
     @Get('instructor/getPayout')
     @UseGuards(GuardGuard)
-    async getInstructorPayout(@Req() req){
+    async getInstructorPayout(
+        @Req() req
+    ){
         try {
             const instructorId=req.user.InstructorId
 

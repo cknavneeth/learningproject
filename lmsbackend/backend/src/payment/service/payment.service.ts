@@ -607,7 +607,7 @@ export class PaymentService implements IPaymentService {
 
 
 
-  async updatePayout(updateData: Partial<InstructorPayoutDto>,instructorId:string): Promise<string> {
+  async updatePayout(updateData: Partial<InstructorPayoutDto>,instructorId:string): Promise<{message:string}> {
       try {
          const payout=await this.paymentRepository.findInstructorPayout(instructorId)
 
@@ -685,7 +685,7 @@ export class PaymentService implements IPaymentService {
 
          await payout.save()
 
-         return `Payout details updated successfully`
+         return {message:'Payout Edited!keep rockin'}
       } catch (error) {
           if(error instanceof HttpException){
            throw error
@@ -700,6 +700,7 @@ export class PaymentService implements IPaymentService {
 
    async getPayoutDetails(instructorId:string):Promise<PayoutDetailsResponse>{
     try {
+
         const instructorPayout=await this.paymentRepository.findInstructorPayout(instructorId)
         if(!instructorPayout){
           throw new NotFoundException(MESSAGE.INSTRUCTOR.NOT_FOUND)
@@ -710,6 +711,7 @@ export class PaymentService implements IPaymentService {
            instructorPayout.toObject()
         )
         return mappedPayout
+
     } catch (error) {
        if(error instanceof HttpException){
         throw error

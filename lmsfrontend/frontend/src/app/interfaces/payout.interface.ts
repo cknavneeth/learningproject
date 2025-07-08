@@ -15,3 +15,7 @@ export interface PayoutResponse{
     payoutId:string,
     status:string
 }
+
+export interface PayoutUpdateResponse{
+    message:string
+}

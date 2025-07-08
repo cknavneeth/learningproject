@@ -35,11 +35,12 @@ export class VerifymiddlewareMiddleware implements NestMiddleware {
           throw new UnauthorizedException('Token has been blacklisted')
        }
 
-       const jwtKey=this.jwtService.verify(token)
+       const jwtKey=await this.jwtService.verify(token)
 
         if(jwtKey){
           next()
         }
+        
     } catch (error) {
        throw new UnauthorizedException('Not Authorized')
     }

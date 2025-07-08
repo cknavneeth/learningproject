@@ -13,7 +13,7 @@ export const instructorguardGuard: CanActivateFn = (route, state) => {
   if(accesstoken){
     return true
   }else{
-    router.navigate(['/instructor/login'])
+    router.navigate(['/instructor/instructorlogin'])
     return false
   }
 };
