@@ -11,7 +11,7 @@ import { TokenserviceService } from '../../tokenservice.service';
 export class WishlistService {
 
   // private apiUrl = 'http://localhost:5000/auth/student/wishlist';
-  private apiUrl=`${environment.apiUrl}/auth/student/wishlist`
+  private apiUrl=`${environment.apiUrl}/v1/auth/student/wishlist`
 
 
   private wishlistItemsSubject=new BehaviorSubject<number>(0)

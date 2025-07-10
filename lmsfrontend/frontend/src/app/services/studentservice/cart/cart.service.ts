@@ -11,7 +11,7 @@ import { TokenserviceService } from '../../tokenservice.service';
 export class CartService {
 
   // private apiUrl = 'http://localhost:5000/auth/student/cart';
-  private apiUrl=`${environment.apiUrl}/auth/student/cart`
+  private apiUrl=`${environment.apiUrl}/v1/auth/student/cart`
 
   private cartItemsSubject=new BehaviorSubject<number>(0)
   cartItems$=this.cartItemsSubject.asObservable()

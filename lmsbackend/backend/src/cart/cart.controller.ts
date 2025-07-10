@@ -1,14 +1,17 @@
-import { Controller, Get, UseGuards ,Request, Body, Post, Delete, NotFoundException, BadRequestException, HttpException, InternalServerErrorException} from '@nestjs/common';
+import { Controller, Get, UseGuards ,Request, Body, Post, Delete, NotFoundException, BadRequestException, HttpException, InternalServerErrorException, Version} from '@nestjs/common';
 import { CartService } from './cart.service';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { MESSAGE } from 'src/common/constants/messages.constants';
+
 
 @Controller('auth/student/cart')
 export class CartController {
 
     constructor(private readonly _cartService:CartService){}
 
+    
     @Get()
+    @Version('1')
     @UseGuards(GuardGuard)
     async getCart(@Request() req){
         try {
@@ -22,6 +25,7 @@ export class CartController {
 
 
     @Post('add')
+    @Version('1')
     @UseGuards(GuardGuard)
     async addToCart(@Request() req,@Body() body:{courseId:string}){
         console.log('Received add to cart request:', {
@@ -52,6 +56,7 @@ export class CartController {
     }
 
     @Delete('remove')
+    @Version('1')
     @UseGuards(GuardGuard)
     async removeFromCart(@Request() req,@Body() body:{courseId:string}){
         try {
@@ -66,6 +71,7 @@ export class CartController {
 
 
     @Delete('clear')
+    @Version('1')
     @UseGuards(GuardGuard)
     async clearCart(@Request() req){
         try {

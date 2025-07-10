@@ -65,6 +65,11 @@ export class WishlistService {
                 const newWishlist = await this._wishlistRepository.create(userId);
                 return this._wishlistRepository.addToWishlist(userId, courseId);
             }
+
+            //max limit checkkkkkk
+            if(wishlist.courses.length>=3){
+                throw new Error('Max limit reached')
+            }
     
             console.log('wishlist kitti')
             const courseExists = wishlist.courses.some(course => course._id.toString() === courseId)

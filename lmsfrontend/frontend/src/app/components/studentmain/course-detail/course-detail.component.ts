@@ -109,9 +109,6 @@ export class CourseDetailComponent {
 
       }
 
-
-
-
           this.snackBar.open(errorMessage,'Close',{
             duration:3000,
             horizontalPosition:'right',
