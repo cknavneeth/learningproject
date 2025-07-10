@@ -114,6 +114,7 @@ const dialoagueref=this.dialoag.open(ConfirmationcomponentComponent,{
 
 
    openVerificationModal(instructor: instructors): void {
+    console.log('sending instructor into profile for verification',instructor)
     const dialogRef = this.dialoag.open(InstructorverificationModalComponent, {
       width: '600px',
       data: instructor

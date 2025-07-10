@@ -33,7 +33,7 @@ export class StudentcourseComponent implements OnInit{
   Math = Math; 
 
   courses:any[]=[]
-  loading:boolean=false
+  loading:boolean=true
   error:string=''
   searchTerm:string=''
   filteredCourses:any[]=[]
@@ -121,6 +121,7 @@ export class StudentcourseComponent implements OnInit{
     this.studentService.getAllCourses(params).subscribe({
       next: (response) => {
         console.log('API Response:', response);
+
         if (Array.isArray(response)) {
           this.courses = response;
           this.filteredCourses = response;
@@ -128,6 +129,11 @@ export class StudentcourseComponent implements OnInit{
           this.totalPages = Math.ceil(response.length / this.itemsPerPage);
 
           this.loadCourseRatings(this.courses)
+
+          setTimeout(() => {
+          this.loading = false;
+        }, 2000);
+
         } else if (response.courses) {
           this.courses = response.courses;
           this.filteredCourses = response.courses;
@@ -135,8 +141,13 @@ export class StudentcourseComponent implements OnInit{
           this.totalPages = response.totalPages;
 
           this.loadCourseRatings(this.courses)
+
+          setTimeout(() => {
+          this.loading = false;
+        }, 2000);
+
         }
-        this.loading = false;
+        
       },
       error: (error) => {
         console.error('API Error:', error);

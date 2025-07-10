@@ -61,7 +61,9 @@ export class MyCoursesComponent {
             this.totalItems = 0;
             this.totalPages = 0;
         }
-        this.loading = false;
+           setTimeout(()=>{
+            this.loading=false
+           },2000)
           console.log('instructorde courses ahn ith',this.courses)
         },
         error=>{

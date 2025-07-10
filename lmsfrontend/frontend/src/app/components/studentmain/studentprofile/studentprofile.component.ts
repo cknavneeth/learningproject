@@ -29,6 +29,12 @@ export class StudentprofileComponent {
           bio: response.bio || ''
         };
         console.log('student data ahno',this.studentData)
+        this.snackBar.open('Profile is here!','close',{
+          duration:3000,
+          horizontalPosition:'right',
+          verticalPosition:'top'
+        })
+        
       },
       error=>{
         this.snackBar.open('Profile fetching failed.Try later','Close',{

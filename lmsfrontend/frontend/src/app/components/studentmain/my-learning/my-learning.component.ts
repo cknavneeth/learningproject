@@ -24,11 +24,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class MyLearningComponent implements OnInit ,AfterViewInit{
       enrolledCourses: EnrolledCourse[] = [];
-      loading: boolean = false;
+
+      loading: boolean = true;
+
       error: string = '';
 
-
-      //pagination properties
       currentPage:number=1
       itemsPerPage:number=10
       totalItems:number=0
@@ -54,13 +54,12 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
 
 
       ngAfterViewInit(): void {
-        // Initialize circular progress after view is initialized
         setTimeout(() => {
           this.updateCircularProgress();
         }, 500);
       }
     
-      // Update circular progress CSS variables
+      
       updateCircularProgress(): void {
         const circles = document.querySelectorAll('.progress-circle');
         circles.forEach(circle => {
@@ -81,7 +80,7 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
               ...course,
               purchaseDate: new Date(course.purchaseDate)
             }));
-            this.loading = false;
+            
             this.totalItems = response.pagination.total;
             this.totalPages = response.pagination.totalPages;
 
@@ -91,6 +90,10 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
             setTimeout(() => {
               this.updateCircularProgress();
             }, 100);
+
+            setTimeout(()=>{
+              this.loading=false
+            },2000)
           },
           error: (error) => {
             this.error = 'failed to load enrolled courses';
@@ -116,7 +119,7 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
       isWithin30Minutes(purchaseDate: Date): boolean {
         if (!purchaseDate) return false;
         
-        // Force current time to be actual current time
+      
         const currentTime = new Date();
         const purchaseTime = new Date(purchaseDate);
         const minutesSincePurchase = (currentTime.getTime() - purchaseTime.getTime()) / (1000 * 60);
@@ -125,7 +128,7 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
 
 
       requestCancellation(course: EnrolledCourse): void {
-        // Single check for cancellation eligibility
+
         const isEligible = this.isWithin30Minutes(course.purchaseDate);
         
         if (!isEligible) {
@@ -176,11 +179,9 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
         dialogRef.afterClosed().subscribe(result=>{
           if(result){
             if (existingReview) {
-              // Update existing review
               this.reviewService.updateReview(existingReview._id, result).subscribe({
                 next: (response) => {
                   this.snackBar.open('Review updated successfully', 'Close', {duration: 3000});
-                  // Update the local review data
                   this.userReviews[courseId] = response;
                   this.loadEnrolledCourses();
                 },
@@ -189,11 +190,10 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
                 }
               });
             }else {
-              // Create new review
+              
               this.reviewService.createReview(courseId, result).subscribe({
                 next: (response) => {
                   this.snackBar.open('Review submitted successfully', 'Close', {duration: 3000});
-                  // Update the local review data
                   this.userReviews[courseId] = response;
                   this.loadEnrolledCourses();
                 },
@@ -208,7 +208,7 @@ export class MyLearningComponent implements OnInit ,AfterViewInit{
       }
 
 
-//for editing reviews
+
     loadUserReviewsForCourses():void{
       if(!this.enrolledCourses||this.enrolledCourses.length===0){
         return

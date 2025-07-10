@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {MatStepperModule} from '@angular/material/stepper';
 import { CourseBasicInfoComponent } from '../features/course/course-basic-info/course-basic-info.component';
 import { CourseDetailsComponent } from '../features/course/course-details/course-details.component';
@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import { InstructorprofileService } from '../../../services/instructorservice/instructorprofile.service';
 
 @Component({
   selector: 'app-coursecreation',
@@ -35,12 +36,20 @@ export class CoursecreationComponent {
 
   isEditMode=false
 
+
+  isInstructorApproved:boolean=false
+
   constructor(
+    private profileService:InstructorprofileService,
     private courseService: InstructorcourseService,
     private router: Router,
     private snackBar: MatSnackBar,
     private route:ActivatedRoute
   ) {
+
+    this.checkInstructorStatus()
+
+
     this.route.queryParams.subscribe(params=>{
       if(params['id']){
         this.loadCourse(params['id'])
@@ -54,6 +63,21 @@ export class CoursecreationComponent {
   //     this.basicInfoForm = this.courseBasicInfoComponent.basicInfoForm;
   //   }
   // }
+
+
+  async checkInstructorStatus(){
+    try {
+      const instructorSir=await firstValueFrom(this.profileService.getInstructorProfile())
+      if(instructorSir.isApproved==true){
+        this.isInstructorApproved=true
+      }else{
+        this.isInstructorApproved=false
+      }
+    } catch (error) {
+      
+    }
+  }
+ 
 
   async loadCourse(courseId:string){
     try{

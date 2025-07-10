@@ -8,10 +8,40 @@
     </div>
   
     <!-- Loading Spinner with backdrop -->
-    <div *ngIf="loading" class="flex justify-center items-center h-64 relative">
+    <!-- <div *ngIf="loading" class="flex justify-center items-center h-64 relative">
       <div class="absolute inset-0 bg-gray-900/20 backdrop-blur-sm rounded-xl"></div>
       <mat-spinner diameter="50" color="accent" class="z-10"></mat-spinner>
-    </div>
+    </div> -->
+
+
+    
+    <!--skelton-->
+     <div *ngIf="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <ng-container *ngFor="let i of [1,2,3,4,5,6]">
+      <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 
+                  shadow-lg animate-pulse overflow-hidden">
+
+        <!-- Image placeholder -->
+        <div class="h-56 w-full bg-gray-700"></div>
+
+        <!-- Content placeholder -->
+        <div class="p-6 space-y-4">
+          <div class="h-6 bg-gray-700 rounded w-3/4"></div>
+          <div class="h-4 bg-gray-700 rounded w-1/2"></div>
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 bg-gray-700 rounded-full"></div>
+            <div class="flex-1">
+              <div class="h-3 bg-gray-700 rounded w-1/2 mb-1"></div>
+              <div class="h-3 bg-gray-700 rounded w-1/3"></div>
+            </div>
+          </div>
+          <div class="h-4 bg-gray-700 rounded w-1/3"></div>
+          <div class="h-10 bg-gray-700 rounded w-full"></div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+    <!--skelton-->
   
     <!-- Courses Grid with enhanced cards -->
     <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

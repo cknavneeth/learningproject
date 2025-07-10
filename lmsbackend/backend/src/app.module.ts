@@ -127,8 +127,9 @@ export class AppModule implements NestModule{
            '/auth/instructor/inslogin',
            '/auth/instructor/instructorRegister',
            '/auth/instructor/sendotp',
-           '/auth/instructor/verifyotp',
            '/auth/instructor/getinsAccess',
+           '/auth/instructor/insotp',
+           '/auth/instructor/verifyinsotp',
 
            '/auth/admin/login',
            '/auth/admin/dashboard/stats'

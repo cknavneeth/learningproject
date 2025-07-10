@@ -59,4 +59,9 @@ export class InstructorverificationModalComponent {
       this.dialogRef.close(true);
     });
   }
+
+
+  isImage(url: string): boolean {
+  return /\.(jpeg|jpg|png|gif|webp)$/i.test(url);
+}
 }

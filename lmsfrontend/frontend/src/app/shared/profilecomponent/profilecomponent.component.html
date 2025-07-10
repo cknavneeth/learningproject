@@ -52,7 +52,7 @@
 
       <button 
       type="submit"
-      [disabled]="!profileForm.valid || !isFormDirty()"
+      [disabled]="!profileForm.valid || !isFormDirty() "
       class="w-full py-2 px-4 rounded-md text-white transition-all duration-200"
       [ngClass]="{
         'bg-blue-600 hover:bg-blue-700': profileForm.valid && isFormDirty(),

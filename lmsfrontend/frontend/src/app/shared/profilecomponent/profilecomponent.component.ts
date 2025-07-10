@@ -28,6 +28,7 @@ export class ProfilecomponentComponent {
   showNewPassword=false
   initialFormValues:any
 
+
   constructor(private fb:FormBuilder,private dialog:MatDialog){
        this.profileForm=this.fb.group({
         username:['',[Validators.required]],
@@ -50,6 +51,7 @@ export class ProfilecomponentComponent {
           this.updateFormWithUserData()
           this.initialFormValues=this.profileForm.value
         }
+
       }
 
       private updateFormWithUserData() {

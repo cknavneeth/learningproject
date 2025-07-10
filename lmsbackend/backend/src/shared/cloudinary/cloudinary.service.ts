@@ -48,7 +48,7 @@ export class CloudinaryService {
 
                 if (isCertificate) {
                     Object.assign(uploadOptions, {
-                        format: 'pdf',
+                        // format: 'pdf',
                         resource_type: 'auto',
                         access_mode: 'public',
                         type: 'upload',
