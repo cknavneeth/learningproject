@@ -12,8 +12,6 @@ import { insupdatePayoutDto } from '../dto/inspayout-update.dto';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 
 
-
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('student/payment')
 export class PaymentController {
     constructor(@Inject(PAYMENT_SERVICE) private readonly paymentService:IPaymentService){}

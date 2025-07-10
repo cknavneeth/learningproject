@@ -103,6 +103,10 @@ export class CourseDetailComponent {
           errorMessage = 'You are blocked from using the platform';
           break;
 
+        case 'Max limit reached for your cart':
+          errorMessage='Max limit reached for your cart';
+          break;
+
       }
 
 

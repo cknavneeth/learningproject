@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CartRepository } from './repositories/cart/cart.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from 'src/instructors/courses/course.schema';
@@ -41,6 +41,8 @@ export class CartService {
 
     async addToCart(userId:string,courseId:string){
 
+
+        
         const user=await this._userRepository.findById(userId)
         if(user){
             if(user.isBlocked){
@@ -65,6 +67,13 @@ export class CartService {
             console.log('Creating new cart for user:', userId);
             cart=await this._cartRepository.create(userId)
         }
+
+        if(cart.items.length>=3){
+            throw new Error('Max limit reached')
+        }
+
+
+
         if (cart.items.length > 0) {
             const firstItemId = cart.items[0].courseId;
             console.log('Debug Info:', {
@@ -103,6 +112,8 @@ export class CartService {
         const updatedCart=await this._cartRepository.addItem(userId,courseId)
         console.log('Item added to cart successfully');
         return updatedCart
+        
+       
     }
 
 

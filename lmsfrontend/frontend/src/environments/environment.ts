@@ -5,6 +5,12 @@ export const environment = {
   // apiUrl:'https://navaneethck.online/api'
   socketUrl:'http://localhost:5000',
 
-  cloudinaryBase:"https://res.cloudinary.com/dtjwwdyo6/image/upload"
+  cloudinaryBase:"https://res.cloudinary.com/dtjwwdyo6/",
+
+  sub:{
+       imageUploadFolder:'image/upload',
+       videoUploadFolder:'video/upload'
+  }
 
 };
+

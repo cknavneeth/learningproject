@@ -7,7 +7,9 @@
     min-height: 100vh;
     padding: 20px;
     transition: background 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
 }
+
 
 /* Light and Dark Mode */
 .dark-mode {
@@ -186,3 +188,5 @@ input:focus {
 .forgot-password:hover {
     color: #333; /* Slightly darker on hover */
 }
+
+

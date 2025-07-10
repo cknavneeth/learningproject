@@ -1,6 +1,7 @@
-import { Controller, Get, UseGuards ,Request, Body, Post, Delete, NotFoundException, BadRequestException} from '@nestjs/common';
+import { Controller, Get, UseGuards ,Request, Body, Post, Delete, NotFoundException, BadRequestException, HttpException, InternalServerErrorException} from '@nestjs/common';
 import { CartService } from './cart.service';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
+import { MESSAGE } from 'src/common/constants/messages.constants';
 
 @Controller('auth/student/cart')
 export class CartController {
@@ -42,7 +43,11 @@ export class CartController {
             if(error.message==='You are blocked from performing this action'){
                 throw new BadRequestException('You are blocked from performing this action')
             }
-            throw new NotFoundException('Failed to add to cart')
+            if(error.message==='Max limit reached'){
+                throw new BadRequestException('Max limit reached for your cart')
+            }
+            
+            
         }
     }
 

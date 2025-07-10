@@ -31,7 +31,6 @@ export class CoursesController {
                 return cb(new BadRequestException('Only video files are allowed!'), false);
             }
             
-            // Additional video format validation if needed
             const allowedMimeTypes = ['video/mp4', 'video/webm', 'video/ogg'];
             if (!allowedMimeTypes.includes(file.mimetype)) {
                 return cb(new BadRequestException('Invalid video format. Supported formats: MP4, WebM, OGG'), false);

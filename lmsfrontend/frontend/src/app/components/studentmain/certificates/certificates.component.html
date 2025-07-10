@@ -21,7 +21,7 @@
     <!-- Certificates Grid -->
     <div *ngIf="!loading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let certificate of pagedCertificates" 
+        <div *ngFor="let certificate of certificates" 
              class="certificate-card">
           <div class="p-6 flex flex-col h-full">
             <div class="certificate-icon animate-float">
@@ -82,7 +82,7 @@
       </div>
   
       <!-- Pagination -->
-      <div *ngIf="certificates.length > 0" class="pagination">
+      <!-- <div *ngIf="certificates.length > 0" class="pagination">
         <button (click)="onPageChange(currentPage - 1)"
                 [disabled]="currentPage === 1"
                 class="pagination-btn">
@@ -90,12 +90,25 @@
         </button>
         <span class="pagination-info">
           Page {{currentPage}} of {{totalPages}}
-        </span>
+        </span> -->
+
+<!-- 
         <button (click)="onPageChange(currentPage + 1)"
                 [disabled]="currentPage === totalPages"
                 class="pagination-btn">
           Next <i class="fas fa-chevron-right ml-2"></i>
-        </button>
-      </div>
+        </button> -->
+
+        <mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageIndex]="currentPage"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="handlePageEvent($event)">
+</mat-paginator>
+
+
+
+      
     </div>
   </div>
