@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InstructorcourseService } from '../../../services/instructorservice/course/instructorcourse.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-instructorstudents',
@@ -20,10 +21,26 @@ export class InstructorstudentsComponent implements OnInit{
   limit:number=10
 
   searchTerm:string=''
+
+  subject:Subject<string>=new Subject()
+
+
   constructor(private instructorService:InstructorcourseService){}
 
   ngOnInit():void{
     this.loadStudents()
+
+
+    this.subject
+    .pipe(
+      debounceTime(300),          
+      distinctUntilChanged()      
+    )
+    .subscribe((searchTerm) => {
+      this.currentPage = 1;
+      this.searchTerm = searchTerm;
+      this.loadStudents();
+    });
   }
 
   loadStudents(page:number=1):void{
@@ -78,7 +95,8 @@ export class InstructorstudentsComponent implements OnInit{
   }
 
   onSearchChange(){
-    this.currentPage=1
-    this.loadStudents()
+    // this.currentPage=1
+    // this.loadStudents()
+    this.subject.next(this.searchTerm)
   }
 }

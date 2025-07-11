@@ -8,7 +8,7 @@ export interface EnrolledCourse{
     };
     progress:number;
     hasReviewed:boolean;
-    status: 'active' | 'cancelled' | 'cancellation_pending';
+    status?: 'active' | 'cancelled' | 'cancellation_pending';
     purchaseDate: Date;
 }
 
@@ -17,4 +17,18 @@ export interface UpdateProgressRequest {
     progress: number;
     timestamp?: number;
   }
+
+
+
+  export interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface GetEnrolledCoursesResponse {
+  courses: EnrolledCourse[];
+  pagination: Pagination;
+}
   

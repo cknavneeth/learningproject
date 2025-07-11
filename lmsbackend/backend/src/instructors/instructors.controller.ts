@@ -10,7 +10,6 @@ export class InstructorsController {
    @Get('profile')
    @UseGuards(GuardGuard)
    async getInstructorProfile(@Request() req){
-    console.log('backendile request vannating')
       const instructorId=req.user.InstructorId
       return this._instructorservice.getProfile(instructorId)
    }

@@ -12,6 +12,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CategoryService } from '../../../services/instructorservice/category/category.service';
 import { ReviewService } from '../../../services/studentservice/review/review.service';
 import { Review } from '../../../interfaces/review.interface';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-studentcourse',
@@ -57,6 +58,8 @@ export class StudentcourseComponent implements OnInit{
   enrolledCourseIds:Set<string>=new Set()
   courseRatings:{[courseId:string]:number}={}
 
+  subject:Subject<string>=new Subject()
+
   constructor(private studentService:StudentcourseService,private snackBar:MatSnackBar,private router:Router,private categoryService:CategoryService,private reviewService:ReviewService){}
 
   ngOnInit():void{
@@ -79,6 +82,19 @@ export class StudentcourseComponent implements OnInit{
       },
       error: (error) => console.error('Error loading categories:', error)
     });
+
+
+
+    this.subject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe((searchTerm)=>{
+      this.searchTerm=searchTerm
+      this.currentPage=1
+      this.loadCourses()
+    })
+
+
   }
 
   loadCourses() {
@@ -241,9 +257,9 @@ export class StudentcourseComponent implements OnInit{
   onLanguageChange(event: any) {
     const value = event.target.value;
   if (value) {
-    this.filters.languages = [value]; // Replace with single value
+    this.filters.languages = [value]; 
   } else {
-    this.filters.languages = []; // Clear if no value
+    this.filters.languages = []; 
   }
   this.applyFilters();
   }
@@ -254,7 +270,7 @@ onCategoryChange(event: any) {
   
   if (value) {
     this.selectedCategory = value;
-    this.filters.categories = [value]; // Make sure this is an array with the selected value
+    this.filters.categories = [value]; 
     console.log('Updated filters with category:', this.filters);
   } else {
     this.selectedCategory = '';
@@ -335,12 +351,13 @@ onCategoryChange(event: any) {
 
 
   onSearch(){
-     if(!this.searchTerm){
-       this.filteredCourses=[...this.courses]
-       return 
-     }
-     this.currentPage=1
-     this.loadCourses()
+    //  if(!this.searchTerm){
+    //    this.filteredCourses=[...this.courses]
+    //    return 
+    //  }
+    //  this.currentPage=1
+    //  this.loadCourses()
+    this.subject.next(this.searchTerm)
   }
 
 

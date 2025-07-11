@@ -4,7 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { Course, CourseResponse } from '../../../interfaces/course.interface';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { UpdateProgressRequest } from '../../../interfaces/mylearning.interface';
+import { GetEnrolledCoursesResponse, UpdateProgressRequest } from '../../../interfaces/mylearning.interface';
 import { environment } from '../../../../environments/environment';
 
 
@@ -48,17 +48,15 @@ export class StudentcourseService {
   }
 
 
-  getEnrolledCourses(page: number = 1, limit: number = 6): Observable<any> {
+  getEnrolledCourses(page: number = 1, limit: number = 6): Observable<GetEnrolledCoursesResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
-      
-    return this.http.get(`${this.learningUrl}`, { params });
+    return this.http.get<GetEnrolledCoursesResponse>(`${this.learningUrl}`, { params });
 }
 
 
   getEnrolledCourseDetails(courseId:string):Observable<any>{
-    console.log('ingot ethaninda')
     return this.http.get(`${this.learningUrl}/course/${courseId}`)
     .pipe(
       catchError((error) => {
