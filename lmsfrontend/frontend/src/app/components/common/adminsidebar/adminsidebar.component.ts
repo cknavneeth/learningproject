@@ -35,13 +35,13 @@ export class AdminsidebarComponent implements OnInit {
     
       this.adminservice.logoutAdmin().subscribe({
         next:(response)=>{
-          this.tokenService.removeAdminToken();
+          this.tokenService.removeToken();
           this.router.navigate(['/admin/login'], { replaceUrl: true });
         },
         error:(error)=>{
           console.log(error)
           console.error('Logout error:', error);
-          this.tokenService.removeAdminToken();
+          this.tokenService.removeToken();
           this.router.navigate(['/admin/login'], { replaceUrl: true });
         } 
       })

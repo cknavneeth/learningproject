@@ -174,7 +174,7 @@ private handleGoogleSignIn(credential: string) {
   this.googleAuthService.verifyGoogleToken(credential, 'student').subscribe({
     next: (response: any) => {
       if (response.accesstoken) {
-        this.tokenservice.setStudentToken(response.accesstoken);
+        this.tokenservice.setToken(response.accesstoken);
         this.message = 'Google sign-in successful';
         
         setTimeout(() => {

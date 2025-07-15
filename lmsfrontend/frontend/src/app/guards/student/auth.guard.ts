@@ -6,11 +6,15 @@ export const authGuard: CanActivateFn = (route, state) => {
   
     const router=inject(Router)
     const tokenService=inject(TokenserviceService)
-    const studentAccessToken=tokenService.getStudentToken()
+    const studentAccessToken=tokenService.getToken()
+
+
+
+    const currentUserType=tokenService.getCurrentUserType()
 
     console.log("Auth Guard - Token Found:", studentAccessToken); 
 
-  if (studentAccessToken) {
+  if (studentAccessToken&&currentUserType==='student') {
     console.log('accessgranted')
     return true;
   } else {
@@ -25,9 +29,11 @@ export const authGuard: CanActivateFn = (route, state) => {
 export const loginGuard:CanActivateFn=(route,state)=>{
   const router=inject(Router)
   const tokenService=inject(TokenserviceService)
-  const studentAccessToken=tokenService.getStudentToken()
+  const studentAccessToken=tokenService.getToken()
 
-  if(studentAccessToken){
+  const currentUserType=tokenService.getCurrentUserType()
+
+  if(studentAccessToken&&currentUserType==='student'){
     router.navigate(['/student/home'])
     return false
   }

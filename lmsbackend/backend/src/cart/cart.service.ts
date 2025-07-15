@@ -8,6 +8,7 @@ import { UserRepository } from 'src/users/repositories/user/user.repository';
 import { plainToInstance } from 'class-transformer';
 import { responsecartDto } from './dto/response-cart.dto';
 import { ICartRepository } from './repositories/cart.repository.interface';
+import { coursePurchased, coursePurchaseDocument } from 'src/payment/schema/purchased.schema';
 
 @Injectable()
 export class CartService {
@@ -16,7 +17,8 @@ export class CartService {
         // private readonly _cartRepository:CartRepository,
         @Inject(CartRepository) private _cartRepository:ICartRepository,
         @InjectModel(Course.name) private _courseModel: Model<Course>,
-        private readonly _userRepository:UserRepository
+        private readonly _userRepository:UserRepository,
+        @InjectModel(coursePurchased.name) private _purchaseModel:Model<coursePurchaseDocument>
     ){}
 
     async getCart(userId:string){
@@ -54,6 +56,13 @@ export class CartService {
             }
         }
 
+
+        //check if course is already purchased
+        
+        const purchasedOrNot=await this._purchaseModel.findOne({userId:new Types.ObjectId(userId),courseId:new Types.ObjectId(courseId)})
+        if(purchasedOrNot){
+            throw new Error('This course already purchased')
+        }
 
 
         console.log('CartService.addToCart - Start', { userId, courseId });

@@ -10,5 +10,5 @@ import { errorInterceptor } from './interceptors/errorhandling/error.interceptor
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),provideAnimations(),provideHttpClient(withInterceptors([errorInterceptor,blockedinterceptorInterceptor,authInterceptor,admininterceptorInterceptor])),importProvidersFrom(HttpClientModule)]
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),provideAnimations(),provideHttpClient(withInterceptors([errorInterceptor,blockedinterceptorInterceptor,authInterceptor])),importProvidersFrom(HttpClientModule)]
 };

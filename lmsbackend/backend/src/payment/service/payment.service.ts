@@ -46,6 +46,7 @@ import { PayoutDetails } from '../dto/payoutDetailsRes.dto';
 
 @Injectable()
 export class PaymentService implements IPaymentService {
+  
   private readonly logger = new Logger(PaymentService.name);
 
   private razorpay: Razorpay;

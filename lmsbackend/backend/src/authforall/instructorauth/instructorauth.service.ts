@@ -135,7 +135,7 @@ export class InstructorauthService {
              const refreshtoken=this.generateInstructorRefresh(instructor)
     
     
-             res.cookie('instructor_refreshToken', refreshtoken, {
+             res.cookie('refreshToken', refreshtoken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production', 
                 sameSite: 'lax',

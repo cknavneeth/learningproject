@@ -36,7 +36,7 @@ export class AuthserviceService {
     console.log('studentinte login service')
       return this.http.post<authResponse>(`${this.apiurl}/login`,userData,{withCredentials:true}).pipe(
         tap((response:any)=>{
-          this.tokenservice.setStudentToken(response.accesstoken)
+          this.tokenservice.setToken(response.accesstoken)
         })
       )
   }
@@ -48,7 +48,7 @@ export class AuthserviceService {
   }
 
   getAccessToken():string|null{
-    return this.tokenservice.getStudentToken()
+    return this.tokenservice.getToken()
   }
 
   refreshToken():Observable<any>{
@@ -59,7 +59,7 @@ export class AuthserviceService {
         console.log('Refresh token success:', response);
         if(response.success&&response.accesstoken){
           this.saveAccesstoken(response.accesstoken)
-          this.tokenservice.setStudentToken(response.accesstoken)
+          this.tokenservice.setToken(response.accesstoken)
         }else{
           throw new Error('Invalid refresh token response')
         }
@@ -67,7 +67,7 @@ export class AuthserviceService {
       catchError(error=>{
         console.log('Refresh token error:', error);
         console.log(error)
-        this.tokenservice.removeStudentToken()
+        this.tokenservice.removeToken()
         throw error
       })
     )
@@ -77,7 +77,7 @@ export class AuthserviceService {
   logoutthestudent():Observable<void>{
     return this.http.post<void>(`${this.apiurl}/logout`,{},{withCredentials:true}).pipe(
       tap(()=>{
-        this.tokenservice.removeStudentToken()
+        this.tokenservice.removeToken()
         
       }),
       catchError((error)=>{

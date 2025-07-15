@@ -8,9 +8,11 @@ export const instructorguardGuard: CanActivateFn = (route, state) => {
   const router=inject(Router)
   const tokenService=inject(TokenserviceService)
 
-  const accesstoken=tokenService.getInstructorToken()
+  const accesstoken=tokenService.getToken()
+
+  const currentUserType=tokenService.getCurrentUserType()
   console.log('iam router guard but there is no token for instructor')
-  if(accesstoken){
+  if(accesstoken&&currentUserType==='instructor'){
     return true
   }else{
     router.navigate(['/instructor/instructorlogin'])
@@ -23,9 +25,10 @@ export const instructorLogin:CanActivateFn=(route,state)=>{
   const router=inject(Router)
   const tokenService=inject(TokenserviceService)
 
-  const accesstoken=tokenService.getInstructorToken()
+  const accesstoken=tokenService.getToken()
+  const currentUserType=tokenService.getCurrentUserType()
 
-  if(accesstoken){
+  if(accesstoken&&currentUserType==='instructor'){
     router.navigate(['/instructor/home'])
     return false
   }

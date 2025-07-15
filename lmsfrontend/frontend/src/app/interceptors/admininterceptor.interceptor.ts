@@ -11,15 +11,16 @@ export const admininterceptorInterceptor: HttpInterceptorFn = (req, next) => {
 
      const router=inject(Router)
 
-     if(!req.url.includes('/auth/admin')){
-      return next(req)
-     }
+    //  if(!req.url.includes('/auth/admin')){
+    //   return next(req)
+    //  }
+   
 
      if(req.url.includes('/auth/admin/logout')||req.url.includes('/auth/admin/login')){
       return next(req)
      }
 
-     const adminToken=tokenService.getAdminToken()
+     const adminToken=tokenService.getToken()
      let authReq=req
 
      if(adminToken){
@@ -34,7 +35,7 @@ export const admininterceptorInterceptor: HttpInterceptorFn = (req, next) => {
      return next(authReq).pipe(
       catchError(error=>{
         if(error.status==401){
-          tokenService.removeAdminToken()
+          tokenService.removeToken()
           router.navigate(['/admin/login'])
         }
         return throwError(()=>error)

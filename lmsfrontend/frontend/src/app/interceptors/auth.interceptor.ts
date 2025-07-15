@@ -12,6 +12,7 @@ import { AuthserviceService } from '../services/authservice.service';
 import { InstructorauthserviceService } from '../services/instructorauthservice.service';
 import { TokenserviceService } from '../services/tokenservice.service';
 import { RefreshTokenResponse } from '../interfaces/tokenresponse.interface';
+import { AdminserviceService } from '../services/adminservice.service';
 
 
 
@@ -24,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (
   const tokenservice = inject(TokenserviceService);
   const router = inject(Router);
 
-  if (req.url.includes('/refreshtoken') || req.url.includes('/auth/admin')) {
+  if (req.url.includes('/refreshtoken') || req.url.includes('/auth/admin/login') || req.url.includes('/auth/admin/logout')) {
     return next(req);
   }
 
@@ -34,11 +35,20 @@ export const authInterceptor: HttpInterceptorFn = (
   let authreq = req;
 
   if (userType === 'student') {
-    accesstoken = tokenservice.getStudentToken();
+
+    accesstoken = tokenservice.getToken();
     authservice = studentauthservice;
+
   } else if (userType === 'instructor') {
-    accesstoken = tokenservice.getInstructorToken();
+
+    accesstoken = tokenservice.getToken();
     authservice = instructorauthservice;
+
+  }
+
+  else if(userType==='admin'){
+    accesstoken=tokenservice.getToken()
+    authservice=studentauthservice
   }
 
   if (accesstoken) {
@@ -47,23 +57,27 @@ export const authInterceptor: HttpInterceptorFn = (
         Authorization: `Bearer ${accesstoken}`
       }
     });
+    
   }
 
   return next(authreq).pipe(
     catchError(error => {
       if (error.status === 401 && !error.error?.isBlocked && authservice) {
-        console.log('Attempting token refresh...');
+        console.log('Attempting token refresh...')
 
         return authservice.refreshToken().pipe(
           switchMap((response: RefreshTokenResponse) => {
             console.log('Refresh token response:', response);
             if (!response.accesstoken) {
               if (userType === 'student') {
-                tokenservice.removeStudentToken();
+                tokenservice.removeToken();
                 router.navigate(['/student/login']);
               } else if (userType === 'instructor') {
-                tokenservice.removeInstructorToken();
+                tokenservice.removeToken();
                 router.navigate(['/instructor/instructorlogin']);
+              }else if(userType==='admin'){
+                tokenservice.removeToken()
+                router.navigate(['/admin/login'])
               }
               return throwError(() => new Error('No access token received'));
             }
@@ -74,15 +88,18 @@ export const authInterceptor: HttpInterceptorFn = (
               }
             });
             return next(newRequest);
+
           }),
           catchError(refreshError => {
             console.log('Refresh token failed:', refreshError);
             if (userType === 'student') {
-              tokenservice.removeStudentToken();
+              tokenservice.removeToken();
               router.navigate(['/student/login']);
             } else if (userType === 'instructor') {
-              tokenservice.removeInstructorToken();
+              tokenservice.removeToken();
               router.navigate(['/instructor/instructorlogin']);
+            }else if(userType==='admin'){
+              router.navigate(['/admin/login'])
             }
             return throwError(() => refreshError);
           })

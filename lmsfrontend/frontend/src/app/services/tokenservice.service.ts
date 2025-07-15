@@ -5,65 +5,52 @@ import { Injectable } from '@angular/core';
 })
 export class TokenserviceService {
 
-  private Student_token_key='studentaccesstoken'
-  private instructor_token_key='instructoraccesstoken'
-  private ADMIN_TOKEN_KEY='adminToken'
+  private TOKEN_KEY='accessToken'
 
   constructor() {}
 
 
-  public setStudentToken(token:string){
-    localStorage.setItem(this.Student_token_key,token)
+  public setToken(token:string){
+    localStorage.setItem(this.TOKEN_KEY,token)
   }
 
-  public getStudentToken():string|null{
-    return localStorage.getItem(this.Student_token_key)
+  public getToken():string|null{
+    return localStorage.getItem(this.TOKEN_KEY)
   }
 
-  public removeStudentToken():void{
+  public removeToken():void{
     console.log('REMOVING STUDENT TOKEN - Stack trace:', new Error().stack);
-    localStorage.removeItem(this.Student_token_key)
+    localStorage.removeItem(this.TOKEN_KEY)
   } 
 
-  public setInstructorToken(token:string){
-    localStorage.setItem(this.instructor_token_key,token)
-  }
-
-  public getInstructorToken():string|null{
-    return localStorage.getItem(this.instructor_token_key)
-  }
-
-  public removeInstructorToken(){
-    console.log('why removing instructor token here',new Error().stack)
-    localStorage.removeItem(this.instructor_token_key)
-  }
+  
 
 
   //for admin sections ok 
 
-  public removeAdminToken(): void {
-    
-    localStorage.removeItem(this.ADMIN_TOKEN_KEY);
-    localStorage.removeItem('admintoken'); 
-    localStorage.removeItem('adminToken'); 
-  }
-
-  public getAdminToken(): string | null {
-    return localStorage.getItem(this.ADMIN_TOKEN_KEY) || 
-           localStorage.getItem('admintoken') || 
-           localStorage.getItem('adminToken');
-  }
-
-  public setAdminToken(token: string): void {
-    this.removeAdminToken();
-    localStorage.setItem(this.ADMIN_TOKEN_KEY, token);
-  }
+ 
 
 
    public getCurrentUserType(): 'student' | 'instructor' | 'admin' | null {
-     if(this.getStudentToken())return 'student'
-     if(this.getInstructorToken())return 'instructor'
-     if(this.getAdminToken())return 'admin'
-     return null
+
+    try {
+
+    const token=this.getToken()
+     if(!token)return null
+
+     const payloadBase64=token.split('.')[1]
+     const decodedJson=atob(payloadBase64)
+     const decoded=JSON.parse(decodedJson)
+
+     return decoded.role||null
+      
+    } catch (error) {
+      return null
+    }
+     
    }
+
+
+
+
 }

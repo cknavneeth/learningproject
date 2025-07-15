@@ -34,7 +34,7 @@ export class AdminloginComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.tokenService.removeAdminToken();
+        this.tokenService.removeToken();
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             this.enableDarkMode();

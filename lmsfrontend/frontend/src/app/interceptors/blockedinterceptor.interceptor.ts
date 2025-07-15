@@ -40,14 +40,14 @@ export const blockedinterceptorInterceptor: HttpInterceptorFn = (req, next) => {
           console.log('handling blocked student')
           
           
-          tokenservice.removeStudentToken()
+          tokenservice.removeToken()
           router.navigate(['/student/login'])
         }
 
        else if(req.url.includes('/instructor/')){
       
         console.log('handling blocked instructor')
-        tokenservice.removeInstructorToken()
+        tokenservice.removeToken()
         // instructorauthservice.logoutinstructor().subscribe()
         router.navigate(['/instructor/instructorlogin'])
       }
@@ -55,6 +55,7 @@ export const blockedinterceptorInterceptor: HttpInterceptorFn = (req, next) => {
     return throwError(()=>error)
     })
 
-    
+
   )
+  
 };

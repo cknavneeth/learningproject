@@ -107,6 +107,10 @@ export class CourseDetailComponent {
           errorMessage='Max limit reached for your cart';
           break;
 
+        case 'Already purchased!Dont need again right?':
+          errorMessage='Already purchased!Dont need again right?'
+          break;
+
       }
 
           this.snackBar.open(errorMessage,'Close',{

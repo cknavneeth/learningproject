@@ -9,6 +9,7 @@ import { WishlistService } from '../../../services/studentservice/wishlist/wishl
 import { MatDialog } from '@angular/material/dialog';
 import { WalletmodalComponent } from '../../studentmain/walletmodal/walletmodal.component';
 import { WalletService } from '../../../services/studentservice/wallet/wallet.service';
+import { TokenserviceService } from '../../../services/tokenservice.service';
 
 @Component({
   selector: 'app-header',
@@ -30,7 +31,8 @@ export class HeaderComponent implements OnInit {
     private cartService:CartService,
     private wishlistService:WishlistService,
     private dialog: MatDialog,
-    private walletService:WalletService
+    private walletService:WalletService,
+    private tokenService:TokenserviceService
   ) {
 
     this.cartItemCount$=this.cartService.cartItems$
@@ -54,8 +56,8 @@ export class HeaderComponent implements OnInit {
 
   private checkAuthStatus(): void {
     const access = this.service.getAccessToken();
-    this.isAuthenticated = !!access;
-    // this.router.navigate(['/'])
+    const role=this.tokenService.getCurrentUserType()
+    this.isAuthenticated = !!access&&role==='student'
   }
 
   logout() {

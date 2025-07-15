@@ -47,7 +47,7 @@ export class InstructorauthserviceService {
       tap((response)=>{
         console.log('login is successfull')
           this.saveAccesstoken(response.accesstoken)
-          this.tokenservice.setInstructorToken(response.accesstoken)
+          this.tokenservice.setToken(response.accesstoken)
       })
     )
   }
@@ -59,7 +59,7 @@ export class InstructorauthserviceService {
   }
 
   getAccessToken():string|null{
-    return this.tokenservice.getInstructorToken()
+    return this.tokenservice.getToken()
   }
 
   refreshToken(){
@@ -67,14 +67,14 @@ export class InstructorauthserviceService {
       tap((response)=>{
         if(response.accesstoken){
             this.saveAccesstoken(response.accesstoken)
-            this.tokenservice.setInstructorToken(response.accesstoken)
+            this.tokenservice.setToken(response.accesstoken)
         }else{
           throw new Error('Invalid refresh token response')
         }
       }),
       catchError((error)=>{
         console.log('Refresh token error:', error);
-        this.tokenservice.removeInstructorToken()
+        this.tokenservice.removeToken()
         throw error
       })
     )
@@ -96,7 +96,7 @@ export class InstructorauthserviceService {
   logoutinstructor():Observable<void>{
     return this.http.post<void>(`${this.apiurl}/logout`,{},{withCredentials:true}).pipe(
       tap(()=>{
-        this.tokenservice.removeInstructorToken()
+        this.tokenservice.removeToken()
       }),
       catchError((error)=>{
         throw error

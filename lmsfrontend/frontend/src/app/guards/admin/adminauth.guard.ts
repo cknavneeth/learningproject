@@ -9,9 +9,10 @@ export const adminauthGuard: CanActivateFn = (route, state) => {
 
 
 
-  const admintoken=tokenService.getAdminToken()
+  const admintoken=tokenService.getToken()
+  const currentUserType=tokenService.getCurrentUserType()
 
-  if(admintoken){
+  if(admintoken&& currentUserType==='admin'){
     return true
   }else{
     router.navigate(['/admin/login'])
@@ -25,9 +26,11 @@ export const adminLogin:CanActivateFn=(route,state)=>{
     const router=inject(Router)
     const tokenService=inject(TokenserviceService)
 
-    const admintoken=tokenService.getAdminToken()
+    const admintoken=tokenService.getToken()
 
-    if(admintoken){
+    const currentUserType=tokenService.getCurrentUserType()
+
+    if(admintoken&&currentUserType==='admin'){
       router.navigate(['/admin/dashboard'])
       return false
     }

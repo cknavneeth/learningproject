@@ -11,13 +11,16 @@ import { AuthenticationModule } from '../authentication/auth.module';
 import { user, userSchema } from 'src/users/users.schema';
 import { UsersModule } from 'src/users/users.module';
 import { CART_REPOSITORY } from './constants/constant';
+import { PaymentModule } from 'src/payment/payment.module';
+import { coursePurchased, coursepurchaseSchema } from 'src/payment/schema/purchased.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Cart.name, schema: CartSchema },
       { name: Course.name, schema: CourseSchema },
-      {name:user.name,schema:userSchema}
+      {name:user.name,schema:userSchema},
+      {name:coursePurchased.name,schema:coursepurchaseSchema}
     ]),
     AuthenticationModule,
     JwtModule.registerAsync({
@@ -29,7 +32,8 @@ import { CART_REPOSITORY } from './constants/constant';
       }),
     }),
     ConfigModule,
-    UsersModule
+    UsersModule,
+    
   ],
   controllers:[CartController],
   providers:[CartService,CartRepository,

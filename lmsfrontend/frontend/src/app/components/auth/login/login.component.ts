@@ -121,9 +121,9 @@ private handleCredentialResponse(response: any) {
           next: (response: any) => {
               if (response.accesstoken) {
                    if(this.userType==='instructor'){
-                    this.tokenservice.setInstructorToken(response.accesstoken)
+                    this.tokenservice.setToken(response.accesstoken)
                    }else{
-                    this.tokenservice.setStudentToken(response.accesstoken)
+                    this.tokenservice.setToken(response.accesstoken)
                    }
                   
                   this.message = 'Google sign-in successful';

@@ -2,6 +2,9 @@ import { Controller, Get, UseGuards ,Request, Body, Post, Delete, NotFoundExcept
 import { CartService } from './cart.service';
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { MESSAGE } from 'src/common/constants/messages.constants';
+import { Roles } from 'src/decorators/roles.decarotor';
+import { Role } from 'src/common/enums/role.enum';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 
 
 @Controller('auth/student/cart')
@@ -11,8 +14,9 @@ export class CartController {
 
     
     @Get()
+    @Roles(Role.STUDENT)
     @Version('1')
-    @UseGuards(GuardGuard)
+    @UseGuards(GuardGuard,RolesGuard)
     async getCart(@Request() req){
         try {
             const userId=req.user.userId
@@ -49,6 +53,9 @@ export class CartController {
             }
             if(error.message==='Max limit reached'){
                 throw new BadRequestException('Max limit reached for your cart')
+            }
+            if(error.message='This course is already purchased'){
+                throw new BadRequestException('Already purchased!Dont need again right?')
             }
             
             

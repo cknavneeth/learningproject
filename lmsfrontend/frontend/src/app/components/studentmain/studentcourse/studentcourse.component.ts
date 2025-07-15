@@ -245,12 +245,12 @@ export class StudentcourseComponent implements OnInit{
       categories: []
     };
     this.searchTerm=''
-    this.currentPage = 1; // Reset to first page
-    this.loadCourses(); // Reload courses without filters
+    this.currentPage = 1; 
+    this.loadCourses(); 
   }
 
   applyFilters() {
-    this.currentPage = 1; // Reset to first page when applying filters
+    this.currentPage = 1; 
     this.loadCourses();
   }
 

@@ -18,7 +18,7 @@ export class WishlistService {
   wishlistItems$=this.wishlistItemsSubject.asObservable()
   
   constructor(private http:HttpClient,private tokenservice:TokenserviceService) {
-    if(this.tokenservice.getStudentToken())
+    if(this.tokenservice.getToken())
     this.getWishlist().subscribe(
       wishlist=>this.updateWishlistCount(wishlist)
     )

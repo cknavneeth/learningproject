@@ -17,7 +17,7 @@ export class CartService {
   cartItems$=this.cartItemsSubject.asObservable()
 
   constructor(private http:HttpClient,private tokenservice:TokenserviceService) {
-    if(this.tokenservice.getStudentToken())
+    if(this.tokenservice.getToken())
     this.getCart().subscribe(
       cart=>this.updateCartCount(cart)
     )

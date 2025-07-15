@@ -73,7 +73,7 @@ export class HeaderadminComponent {
       },
       error: (error) => {
         console.error('Logout error:', error);
-        this.tokenService.removeAdminToken();
+        this.tokenService.removeToken();
         this.router.navigate(['/admin/login'])
           .then(() => {
             window.location.reload();

@@ -24,7 +24,7 @@ export class AdminserviceService {
     .pipe(
       tap(response=>{
         if(response.accesstoken){
-          this.tokenService.setAdminToken(response.accesstoken)
+          this.tokenService.setToken(response.accesstoken)
         }
       })
     )
@@ -77,7 +77,7 @@ export class AdminserviceService {
     // Remove router navigation from service
     return this.http.post(`${this.apiurl}/logout`, {}).pipe(
       tap(() => {
-        this.tokenService.removeAdminToken();
+        this.tokenService.removeToken();
       })
     );
   }
