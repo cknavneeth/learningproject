@@ -41,6 +41,12 @@ import { InstructorRepository } from 'src/instructors/repositories/instructor/in
 import axios from 'axios';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { PayoutDetails } from '../dto/payoutDetailsRes.dto';
+import { CART_REPOSITORY } from 'src/cart/constants/constant';
+import { ICartRepository } from 'src/cart/repositories/cart.repository.interface';
+import { IInstructorRepository } from 'src/instructors/repositories/instructor.repository.interface';
+import { INSTRUCTOR_REPOSITORY } from 'src/instructors/constants/instructor.constant';
+import { USER_REPOSITORY } from 'src/users/constants/user.constant';
+import { IUserRepository } from 'src/users/repositories/user.repository.interface';
 
 
 
@@ -55,11 +61,14 @@ export class PaymentService implements IPaymentService {
 
   constructor(
     @Inject(PAYMENT_REPOSITORY)
-    private readonly paymentRepository: IPaymentRepository,
+    private readonly _paymentRepository: IPaymentRepository,
     private configService: ConfigService,
-    private userRepository: UserRepository,
-    private cartRepository: CartRepository,
-    private instructorRepository: InstructorRepository,
+    // private userRepository: UserRepository,
+    @Inject(USER_REPOSITORY) private readonly _userRepository:IUserRepository,
+    // private cartRepository: CartRepository,
+    @Inject(CART_REPOSITORY) private readonly _cartRepository:ICartRepository,
+    // private instructorRepository: InstructorRepository,
+    @Inject(INSTRUCTOR_REPOSITORY) private readonly _instructorRepository:IInstructorRepository,
     @InjectRedis() redis: Redis,
   ) {
     const key_id = this.configService.get<string>('RAZORPAY_KEY_ID');
@@ -116,7 +125,7 @@ export class PaymentService implements IPaymentService {
         }
 
         //pre -check for already exist
-        const purchased = await this.paymentRepository.findPurchased(
+        const purchased = await this._paymentRepository.findPurchased(
           userId,
           courseIds,
         );
@@ -137,7 +146,7 @@ export class PaymentService implements IPaymentService {
         }
         //pre check for already exist
 
-        const payment = await this.paymentRepository.create({
+        const payment = await this._paymentRepository.create({
           orderId: order.id,
           amount: amountInRupees,
           currency: order.currency,
@@ -212,13 +221,13 @@ export class PaymentService implements IPaymentService {
     try {
       // Find the original payment record first
       const originalPayment =
-        await this.paymentRepository.findByOrderId(razorpay_order_id);
+        await this._paymentRepository.findByOrderId(razorpay_order_id);
       if (!originalPayment) {
         throw new BadRequestException('No payment record found for this order');
       }
 
       // 2. Update payment status
-      const payment = await this.paymentRepository.updatePaymentStatus(
+      const payment = await this._paymentRepository.updatePaymentStatus(
         razorpay_order_id,
         'completed',
         razorpay_payment_id,
@@ -239,7 +248,7 @@ export class PaymentService implements IPaymentService {
           };
 
           const savingDoc =
-            await this.paymentRepository.coursepurchaseSave(newDoc);
+            await this._paymentRepository.coursepurchaseSave(newDoc);
           this.logger.log(savingDoc);
         }
       } catch (error) {
@@ -261,7 +270,7 @@ export class PaymentService implements IPaymentService {
 
         const paymentDetails =
           await this.razorpay.payments.fetch(razorpay_payment_id);
-        const newPayment = await this.paymentRepository.create({
+        const newPayment = await this._paymentRepository.create({
           orderId: razorpay_order_id,
           paymentId: razorpay_payment_id,
           amount: paymentDetails.amount / 100,
@@ -287,7 +296,7 @@ export class PaymentService implements IPaymentService {
   }
 
   async getPaymentHistory(userId: string) {
-    return this.paymentRepository.findByUserId(userId);
+    return this._paymentRepository.findByUserId(userId);
   }
 
   async requestCourseCancellation(
@@ -301,7 +310,7 @@ export class PaymentService implements IPaymentService {
       courseId,
       reason,
     );
-    const payment = await this.paymentRepository.findLatestPaymentByCourse(
+    const payment = await this._paymentRepository.findLatestPaymentByCourse(
       userId,
       courseId,
     );
@@ -355,7 +364,7 @@ export class PaymentService implements IPaymentService {
     }
 
     const updatedPayment =
-      await this.paymentRepository.updateCourseCancellationStatus(
+      await this._paymentRepository.updateCourseCancellationStatus(
         payment._id.toString(),
         courseId,
         reason,
@@ -373,7 +382,7 @@ export class PaymentService implements IPaymentService {
   async payusingWallet(createOrderDto: CreateOrderDto, userId: string) {
     try {
       this.logger.log('entered to wallet service');
-      const user = await this.userRepository.findById(
+      const user = await this._userRepository.findById(
         createOrderDto?.userId || userId,
       );
       if (!user) {
@@ -388,7 +397,7 @@ export class PaymentService implements IPaymentService {
       const orderId = `WALLET-ORDER-${uuidv4()}`;
       const paymentId = `WALLET-TXN-${uuidv4()}`;
 
-      const paymentSaving = await this.paymentRepository.createwalletPay(
+      const paymentSaving = await this._paymentRepository.createwalletPay(
         createOrderDto,
         userId,
         orderId,
@@ -411,7 +420,7 @@ export class PaymentService implements IPaymentService {
 
       await user.save();
 
-      const cartofUser = await this.cartRepository.findUserById(userId);
+      const cartofUser = await this._cartRepository.findUserById(userId);
       if (!cartofUser) {
         throw new Error('No cart found for this user');
       }
@@ -436,7 +445,7 @@ export class PaymentService implements IPaymentService {
     instructorId: string,
   ): Promise<payoutDocument | null> {
     try {
-      const creatingPayout = await this.paymentRepository.createPayoutSchema(
+      const creatingPayout = await this._paymentRepository.createPayoutSchema(
         instructorPayoutDto,
         instructorId,
       );
@@ -460,7 +469,7 @@ export class PaymentService implements IPaymentService {
     instructorId: string,
   ): Promise<PayoutResponse> {
     try {
-      let instructor = await this.instructorRepository.findById(instructorId);
+      let instructor = await this._instructorRepository.findById(instructorId);
 
       if (!instructor) {
         throw new NotFoundException(MESSAGE.INSTRUCTOR.NOT_FOUND);
@@ -499,7 +508,7 @@ export class PaymentService implements IPaymentService {
       
 
       //WE have to check instructor filled the form or not ? payoutschema is there
-      let payoutforInstructor = await this.paymentRepository.findInstructorPayout(instructorId);
+      let payoutforInstructor = await this._paymentRepository.findInstructorPayout(instructorId);
 
       if (!payoutforInstructor) {
         throw new NotFoundException('Payout record not found! Fill payout form');
@@ -582,7 +591,7 @@ export class PaymentService implements IPaymentService {
       status:payout.data.status
    }
 
-   let payoutSuccessSave=await this.paymentRepository.payoutSuccessSave(obj)
+   let payoutSuccessSave=await this._paymentRepository.payoutSuccessSave(obj)
 
    instructor.lastPayoutDate=new Date()
    
@@ -610,7 +619,7 @@ export class PaymentService implements IPaymentService {
 
   async updatePayout(updateData: Partial<InstructorPayoutDto>,instructorId:string): Promise<{message:string}> {
       try {
-         const payout=await this.paymentRepository.findInstructorPayout(instructorId)
+         const payout=await this._paymentRepository.findInstructorPayout(instructorId)
 
          if(!payout){
           throw new NotFoundException('No payout record found.lplease fill payout details first.')
@@ -703,7 +712,7 @@ export class PaymentService implements IPaymentService {
    async getPayoutDetails(instructorId:string):Promise<PayoutDetailsResponse>{
     try {
 
-        const instructorPayout=await this.paymentRepository.findInstructorPayout(instructorId)
+        const instructorPayout=await this._paymentRepository.findInstructorPayout(instructorId)
         if(!instructorPayout){
           throw new NotFoundException(MESSAGE.INSTRUCTOR.NOT_FOUND)
         }

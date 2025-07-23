@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Req, Res, UnauthorizedException, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Inject, Param, Post, Req, Res, UnauthorizedException, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -9,11 +9,16 @@ import { access } from 'fs';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
+import { AUTH_SERVICE } from './constants/constant';
+import { IAuthService } from './interfaces/service.interface';
 
 @Controller('auth/student')
 export class AuthController {
 
-    constructor(private readonly authservice:AuthService,private jwtService:JwtService,
+    constructor(
+      // private readonly authservice:AuthService,
+      @Inject(AUTH_SERVICE) private authservice:IAuthService,
+      private jwtService:JwtService,
       @InjectRedis() private redis:Redis
     ){}
 

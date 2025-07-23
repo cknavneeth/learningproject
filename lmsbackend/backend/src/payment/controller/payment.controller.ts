@@ -14,7 +14,7 @@ import { ClassSerializerInterceptor } from '@nestjs/common';
 
 @Controller('student/payment')
 export class PaymentController {
-    constructor(@Inject(PAYMENT_SERVICE) private readonly paymentService:IPaymentService){}
+    constructor(@Inject(PAYMENT_SERVICE) private readonly _paymentService:IPaymentService){}
 
     private logger=new Logger()
 
@@ -22,19 +22,19 @@ export class PaymentController {
     @UseGuards(GuardGuard)
     async createOrder(@Body() createOrderDto:CreateOrderDto,@Req() req){
          createOrderDto.userId=req.user.userId
-         return this.paymentService.createOrder(createOrderDto)
+         return this._paymentService.createOrder(createOrderDto)
     }
 
     @Post('verify-payment')
     async verifyPayment(@Body() verifyPaymentDto:VerifyPaymentDto){
-        return this.paymentService.verifyPayment(verifyPaymentDto)
+        return this._paymentService.verifyPayment(verifyPaymentDto)
     }
 
     @Get('history')
     @UseGuards(GuardGuard)
     async getPaymentHistory(@Req() req){
         const userId=req.user.userId
-        return this.paymentService.getPaymentHistory(userId)
+        return this._paymentService.getPaymentHistory(userId)
     }
 
 
@@ -52,7 +52,7 @@ export class PaymentController {
 
         const userId=req.user.userId
 
-        return this.paymentService.requestCourseCancellation(userId,courseId,reason)
+        return this._paymentService.requestCourseCancellation(userId,courseId,reason)
 
     }
 
@@ -68,7 +68,7 @@ export class PaymentController {
             this.logger.log('wallet payment controller',createOrderDto)
             createOrderDto.userId=req.user.userId
             const userId=req.user.userId
-            const payment=await this.paymentService.payusingWallet(createOrderDto,userId)
+            const payment=await this._paymentService.payusingWallet(createOrderDto,userId)
             return payment
         } catch (error) {
             if(error instanceof HttpException){
@@ -86,7 +86,7 @@ export class PaymentController {
     ){
           try {
             const instructorId=req.user.InstructorId
-            const payout=await this.paymentService.createPayout(InstructorPayoutDto,instructorId)
+            const payout=await this._paymentService.createPayout(InstructorPayoutDto,instructorId)
             return payout
           } catch (error) {
              if(error instanceof HttpException){
@@ -104,7 +104,7 @@ export class PaymentController {
     ){
         try {
             const instructorId=req.user.InstructorId
-            const makePayout=await this.paymentService.makePayout(instructorPayoutRequestDto,instructorId)
+            const makePayout=await this._paymentService.makePayout(instructorPayoutRequestDto,instructorId)
             return makePayout
         } catch (error) {
             if(error instanceof HttpException){
@@ -122,7 +122,7 @@ export class PaymentController {
     ){
          try {
             const instructorId=req.user.InstructorId
-            const update=await this.paymentService.updatePayout(updateDto,instructorId)
+            const update=await this._paymentService.updatePayout(updateDto,instructorId)
             return update
          } catch (error) {
             if(error instanceof HttpException){
@@ -141,7 +141,7 @@ export class PaymentController {
         try {
             const instructorId=req.user.InstructorId
 
-            return this.paymentService.getPayoutDetails(instructorId)
+            return this._paymentService.getPayoutDetails(instructorId)
         } catch (error) {
             if(error instanceof HttpException){
                 throw error

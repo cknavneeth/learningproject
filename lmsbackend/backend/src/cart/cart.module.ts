@@ -14,6 +14,11 @@ import { CART_REPOSITORY } from './constants/constant';
 import { PaymentModule } from 'src/payment/payment.module';
 import { coursePurchased, coursepurchaseSchema } from 'src/payment/schema/purchased.schema';
 
+export const cartRepoProvider={
+    provide:CART_REPOSITORY,
+    useClass:CartRepository
+}
+
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -37,11 +42,12 @@ import { coursePurchased, coursepurchaseSchema } from 'src/payment/schema/purcha
   ],
   controllers:[CartController],
   providers:[CartService,CartRepository,
-    {
-      provide:CART_REPOSITORY,
-      useClass: CartRepository
-    }
+    // {
+    //   provide:CART_REPOSITORY,
+    //   useClass: CartRepository
+    // }
+    cartRepoProvider
   ],
-  exports: [CartService, CartRepository],
+  exports: [CartService, CartRepository,cartRepoProvider],
 })
 export class CartModule {}

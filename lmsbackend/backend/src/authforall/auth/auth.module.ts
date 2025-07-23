@@ -9,6 +9,12 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { AUTH_SERVICE } from './constants/constant';
+
+const authServiceProvider={
+  provide:AUTH_SERVICE,
+  useClass:AuthService
+}
 
 @Module({
   imports:[UsersModule,InstructorsModule,CloudinaryModule,AdminModule,ConfigModule.forRoot(),
@@ -21,7 +27,7 @@ import { ConfigService } from '@nestjs/config';
       }),
     }),
   ],
-  providers: [AuthService,JwtService],
+  providers: [AuthService,JwtService,authServiceProvider],
   controllers: [AuthController]
 })
 export class AuthModule {}

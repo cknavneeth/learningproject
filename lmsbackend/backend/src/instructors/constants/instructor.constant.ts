@@ -1,0 +1,1 @@
+export const INSTRUCTOR_REPOSITORY='IInstructorRepository'
