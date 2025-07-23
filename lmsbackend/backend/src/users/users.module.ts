@@ -6,11 +6,16 @@ import { user, userSchema } from './users.schema';
 import { UserRepository } from './repositories/user/user.repository';
 import { AuthenticationModule } from 'src/authentication/auth.module';
 import { Course, CourseSchema } from 'src/instructors/courses/course.schema';
-import { USER_REPOSITORY } from './constants/user.constant';
+import { USER_REPOSITORY, USER_SERVICE } from './constants/user.constant';
 
 export const userRepoProvider={
   provide:USER_REPOSITORY,
   useClass:UserRepository
+}
+
+export const userServiceProvider={
+  provide:USER_SERVICE,
+  useClass:UsersService
 }
 
 
@@ -23,9 +28,10 @@ export const userRepoProvider={
   //   provide:USER_REPOSITORY,
   //   useClass:UserRepository
   //  },
-  userRepoProvider
+  userRepoProvider,
+  userServiceProvider
   ],
   controllers: [UsersController],
-  exports:[UsersService,UserRepository,MongooseModule,userRepoProvider]
+  exports:[UsersService,UserRepository,MongooseModule,userRepoProvider,userServiceProvider]
 })
 export class UsersModule {}

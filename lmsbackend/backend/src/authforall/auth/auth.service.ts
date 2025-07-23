@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable, Logger, Res, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Inject, Injectable, Logger, Res, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as nodemailer from 'nodemailer';
 import { Subject } from 'rxjs';
@@ -16,6 +16,9 @@ import { instructorDocument } from 'src/instructors/instructor.schema';
 import { AdminService } from 'src/admin/admin.service';
 import * as bcrypt from 'bcryptjs'
 import { OAuth2Client } from 'google-auth-library';
+import { IAuthService } from './interfaces/service.interface';
+import { USER_SERVICE } from 'src/users/constants/user.constant';
+import { IUsersService } from 'src/users/interfaces/user.interface';
 
 
 
@@ -23,13 +26,18 @@ import { OAuth2Client } from 'google-auth-library';
 
 
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService{
 
     private logger=new Logger()
 
     private googleClient:OAuth2Client
 
-    constructor(private readonly userservice:UsersService,private readonly cloudinary:CloudinaryService,private readonly instructorService:InstructorsService ,private readonly adminService:AdminService,private jwtService:JwtService,private readonly configservice:ConfigService){
+    constructor(
+        // private readonly userservice:UsersService,
+        @Inject(USER_SERVICE) private userservice:IUsersService,
+        private jwtService:JwtService,
+        private readonly configservice:ConfigService
+    ){
         this.googleClient=new OAuth2Client(this.configservice.get<string>('GOOGLE_CLIENT_ID'))
     }
 

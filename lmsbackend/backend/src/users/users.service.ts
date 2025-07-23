@@ -4,9 +4,10 @@ import { user, userDocument } from './users.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs'
 import { CourseResponse, UserRepository } from './repositories/user/user.repository';
+import { IUsersService } from './interfaces/user.interface';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements IUsersService{
 
     constructor(@InjectModel(user.name) private usermodel:Model<userDocument>,private readonly userRepository:UserRepository){}
 
