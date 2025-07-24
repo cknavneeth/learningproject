@@ -44,6 +44,11 @@ export interface CartResponse{
 
 // cart.interface.ts
 
+export interface Offer {
+  discountPrice: number;
+  percentage: number;
+}
+
 export interface Instructor {
   name: string;
 }
@@ -53,7 +58,7 @@ export interface Course {
   title: string;
   price: number;
   thumbnailUrl: string;
-  offer: string;
+  offer: Offer;
   instructor: Instructor;
 }
 
