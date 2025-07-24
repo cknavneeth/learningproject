@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Course } from '../../../interfaces/course.interface';
 
 type CourseStatus='pending_review' | 'published' | 'rejected'
 interface StatusClasses{
@@ -21,7 +22,7 @@ interface StatusClasses{
   styleUrl: './my-courses.component.scss'
 })
 export class MyCoursesComponent {
-     courses:any[]=[]
+     courses:Course[]=[]
      loading:boolean=false
      error=''
 
@@ -52,8 +53,8 @@ export class MyCoursesComponent {
       this.instructorService.getCourses(this.currentPage,this.itemsPerPage,this.searchTerm).subscribe(
         
         response=>{
-          if (response && response.data) {
-            this.courses = response.data.courses;
+          if (response) {
+            this.courses = response.data.courses
             this.totalItems = response.data.pagination.total;
             this.totalPages = response.data.pagination.totalPages;
         } else {

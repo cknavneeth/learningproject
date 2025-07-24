@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CourseStateService {
+ class CourseStateService {
   private courseDataSubject = new BehaviorSubject<any>({
     title: '',
     category: '',

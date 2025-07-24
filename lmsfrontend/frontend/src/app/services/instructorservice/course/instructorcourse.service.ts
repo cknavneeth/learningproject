@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Course, CourseCreateRequest } from '../../../interfaces/course.interface';
+import { BackendFullResponse, Course, CourseCreateRequest, CourseDetails, CourseDetailsResponse, DraftCourse, EnrolledStudentsResponse, PaginatedResponse } from '../../../interfaces/course.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -32,44 +32,44 @@ export class InstructorcourseService {
      return this.http.post(`${this.apiUrl}/upload-thumbnail`,formData)
   }
 
-  createCourse(courseData:CourseCreateRequest,isDraft:boolean):Observable<any>{
-    return this.http.post(`${this.apiUrl}`,{...courseData,isDraft})
+  createCourse(courseData:CourseCreateRequest,isDraft:boolean):Observable<Course>{
+    return this.http.post<Course>(`${this.apiUrl}`,{...courseData,isDraft})
   }
 
-  updateCourse(courseId:string,courseData:any):Observable<any>{
+  updateCourse(courseId:string,courseData:Partial<CourseCreateRequest>):Observable<Course>{
     console.log('updating course',courseData)
-    return this.http.put(`${this.apiUrl}/${courseId}`,courseData)
+    return this.http.put<Course>(`${this.apiUrl}/${courseId}`,courseData)
   }
 
-  publishCourse(courseId:string):Observable<any>{
-     return this.http.put(`${this.apiUrl}/${courseId}/publish`,{})
+  publishCourse(courseId:string):Observable<{message:string}>{
+     return this.http.put<{message:string}>(`${this.apiUrl}/${courseId}/publish`,{})
   }
 
-  getCourseById(courseId:string):Observable<any>{
-    return this.http.get(`${this.apiUrl}/${courseId}`)
-  }
-
-  //related to drafts
-  getDrafts():Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}/drafts`)
-  }
-
-  deleteDraft(draftId:string):Observable<any>{
-    return this.http.delete(`${this.apiUrl}/draft/${draftId}`)
-  }
-
-  getCourses(page:number=1,limit:number=10,searchTerm:string=''):Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}`,{params:new HttpParams().set('page',page.toString()).set('limit',limit.toString()).set('searchTerm',searchTerm??'')})
+  getCourseById(courseId:string):Observable<CourseDetails>{
+    return this.http.get<CourseDetails>(`${this.apiUrl}/${courseId}`)
   }
 
 
-  getEnrolledStudents(page:number=1,limit:number=10,searchTerm:string=''):Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/enrolled-students`,{params:{page:page.toString(),limit:limit.toString(),searchTerm}})
+  getDrafts():Observable<DraftCourse[]>{
+    return this.http.get<DraftCourse[]>(`${this.apiUrl}/drafts`)
+  }
+
+  deleteDraft(draftId:string):Observable<{message:string}>{
+    return this.http.delete<{message:string}>(`${this.apiUrl}/draft/${draftId}`)
+  }
+
+  getCourses(page:number=1,limit:number=10,searchTerm:string=''):Observable<PaginatedResponse<Course>>{
+    return this.http.get<PaginatedResponse<Course>>(`${this.apiUrl}`,{params:new HttpParams().set('page',page.toString()).set('limit',limit.toString()).set('searchTerm',searchTerm??'')})
+  }
+
+
+  getEnrolledStudents(page:number=1,limit:number=10,searchTerm:string=''):Observable<BackendFullResponse>{
+    return this.http.get<BackendFullResponse>(`${this.apiUrl}/enrolled-students`,{params:{page:page.toString(),limit:limit.toString(),searchTerm}})
      
   }
 
 
-  getCourseDetailsForInstructor(courseId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/details/${courseId}`);
+  getCourseDetailsForInstructor(courseId: string): Observable<CourseDetailsResponse> {
+    return this.http.get<CourseDetailsResponse>(`${this.apiUrl}/details/${courseId}`);
   }
 }

@@ -49,7 +49,7 @@ export class InstructorstudentsComponent implements OnInit{
 
     this.instructorService.getEnrolledStudents(page,this.limit,this.searchTerm).subscribe({
       next:(response)=>{
-        console.log('Full response:', response.data);
+        console.log('Full response:', response);
         console.log('Number of students:', response.data.students.length);
         console.log('Total count:', response.data.pagination.total);
         this.students=response.data.students

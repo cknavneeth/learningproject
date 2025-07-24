@@ -181,7 +181,7 @@ export class CoursecreationComponent {
     try {
       if(!this.courseData._id){
          const createdCourse=await this.courseService.createCourse(this.courseData,false).toPromise()
-         this.courseData._id=createdCourse._id
+         this.courseData._id=createdCourse?._id
       }else{
         await this.courseService.updateCourse(this.courseData._id,this.courseData).toPromise()
       }

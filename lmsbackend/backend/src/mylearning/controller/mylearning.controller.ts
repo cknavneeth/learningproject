@@ -2,7 +2,7 @@
 import { GuardGuard } from 'src/authentication/guard/guard.guard';
 import { MYLEARNING_SERVICE } from '../constants/mylearning.constants';
 import { IMyLearningService } from '../service/interfaces/mylearning.service.interface';
-import { Body, Controller, DefaultValuePipe, Get, Inject, Param, ParseIntPipe, Post, Query, Req, UnauthorizedException, UseGuards, Res, Put, } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Get, Inject, Param, ParseIntPipe, Post, Query, Req, UnauthorizedException, UseGuards, Res, Put, Logger, } from '@nestjs/common';
 import { UpdateProgressDto } from '../dto/update-progress.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -12,6 +12,8 @@ import { Role } from 'src/common/enums/role.enum';
 
 @Controller('auth/student/learning')
 export class MylearningController {
+    private logger=new Logger(MylearningController.name)
+
     constructor(@Inject(MYLEARNING_SERVICE) private readonly _mylearningService:IMyLearningService){}
 
 
@@ -25,6 +27,7 @@ export class MylearningController {
     ){
         console.log('enroll ayath kittm chelpo')
         const userId=req.user.userId
+        this.logger.log('checking emaillllll',req.user.email,req.user.username)
         return this._mylearningService.getEnrolledCourses(userId,page,limit)
     }
 
