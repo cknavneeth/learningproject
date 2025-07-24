@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ConfirmationcomponentComponent } from '../../common/confirmationcomponent/confirmationcomponent.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
+import { Cart, CartItem, CartResponse } from '../../../interfaces/cart.interface';
 
 @Component({
   selector: 'app-cart',
@@ -23,7 +24,7 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './cart.component.scss'
 })
 export class CartComponent implements OnInit{
-   cartItems:any[]=[]
+   cartItems:CartItem[]=[]
    loading:boolean=true
    error:string=''
    totalAmount:number=0

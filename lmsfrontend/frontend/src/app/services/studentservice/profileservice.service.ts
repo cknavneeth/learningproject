@@ -2,13 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Profile, ProfileResponse, UserProfile } from '../../interfaces/userprofile.interface';
 
-interface ProfileResponse {
-  username: string;
-  email: string;
-  phone?: string;
-  bio?: string;
-}
+
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +16,8 @@ export class ProfileserviceService {
 
   constructor(private http:HttpClient) { }
 
-  getStudentProfile():Observable<any>{
-    return this.http.get<any>(`${this.apiurl}/profile`)
+  getStudentProfile():Observable<UserProfile>{
+    return this.http.get<UserProfile>(`${this.apiurl}/profile`)
   }
 
 
@@ -29,7 +25,7 @@ export class ProfileserviceService {
     return this.http.put<ProfileResponse>(`${this.apiurl}/profile`,profileData)
   }
 
-  updateStudentPassword(passwordData:any):Observable<any>{
-    return this.http.put(`${this.apiurl}/changepassword`,passwordData)
+  updateStudentPassword(passwordData:any):Observable<Profile>{
+    return this.http.put<Profile>(`${this.apiurl}/changepassword`,passwordData)
   }
 }
