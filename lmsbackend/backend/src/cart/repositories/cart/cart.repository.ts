@@ -4,13 +4,15 @@ import { Model, Types } from 'mongoose';
 import { Cart, CartDocument } from 'src/cart/cart.schema';
 import { ICartRepository } from '../cart.repository.interface';
 import { MESSAGE } from 'src/common/constants/messages.constants';
+import { coursePurchased, coursePurchaseDocument } from 'src/payment/schema/purchased.schema';
 
 @Injectable()
 export class CartRepository implements ICartRepository{
 
     private logger=new Logger()
     constructor(
-        @InjectModel(Cart.name) public cartModel: Model<CartDocument>
+        @InjectModel(Cart.name) public cartModel: Model<CartDocument>,
+        
     ){ }
 
     async findByUser(userId:string):Promise<CartDocument|null>{
@@ -54,14 +56,15 @@ export class CartRepository implements ICartRepository{
     async addItem(userId:string,courseId:string):Promise<CartDocument|null>{
 
         try {
-             console.log('CartRepository.addItem - Starting with:', { userId, courseId });
-        const cart=await this.cartModel.findOne({user:userId})
+         console.log('CartRepository.addItem - Starting with:', { userId, courseId });
+         const cart=await this.cartModel.findOne({user:userId})
         if(!cart){
             console.log('No cart found, throwing error');
             throw new NotFoundException(MESSAGE.CART.NOT_FOUND)
         }
-        
 
+        
+        
 
         cart.items.push({courseId:new Types.ObjectId(courseId) as any,addedAt:new Date()})
         console.log('cartil push aay')

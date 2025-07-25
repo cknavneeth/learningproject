@@ -159,13 +159,13 @@ export class CourseContentComponent implements OnInit{
   }
 
   ngOnInit(){
-     if(this.courseData?.section?.length){
+     if(this.courseData?.sections?.length){
       this.patchFormData()
      }
   }
 
   ngOnChanges(changes:SimpleChanges){
-     if(changes['courseData']&&this.courseData?.section?.length){
+     if(changes['courseData']&&this.courseData?.sections?.length){
       this.patchFormData()
      }
   }

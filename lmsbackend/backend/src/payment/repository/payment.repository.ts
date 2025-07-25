@@ -231,4 +231,22 @@ export class paymentRepository implements IPaymentRepository{
         }
     }
 
+
+    //check if it is already purchased
+    async alreadyPurchased(userId:string,courseId:string){
+        try {
+            let course=new Types.ObjectId(courseId)
+            const alreadyExist=await this._coursePurchaseModel.findOne({userId:new Types.ObjectId(userId),courseId:course})
+            if(alreadyExist){
+                throw new BadRequestException(MESSAGE.PAYMENT.ALREADY_PURCHASED)
+            }
+            return false
+        } catch (error) {
+            if(error instanceof HttpException){
+                throw error
+            }
+            throw new InternalServerErrorException(error.message)
+        }
+    }
+
 }

@@ -88,4 +88,10 @@ export class MyCoursesComponent {
       this.currentPage=1
       this.loadCourses()
     }
+
+
+
+  editDraft(draftId:string){
+    this.router.navigate(['/instructor/courses'],{queryParams:{id:draftId}})
+  }
 }

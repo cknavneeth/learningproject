@@ -156,14 +156,6 @@ export class CoursecreationComponent {
     }
   }
 
-
-
-
-
-
-
-
-
   onBasicInfoValidityChange(isValid: boolean) {
     this.basicInfoComplete = isValid;
   }
@@ -187,7 +179,6 @@ export class CoursecreationComponent {
       }
 
 
-      // await this.courseService.publishCourse(this.courseData._id).toPromise()
       await firstValueFrom(this.courseService.publishCourse(this.courseData._id))
 
       this.snackBar.open('Course published successfully!','Close',{
@@ -207,4 +198,17 @@ export class CoursecreationComponent {
        })
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -58,7 +58,6 @@ export class CartService {
 
 
         //check if course is already purchased
-        
         const purchasedOrNot=await this._purchaseModel.findOne({userId:new Types.ObjectId(userId),courseId:new Types.ObjectId(courseId)})
         if(purchasedOrNot){
             throw new Error('This course already purchased')
